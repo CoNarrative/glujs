@@ -1,0 +1,10 @@
+extends assetsLayout
+block append head
+    link(href='/lib/jasmine/jasmine.css', rel='stylesheet')
+    script(src='/lib/jasmine/jasmine.js')
+    script(src='/lib/jasmine/jasmine-html.js')
+    script(src='/spec/run.js')
+
+    title Assets example running under ExtJS #{extjs_version}
+    script(src='spec/spec.js')
+

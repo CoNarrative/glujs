@@ -1,0 +1,12 @@
+extends layout
+block append head
+    title Hello World gluJS example running under ExtJS #{extjs_version}
+    link(href='/lib/jasmine/jasmine.css', rel='stylesheet')
+    script(src='/lib/jasmine/jasmine.js')
+    script(src='/lib/jasmine/jasmine-html.js')
+    script(src='/spec/run.js')
+    script(src='helloworld.js')
+    script(src='spec/spec.js')
+
+
+

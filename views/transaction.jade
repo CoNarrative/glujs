@@ -1,0 +1,16 @@
+extends layout
+block append head
+	title Transaction
+	link(href='transaction.css', media="screen", rel="stylesheet", type="text/css")
+	script(src='controls/LiveFilterButton.js')
+	script(src='controls/PagingToolbar.js')
+	script(src='controls/FilterPanel.js')
+	script(src='viewmodels/TransactionViewModel.js')
+	script(src='viewmodels/TransactionSliceViewModel.js')
+	script(src='views/TransactionView.js')
+	script(src='views/TransactionSliceView.js')
+	script(src='views/TransactionAttachmentsColumnRenderer.js')
+	script(src='views/TransactionWarningColumnRenderer.js')
+	script(src='views/TransactionCurrencyCodeColumnRenderer.js')
+	script(src='lookups.js')
+	script(src='App.js')

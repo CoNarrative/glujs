@@ -1,0 +1,18 @@
+{
+    "--title": "GluJS 1.0.0 for ExtJS docs",
+    "--warnings": ["-link", "-no_doc"],
+    "--output": "docs/api",
+    "--img": "docs/img",
+    "--": [
+        "./src/providers/sencha/adapters_extjs",
+        "./src/providers/sencha/adapters_extjs3",
+        "./src/providers/sencha/adapters_extjs4",
+        "./src/test",
+        "./src/activatorlist.js",
+        "./src/viewmodel.js",
+        "./src/datamodel.js",
+        "./src/list.js",
+        "./src/glu.js",
+        "./src/model.js"
+    ]
+}

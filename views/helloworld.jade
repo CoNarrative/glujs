@@ -1,0 +1,6 @@
+extends layout
+block append head
+    title Hello World gluJS Example
+    script(src='helloworld.js')
+    script
+        Ext.onReady(function(){glu.viewport('helloworld.main')});
