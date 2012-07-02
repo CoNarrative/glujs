@@ -17,8 +17,14 @@
  *
  */
 
-glu.provider.adapters.paging = {
-    applyConventions:glu.provider.itemsHelper.bindNameTo('text'),
+glu.regAdapter('pagingtoolbar', {
+    extend : 'container',
+
+    beforeCreate:function (config, viewmodel) {
+        if (config.paging && config.paging.limit) {
+            config.pageSize = config.pageSize || config.paging.limit;
+        }
+    },
     beforeCreate:function (config, viewmodel) {
         if (config.paging && config.paging.limit) {
             config.pageSize = config.pageSize || config.paging.limit;
@@ -128,6 +134,6 @@ glu.provider.adapters.paging = {
     defaultTypes:{
         items:'button'
     }
-};
+});
 //Ext 4.x compatibility
 glu.provider.adapters.pagingtoolbar = glu.provider.adapters.paging;
