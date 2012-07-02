@@ -103,9 +103,7 @@ So to run the agent example for Ext JS 4:
 Online documentation:
 
 -  [User Guide] (http://conarrative.github.com/glujs-guide)
--  [API Reference]
---  [ExtJS 3.x] (http://gluJS.com/docs/api/extjs3.x)
---  [ExtJS 4.x] (http://gluJS.com/docs/api/extjs4.x)
+-  [API Reference] (http://conarrative.github.com/glujs-guide/api)
 
 ####Generating your own documentation
 Documentation is generated using jsduck.  The github project for jsDuck is located at [https://github.com/senchalabs/jsduck]https://github.com/senchalabs/jsduck.
