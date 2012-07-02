@@ -156,6 +156,7 @@ Ext.apply(glu.provider.binder, {
 
             if (propName == 'listeners') {
                 //manage listeners block which is special:
+                config._bindingMap = config._bindingMap || {};
                 config._bindingMap.listeners = config._bindingMap.listeners || {};
                 var listeners = value;
                 for (var propName in listeners) {
