@@ -166,7 +166,7 @@ Ext.apply(glu.provider.binder, {
                 continue;
             }
 
-            if (xtypeAdapter.isChildObject(propName, value)) {
+            if (xtypeAdapter.isChildObject && xtypeAdapter.isChildObject(propName, value)) {
                 //process a special single child object like a menu or toolbar
                 //we check for string because it may be a binding that will get pushed down a level
                 if (glu.isString(value) || glu.isArray(value)) {
@@ -184,7 +184,7 @@ Ext.apply(glu.provider.binder, {
                 childContainerPropNames.push(propName);
                 continue;
             }
-            var isChildArray = xtypeAdapter.isChildArray(propName);
+            var isChildArray = xtypeAdapter.isChildArray && xtypeAdapter.isChildArray(propName);
             if ((isChildArray && glu.isArray(value))) {
                 //process a child array (like items or dockedItems), only if actually an array.
                 //if a binding to a list, then simply collect the binding
