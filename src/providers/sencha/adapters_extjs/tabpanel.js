@@ -4,33 +4,64 @@
 glu.regAdapter('tabpanel', {
     extend : 'panel',
 
-    items:{
-        custom:function (context) {
-            var tabpanel = context.control;
-            tabpanel.activeTab = context.viewmodel.get(context.binding.modelPropName);
-            if (context.valueSetTask === undefined) {
-                context.valueSetTask = new Ext.util.DelayedTask(function () {
-                });
-            }
+    applyConventions:function (config, viewmodel) {
+        var itemName = glu.string(config.name).until('List');
+        Ext.applyIf(config, {
+            activeTab:glu.conventions.expression(itemName + 'WithFocus', {optional:true})
+        });
+        glu.provider.adapters.Container.prototype.applyConventions.apply(this, arguments);
+    },
 
-            context.viewmodel.on(context.binding.modelPropName + 'Changed', function (value) {
-                context.valueSetTask.delay(1,function(){
-                    tabpanel._changeOriginatedFromModel = true;
-                    tabpanel.setActiveTab(value);
-                    delete tabpanel._changeOriginatedFromModel;
-                });
-            });
-
-            tabpanel.on('beforetabchange', function (tab, newpanel) {
-                if (tabpanel._changeOriginatedFromModel) {
-                    return true;
+    /**
+     * Can be either the view model itself or its index
+     */
+    activeTabBindings : {
+        storeValueInComponentAs : '_activeIndex',
+        setComponentProperty:function (value, oldValue, options, control) {
+            //debugger;
+            if (value.mtype) {
+                if (value.parentList === undefined) {
+                    throw "Attempted to set an activeTab to a view model that is not in a list";
                 }
-                var newIndex = tab.items.indexOf(newpanel);
-                context.viewmodel.set(context.binding.modelPropName, newIndex);
-                return false;
-            }, this);
+                //look up index...
+                value = value.parentList.indexOf(value);
+            }
+            control._changeOriginatedFromModel = true;
+            control.setActiveTab(value);
+        },
+        transformInitialValue : function (value, config, viewmodel){
+            if (value.mtype) {
+                if (value.parentList === undefined) {
+                    throw "Attempted to set an activeTab to a view model that is not in a list";
+                }
+                return value.parentList.indexOf(value);
+            }
+            return value;
+        },
+        eventName:'tabchangerequest',
+        eventConverter:function (control, idx) {
+            //TODO: Return view model if a view model has ever been set...
+            return idx;
         }
+    },
 
+    afterCreate: function (control, viewmodel){
+        //debugger;
+        if (!control._bindingMap || control._bindingMap.activeTab===undefined) {
+            return; //only instrument below if tracking active tab
+        }
+        control.valueSetTask = new Ext.util.DelayedTask(function () {});
+        control.on('beforetabchange', function (tab, newpanel) {
+            if (control._changeOriginatedFromModel) {
+                delete control._changeOriginatedFromModel;
+                return true;
+            }
+            var newIndex = tab.items.indexOf(newpanel);
+            //a) set up a "request" and reject the change, so that the tab won't switch without passing through the view model
+            control.valueSetTask.delay(1,function(){
+                control.fireEvent('tabchangerequest', control, newIndex);
+            });
+            return false;
+        }, this);
     }
-
 });

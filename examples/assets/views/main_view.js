@@ -5,7 +5,8 @@ glu.defView('examples.assets.main', {
     items:[
         {
             xtype:'tabpanel',
-            name:'assetSetList',
+            items:'@{assetSetList}',
+            activeTab:'@{assetSetWithFocus}',
             region:'center'
         },
         {

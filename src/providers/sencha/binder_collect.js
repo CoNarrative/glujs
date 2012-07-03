@@ -197,7 +197,7 @@ Ext.apply(glu.provider.binder, {
             var isEventListener = propName == 'handler' || glu.symbol(propName).endsWith('Handler');
 
             //Finally, process this individual property binding
-            this.collectPropertyBinding(propName, config, viewmodel, isEventListener, isChildArray);
+            this.collectPropertyBinding(propName, config, viewmodel, isEventListener, isChildArray, xtypeAdapter);
         }
 
         if (glu.isFunction(xtypeAdapter.beforeCollectChildren)) {
@@ -305,7 +305,7 @@ Ext.apply(glu.provider.binder, {
     /*
      * Collect and activate property binding on the config
      */
-    collectPropertyBinding:function (propName, config, viewmodel, isEventListener, isChildArray) {
+    collectPropertyBinding:function (propName, config, viewmodel, isEventListener, isChildArray, xtypeAdapter) {
         var propValue = config[propName];
         var binding = this.readPropertyBinding(propValue, viewmodel, isEventListener);
         if (binding == null) {
@@ -357,6 +357,14 @@ Ext.apply(glu.provider.binder, {
             //don't actually want it being initialized with a bunch of view/data/whatever models!
             //These will be added later by the item binder
             binding.initialValue = [];
+        }
+
+        //transform initial value if requested by adapter
+        if (xtypeAdapter) {
+            var propBindings = xtypeAdapter[binding.controlPropName + 'Bindings'];
+            if (propBindings && propBindings.transformInitialValue) {
+                binding.initialValue = propBindings.transformInitialValue(binding.initialValue, config, binding.model);
+            }
         }
 
         //set initial value

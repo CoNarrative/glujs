@@ -1,33 +1,36 @@
 glu.defModel('examples.assets.main', {
-    options : {
-        mtype : 'options'
+    options:{
+        mtype:'options'
     },
 
-    sliceCounter : 2,
+    sliceCounter:2,
 
-    assetSetList : {
+    assetSetList:{
         mtype:'activatorlist',
-        items : [{mtype:'assetSet', name:'Asset Set 1'}]
+        items:[
+            {mtype:'assetSet', name:'Asset Set 1'}
+        ]
     },
-    detail:{
-        mtype:'asset'
-    },
+
+    assetSetWithFocus: 0,
+
+    detail:{ mtype:'asset' },
 
     //COMMANDS
-    cloneSet : function(){
+    cloneSet:function () {
         var newSlice = this.model(this.assetSetList.activeItem.clone());
         newSlice.set('name', 'Asset Set ' + this.sliceCounter++);
         this.assetSetList.add(newSlice);
         newSlice.init();
-        this.assetSetList.setActiveItem(newSlice);
+        this.set('assetSetWithFocus', newSlice);
     },
 
-    openOptions : function(){
+    openOptions:function () {
         this.open(this.options);
     },
 
     //EXTERNAL
-    notifyAssetChanged:function(){
+    notifyAssetChanged:function () {
         this.assetSetList.getActiveItem().refreshAssetList();
     }
 });
