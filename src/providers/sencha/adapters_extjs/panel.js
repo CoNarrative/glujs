@@ -23,7 +23,7 @@ glu.regAdapter('panel', {
     },
 
     isChildObject:function(propName){
-        return propName ==='tbar' || propName === 'bbar';
+        return propName ==='tbar' || propName === 'bbar' || propName === 'buttons';
     },
 
     tbarShortcut : function (value) {
@@ -41,6 +41,14 @@ glu.regAdapter('panel', {
             items:value
         }
     },
+	
+	buttonsShortcut: function(value){
+		return {
+            xtype:'toolbar',
+            defaultType:'button',
+            items:value
+        }
+	},
     /**
      * @cfg {Function} closeHandler
      * The handle to process a 'close me' request from either a window close button or a tab close button.
