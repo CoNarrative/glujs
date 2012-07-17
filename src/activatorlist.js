@@ -15,6 +15,8 @@ glu.ViewmodelActivator = glu.extend(glu.List, {
         glu.ViewmodelActivator.superclass.constructor.call(this, config);
         this.activeIndex = this.activeIndex || 0;
         this.activeItem = this.getActiveItem();
+        this.focusProperty = config.focusProperty || glu.symbol(config.referenceName).until('List') + 'WithFocus';
+        this.focusPropertyType = config.focusPropertyType || 'viewmodel';
     },
 
     init:function () {
@@ -50,9 +52,15 @@ glu.ViewmodelActivator = glu.extend(glu.List, {
         if (this.activeItem && this.activeItem.exit) {
             this.activeItem.exit();
         }
-        this.activeItem = this.getActiveItem();
+
         this.activeIndex=idx;
+        this.activeItem = this.getActiveItem();
+
+        //push into focus property
+        this.parentVM.set(this.focusProperty, this.focusPropertyType==='viewmodel' ? this.activeItem : this.activeIndex);
+
         if (this.activeItem == null) {
+            debugger;
             return;
         }
         if (this.activeItem.enter) {

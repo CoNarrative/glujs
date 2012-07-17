@@ -20,8 +20,10 @@ describe('activator tests', function () {
                             mtype:'activatorlist',
                             items:[
                                 {mtype:'screen'}
-                            ]
-                        }
+                            ],
+                            focusProperty:'activeScreen'
+                        },
+                        activeScreen:0
                     }
                 }
             };
