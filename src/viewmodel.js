@@ -439,6 +439,7 @@ glu.Viewmodel = glu.extend(Object, {
             this[propName] = propValue;
             //attach (so that it doesn't matter what order the graph was built up in...
             this._ob.attach(propName,model,"parentVM");
+            this.makePropertyAccessors(propName,propValue,true);
             return;
         }
 
@@ -478,13 +479,21 @@ glu.Viewmodel = glu.extend(Object, {
         this.makePropertyAccessors('isValid', true);
     },
 
-    makePropertyAccessors:function (propName, initialValue) {
+    makePropertyAccessors:function (propName, initialValue, isChildModel) {
         this._private.data[propName] = initialValue;
         var me = this;
-        var setter = this['set' + glu.string(propName).toPascalCase()] ||
-            function (value) {
+        if (isChildModel) {
+            var setter = function (value) {
+                me._ob.detach(propName);
                 me.setRaw(propName, value);
+                me._ob.attach(propName);
             };
+        } else {
+            var setter = this['set' + glu.string(propName).toPascalCase()] ||
+                function (value) {
+                    me.setRaw(propName, value);
+                };
+        }
         this._private.setters[propName] = setter;
         if (false) //TODO: Test for knockout mode
         {

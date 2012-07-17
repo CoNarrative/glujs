@@ -168,4 +168,66 @@ describe('view model tests', function () {
             })
         });
     });
+    Given('a viewmodel with a child model', function(){
+        var vm, formulaCalled;
+        Meaning (function(){
+            testNs = {
+                viewmodels:{
+                    tester:{
+                        childWithFocus : {mtype:'childtype'},
+                        focusChildAge$ : function(){
+                            formulaCalled = true;
+                            return this.childWithFocus.age;
+                        }
+                    },
+                    childtype : {
+                        age: 1
+                    }
+                }
+            };
+            vm = glu.model ('testNs.tester');
+        });
+        ShouldHave('set parent formula named focusChildAge to 1', function(){
+            expect (vm.focusChildAge).toBe(1);
+        });
+        When ('set the child model age to 2', function(){
+            Meaning (function(){
+                vm.childWithFocus.set('age',2);
+            });
+            ShouldHave('set parent formula named focusChildAge to 2', function(){
+                expect (vm.focusChildAge).toBe(2);
+            });
+        });
+        When ('replacing the view model with another child aged 3', function(){
+            var original;
+            Meaning (function(){
+                original = vm.childWithFocus;
+                vm.set('childWithFocus',vm.model({mtype:'childtype',age:3}));
+            });
+            ShouldHave('set parent formula named focusChildAge to 3', function(){
+                expect (vm.focusChildAge).toBe(3);
+            });
+            When ('updating the age on the new child to 4', function(){
+                Meaning (function(){
+                    vm.childWithFocus.set('age',4);
+                });
+                ShouldHave('set parent formula named focusChildAge to 4', function(){
+                    expect (vm.focusChildAge).toBe(4);
+                });
+            });
+            When ('updating the age on the new child to 5', function(){
+                Meaning (function(){
+                    formulaCalled = false;
+                    original.set('age',5);
+                });
+                ShouldHave('not forced a recalcuation of the formula because no longer watched', function(){
+                    expect (formulaCalled).toBe(false);
+                });
+                ShouldHave('set parent formula named focusChildAge to REMAIN AT 3', function(){
+                    expect (vm.focusChildAge).toBe(3);
+                });
+            });
+        });
+
+    })
 });
