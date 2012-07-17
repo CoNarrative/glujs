@@ -23,6 +23,8 @@ glu.regAdapter('tabpanel', {
                 if (value.parentList === undefined) {
                     throw "Attempted to set an activeTab to a view model that is not in a list";
                 }
+                control._activeItemValueType = 'viewmodel';
+                control._parentList = value.parentList;
                 //look up index...
                 value = value.parentList.indexOf(value);
             }
@@ -40,8 +42,7 @@ glu.regAdapter('tabpanel', {
         },
         eventName:'tabchangerequest',
         eventConverter:function (control, idx) {
-            //TODO: Return view model if a view model has ever been set...
-            return idx;
+            return control._activeItemValueType==='viewmodel'?control._parentList.getAt(idx):idx;
         }
     },
 
