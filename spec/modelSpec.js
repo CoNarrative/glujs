@@ -215,7 +215,7 @@ describe('view model tests', function () {
                     expect (vm.focusChildAge).toBe(4);
                 });
             });
-            When ('updating the age on the new child to 5', function(){
+            When ('updating the age on the old child to 5', function(){
                 Meaning (function(){
                     formulaCalled = false;
                     original.set('age',5);
