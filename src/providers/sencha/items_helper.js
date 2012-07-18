@@ -104,8 +104,10 @@ glu.provider.itemsHelper = {
             this.respondToAdd(item, idx, context, needsDoLayout)
         }, this);
         list.on('removed', function (item, idx) {
-            //container._changeOriginatedFromModel=true;
+            //suppress tab selection change events
+            container._changeOriginatedFromModel=true;
             container.remove(idx);
+            delete container._changeOriginatedFromModel;
         }, this);
         //if store, listen that way...
         if (list.data && list.data.on) {
@@ -125,8 +127,10 @@ glu.provider.itemsHelper = {
                     }
                 }, this);
                 list.on('remove', function (store, item, idx) {
-                    //container._changeOriginatedFromModel=true;
+                    //suppress tab selection change events
+                    container._changeOriginatedFromModel=true;
                     container.remove(idx);
+                    delete container._changeOriginatedFromModel;
                 }, this);
             }
         }
