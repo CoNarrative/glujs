@@ -57,7 +57,8 @@ Ext.apply(glu.provider.binder, {
                     var expr = origXtype.substring(2, origXtype.length - 1);
                     var split = this.traverseExpression(viewmodel, expr);
                     var target = split.model[split.prop];
-                    var spec = glu.getViewSpec(target, viewmodel.ns, target.viewmodelName, config);
+                    var viewname = target.viewmodelName + (config.viewMode?'_'+config.viewMode:'');
+                    var spec = glu.getViewSpec(target, viewmodel.ns, viewname, config);
                     if (Ext.isString(spec))
                         throw spec;
                     //just inline the view and prepare for binding...
@@ -69,7 +70,7 @@ Ext.apply(glu.provider.binder, {
                 } else {
                     //see if it is a 'local type' and if so inline it
                     var spec = glu.getViewSpec(viewmodel, viewmodel.ns, origXtype, config);
-                    if (!Ext.isString(spec)) {//getViewSpec returns error strings when it can't process the request. Deal with it.
+                    if (!Ext.isString(spec)) {//getViewSpec returns error strings when it can't process the request. I wrote it but do not necessarily approve.
                         config = spec;
                         config.xtype = config.xtype || defaultTypeForItems || adapterSpecificDefaultXtype || 'panel';
                     } else {
