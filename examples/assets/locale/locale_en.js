@@ -5,7 +5,7 @@ glu.namespace('examples.assets').locale = {
     revert : 'Revert',
     valid_needOneCharacter:'The name cannot be empty',
     main :{
-        title: 'Asset Management',
+        title: 'Asset Management ({focusName})',
         openOptions: 'Options'
     },
     asset:{

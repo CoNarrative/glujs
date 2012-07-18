@@ -3,22 +3,27 @@ glu.defModel('examples.assets.main', {
         mtype:'options'
     },
 
-    sliceCounter:2,
+    sliceCounter:1,
 
     assetSetList:{
-        mtype:'activatorlist',
-        items:[
-            {mtype:'assetSet', name:'Asset Set 1'}
-        ]
+        mtype:'activatorlist'
     },
 
-    assetSetWithFocus: 0,
+    assetSetWithFocus: {mtype:'assetSet', name:'dummy'},
+
+    title$: function(){
+        return this.localize('title',{focusName: this.assetSetWithFocus.name});
+    },
 
     detail:{ mtype:'asset' },
 
+    init:function(){
+        this.cloneSet(); //clone dummy asset set
+    },
+
     //COMMANDS
     cloneSet:function () {
-        var newSlice = this.model(this.assetSetList.activeItem.clone());
+        var newSlice = this.model(this.assetSetWithFocus.clone());
         newSlice.set('name', 'Asset Set ' + this.sliceCounter++);
         this.assetSetList.add(newSlice);
         newSlice.init();

@@ -26,12 +26,10 @@ glu.defModel('examples.assets.assetSet', {
     assetWithFocus:{},
 
     isClosable$ : function(){
-        glu.log.info(this.name + ' is testing to see if closable and answer is ' + (this.parentVM.assetSetList.length>1));
         return this.parentVM.assetSetList.length>1;
     },
 
     showMissing$ : function(){
-        glu.log.info(this.name + ' is testing to see if should show missing warning and answer is ' + (this.rootVM.options.missingWarning));
         return this.rootVM.options.missingWarning;
     },
 

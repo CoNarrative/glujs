@@ -1,7 +1,7 @@
 glu.defView('examples.assets.main', {
-    title:'~~title~~',
+    title:'@{title}',
     layout:'border',
-    tbar : ['openOptions'],
+    tbar : ['cloneSet',{xtype:'tbfill'},'openOptions'],
     items:[
         {
             xtype:'tabpanel',

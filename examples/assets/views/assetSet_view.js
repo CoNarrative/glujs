@@ -4,7 +4,6 @@ glu.defView('examples.assets.assetSet', {
     title:'@{name}',
     xtype:'grid',
     selType:'checkboxmodel',
-    //TODO: Fix memory leak in which child objects that reference parent that are then removed still receive events
     closable : '@{isClosable}',
     //TODO: Make binding off of selection object above
     columns:[
@@ -34,7 +33,7 @@ glu.defView('examples.assets.assetSet', {
         {
             xtype:'toolbar',
             dock:'top',
-            items:['requestVerification', 'removeAssets', 'cloneSet']
+            items:['requestVerification', 'removeAssets']
         }
     ]
 });
