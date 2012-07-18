@@ -34,6 +34,15 @@ glu.defModel('examples.assets.main', {
         this.open(this.options);
     },
 
+    //REACTIONS
+    when_selected_asset_changes_then_load_detail:{
+        on:['assetSetWithFocusChanged','assetSetWithFocus.assetWithFocusChanged'],
+        action:function () {
+            if (this.assetSetWithFocus.assetWithFocus == null) return;
+            this.detail.load(this.assetSetWithFocus.assetWithFocus.get('id'));
+        }
+    },
+
     //EXTERNAL
     notifyAssetChanged:function () {
         this.assetSetList.getActiveItem().refreshAssetList();

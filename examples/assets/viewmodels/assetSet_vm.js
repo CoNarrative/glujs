@@ -23,7 +23,7 @@ glu.defModel('examples.assets.assetSet', {
     assetSelections:[],
 
     //likewise
-    assetWithFocus:{},
+    assetWithFocus:null,
 
     isClosable$ : function(){
         return this.parentVM.assetSetList.length>1;
@@ -89,16 +89,6 @@ glu.defModel('examples.assets.assetSet', {
 
     removeAssetsIsEnabled$:function () {
         return this.assetSelections.length > 0;
-    },
-
-    //REACTIONS
-    when_selected_asset_changes_then_load_detail:{
-        on:'assetWithFocusChanged',
-        action:function () {
-            if (this.assetWithFocus == null) return;
-            //TODO: Allow this.parentVM.setDetail(...);
-            this.parentVM.detail.load(this.assetWithFocus.get('id'))
-        }
     },
 
     when_page_changes_then_reload_grid:{
