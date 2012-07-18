@@ -23,15 +23,13 @@ glu.defModel('examples.assets.assetSet', {
     assetSelections:[],
 
     //likewise
-    assetWithFocus:{},
+    assetWithFocus:null,
 
     isClosable$ : function(){
-        glu.log.info(this.name + ' is testing to see if closable and answer is ' + (this.parentVM.assetSetList.length>1));
         return this.parentVM.assetSetList.length>1;
     },
 
     showMissing$ : function(){
-        glu.log.info(this.name + ' is testing to see if should show missing warning and answer is ' + (this.rootVM.options.missingWarning));
         return this.rootVM.options.missingWarning;
     },
 
@@ -91,16 +89,6 @@ glu.defModel('examples.assets.assetSet', {
 
     removeAssetsIsEnabled$:function () {
         return this.assetSelections.length > 0;
-    },
-
-    //REACTIONS
-    when_selected_asset_changes_then_load_detail:{
-        on:'assetWithFocusChanged',
-        action:function () {
-            if (this.assetWithFocus == null) return;
-            //TODO: Allow this.parentVM.setDetail(...);
-            this.parentVM.detail.load(this.assetWithFocus.get('id'))
-        }
     },
 
     when_page_changes_then_reload_grid:{

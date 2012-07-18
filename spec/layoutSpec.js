@@ -135,5 +135,54 @@ describe('layouts and embedded views spec', function () {
             });
         });
     });
+    describe('given a view with a statically included NAMED VIEW MODE child model underneath', function () {
+        var vm, view, itemId;
+        beforeEach(function () {
+            testNs = {
+                viewmodels:{
+                    character:{
+                        save:jasmine.createSpy('save command'),
+                        description:'super'
+                    },
+                    tester:{
+                        theHero:{
+                            mtype:'character'
+                        }
+                    }
+                }
+            };
+            vm = glu.model({
+                ns:'testNs',
+                mtype:'tester'
+            });
+            //tester
+            glu.defView('testNs.tester',{
+                items:[
+                    {
+                        xtype:'@{theHero}'
+                    },{
+                        xtype:'@{theHero}',
+                        viewMode : 'detail'
+                    }
+                ]
+            });
+            //default view
+            glu.defView('testNs.character',{
+                title : 'normal'
+            });
+            //detail view
+            glu.defView('testNs.character','detail',{
+                title:'@{description}'
+            });
+            view = glu.view(vm, 'testNs', 'tester');
+        });
+        it('the first view should have its static title of normal', function () {
+            expect(view.items.first().title).toBe('normal');
+        });
+        it('the second ("detail") view should have its bound title of super', function () {
+            expect(view.items.last().title).toBe('super');
+        });
+
+    });
 
 });

@@ -57,7 +57,8 @@ Ext.apply(glu.provider.binder, {
                     var expr = origXtype.substring(2, origXtype.length - 1);
                     var split = this.traverseExpression(viewmodel, expr);
                     var target = split.model[split.prop];
-                    var spec = glu.getViewSpec(target, viewmodel.ns, target.viewmodelName, config);
+                    var viewname = target.viewmodelName + (config.viewMode?'_'+config.viewMode:'');
+                    var spec = glu.getViewSpec(target, viewmodel.ns, viewname, config);
                     if (Ext.isString(spec))
                         throw spec;
                     //just inline the view and prepare for binding...
@@ -69,7 +70,7 @@ Ext.apply(glu.provider.binder, {
                 } else {
                     //see if it is a 'local type' and if so inline it
                     var spec = glu.getViewSpec(viewmodel, viewmodel.ns, origXtype, config);
-                    if (!Ext.isString(spec)) {//getViewSpec returns error strings when it can't process the request. Deal with it.
+                    if (!Ext.isString(spec)) {//getViewSpec returns error strings when it can't process the request. I wrote it but do not necessarily approve.
                         config = spec;
                         config.xtype = config.xtype || defaultTypeForItems || adapterSpecificDefaultXtype || 'panel';
                     } else {
@@ -197,7 +198,7 @@ Ext.apply(glu.provider.binder, {
             var isEventListener = propName == 'handler' || glu.symbol(propName).endsWith('Handler');
 
             //Finally, process this individual property binding
-            this.collectPropertyBinding(propName, config, viewmodel, isEventListener, isChildArray);
+            this.collectPropertyBinding(propName, config, viewmodel, isEventListener, isChildArray, xtypeAdapter);
         }
 
         if (glu.isFunction(xtypeAdapter.beforeCollectChildren)) {
@@ -305,7 +306,7 @@ Ext.apply(glu.provider.binder, {
     /*
      * Collect and activate property binding on the config
      */
-    collectPropertyBinding:function (propName, config, viewmodel, isEventListener, isChildArray) {
+    collectPropertyBinding:function (propName, config, viewmodel, isEventListener, isChildArray, xtypeAdapter) {
         var propValue = config[propName];
         var binding = this.readPropertyBinding(propValue, viewmodel, isEventListener);
         if (binding == null) {
@@ -357,6 +358,14 @@ Ext.apply(glu.provider.binder, {
             //don't actually want it being initialized with a bunch of view/data/whatever models!
             //These will be added later by the item binder
             binding.initialValue = [];
+        }
+
+        //transform initial value if requested by adapter
+        if (xtypeAdapter) {
+            var propBindings = xtypeAdapter[binding.controlPropName + 'Bindings'];
+            if (propBindings && propBindings.transformInitialValue) {
+                binding.initialValue = propBindings.transformInitialValue(binding.initialValue, config, binding.model);
+            }
         }
 
         //set initial value

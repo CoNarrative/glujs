@@ -591,9 +591,15 @@ glu = {
     /**
      * Defines a view according to the provider (e.g. ExtJS) using the provider's declarative JSON syntax
      * @param {String} fqname The name of the view
+     * @param {String} viewmode (optional) Indicates the mode of this view
      * @param {String} config The declarative configuration of the view
      */
-    defView:function (fqname, config) {
+    defView:function (fqname, viewmode, config) {
+        if (glu.isString(viewmode)){
+            fqname = fqname + '_' + viewmode;
+        } else {
+            config = viewmode;
+        }
         this.def(fqname, config, glu.conventions.viewNs);
     },
 

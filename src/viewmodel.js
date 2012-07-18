@@ -225,6 +225,7 @@ glu.Viewmodel = glu.extend(Object, {
         glu.deepApply(this, config);
         this._private = this._private || {};
         this._private.setters = {};
+        this._private.meta = {};
         //TO DO - separate between formulas and reactors proper...
         this._private.reactors = [];
         this._private.data = this._private.data || {};
@@ -317,6 +318,10 @@ glu.Viewmodel = glu.extend(Object, {
      * @param value
      */
     setRaw:function (propName, value) {
+        var subModel = this._private.meta[propName].isChildModel === true;
+        if (subModel) {
+            this._ob.detach(propName);
+        }
         var oldValue = this.get(propName);
         if (glu.equivalent(oldValue, value)) {
             return; //do nothing if it's the same thing.
@@ -328,6 +333,9 @@ glu.Viewmodel = glu.extend(Object, {
         this.fireEvent(propName + 'Changed', value, oldValue, {
             modelPropName:propName
         });
+        if (subModel) {
+            this._ob.attach(propName);
+        }
         // this.fireEvent('changed', value, oldValue, {
         // modelPropName : propName
         // });
@@ -439,6 +447,7 @@ glu.Viewmodel = glu.extend(Object, {
             this[propName] = propValue;
             //attach (so that it doesn't matter what order the graph was built up in...
             this._ob.attach(propName,model,"parentVM");
+            this.makePropertyAccessors(propName,propValue,true);
             return;
         }
 
@@ -478,14 +487,18 @@ glu.Viewmodel = glu.extend(Object, {
         this.makePropertyAccessors('isValid', true);
     },
 
-    makePropertyAccessors:function (propName, initialValue) {
+    makePropertyAccessors:function (propName, initialValue, isChildModel) {
         this._private.data[propName] = initialValue;
         var me = this;
         var setter = this['set' + glu.string(propName).toPascalCase()] ||
             function (value) {
-                me.setRaw(propName, value);
+                me.setRaw(propName, value, isChildModel);
             };
         this._private.setters[propName] = setter;
+        this._private.meta[propName] = {
+            setter : setter,
+            isChildModel: isChildModel
+        };
         if (false) //TODO: Test for knockout mode
         {
             /*

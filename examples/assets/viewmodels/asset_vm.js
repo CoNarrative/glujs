@@ -4,7 +4,7 @@ glu.defModel('examples.assets.asset', {
     isSaving : false,
 
     isExpanded$ : function(){
-        return this.rootVM.assetSetList.activeItem.assetSelections.length>0;
+        return this.rootVM.assetSetWithFocus.assetSelections.length>0;
     },
 
     nameIsValid$:function () {

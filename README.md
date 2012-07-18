@@ -56,9 +56,20 @@ Ext.onReady(function(){glu.viewport('helloworld.main');});
 
 If you really just want the minified libraries, grab them here:
 
-[http://gluJS.com/downloads](http://gluJS.com/downloads)
+[http://www.conarrative.com/download/glujs-1.0.0.zip](http://www.conarrative.com/download/glujs-1.0.0.zip)
 
 If you want the source and full examples, clone this project from github.
+
+##Documentation and Support
+
+Online documentation:
+
+-  [User Guide] (http://conarrative.github.com/glujs-guide)
+-  [API Reference] (http://conarrative.github.com/glujs-guide/api)
+
+GluJS Support Forums:
+
+-  [GluJS on Google Groups] (https://groups.google.com/d/forum/glujs)
 
 ##Building/minifying
 Install node if you haven't already.
@@ -98,23 +109,6 @@ So to run the agent example for Ext JS 4:
 
     /examples/agents/extjs4
 
-##Documentation
-
-Online documentation:
-
--  [User Guide] (http://conarrative.github.com/glujs-guide)
--  [API Reference] (http://conarrative.github.com/glujs-guide/api)
-
-####Generating your own documentation
-Documentation is generated using jsduck.  The github project for jsDuck is located at [https://github.com/senchalabs/jsduck]https://github.com/senchalabs/jsduck.
-
-Install per their instructions so that jsduck is on your shell path.
-
-From the command line with the path in the root of the GluJS project, run:
-
-    jsduck --config jsduck.json
-
-
 ##Testing
 
 We use the excellent jasmine BDD testing library for GluJS testing (and it's also core to how we help you develop and
@@ -127,3 +121,13 @@ http://localhost:8123/spec/extjs4
 or for Ext JS 3.x testing
 
 http://localhost:8123/spec/extjs3
+
+##Generating your own documentation
+
+Documentation is generated using jsduck.  The github project for jsDuck is located at [https://github.com/senchalabs/jsduck]https://github.com/senchalabs/jsduck.
+
+Install per their instructions so that jsduck is on your shell path.
+
+From the command line with the path in the root of the GluJS project, run:
+
+    jsduck --config jsduck.json
