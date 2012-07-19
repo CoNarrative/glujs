@@ -53,10 +53,10 @@ glu.regAdapter('panel', {
             defaultType : 'button',
             items : value,
             dock : 'bottom',
-            layout : Ext.applyIf(toolbar.layout || {}, {
+            layout : {
                 // default to 'end' (right-aligned)
                 pack : 'end'
-            })
+            }
         }
     },
 
@@ -66,10 +66,10 @@ glu.regAdapter('panel', {
             defaultType : 'button',
             items : value,
             dock : 'bottom',
-            layout : Ext.applyIf(toolbar.layout || {}, {
+            layout : {
                 // default to 'end' (right-aligned)
                 pack : 'end'
-            })
+            }
         }
     },
 
