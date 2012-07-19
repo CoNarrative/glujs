@@ -207,13 +207,30 @@ glu.regAdapter('panel', {
             }
         }
     },
+
     activeItemBindings : {
-        setComponentProperty : function(value, oldValue, options, control) {
-            //TODO: added this check due to headless access.  if fails because layout is not rendered
-            if (!control.getLayout() || !control.getLayout().setActiveItem) {
-                return;
+        storeValueInComponentAs : '_activeIndex',
+        setComponentProperty:function (value, oldValue, options, control) {
+            if (value.mtype) {
+                if (value.parentList === undefined) {
+                    throw "Attempted to set an activeItem to a view model that is not in a list";
+                }
+                control._activeItemValueType = 'viewmodel';
+                control._parentList = value.parentList;
+                //look up index...
+                value = value.parentList.indexOf(value);
             }
+            control._changeOriginatedFromModel = true;
             control.getLayout().setActiveItem(value);
+        },
+        transformInitialValue : function (value, config, viewmodel){
+            if (value.mtype) {
+                if (value.parentList === undefined) {
+                    throw "Attempted to set an activeTab to a view model that is not in a list";
+                }
+                return value.parentList.indexOf(value);
+            }
+            return value;
         }
     },
 
@@ -241,26 +258,6 @@ glu.regAdapter('panel', {
             var cardPanel = context.control;
 
             glu.provider.itemsHelper.bindItems(context);
-            //do the items bindings using the helper
-
-            //now Activation stuff if really an activator...
-            if (activator.getActiveIndex) {
-                if (cardPanel.rendered == true) {
-                    cardPanel.getLayout().setActiveItem(activator.getActiveIndex());
-                } else {
-                    cardPanel.activeItem = activator.getActiveIndex();
-                }
-
-                //listen (automatically) to change event on activeIndex
-                activator.on('activeindexchanged', function(newvalue) {
-                    cardPanel._changeOriginatedFromModel = true;
-                    if (cardPanel.rendered == true) {
-                        cardPanel.getLayout().setActiveItem(activator.getActiveIndex());
-                    } else {
-                        cardPanel.activeItem = activator.getActiveIndex();
-                    }
-                });
-            }
         }
     }
 });
