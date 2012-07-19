@@ -35,7 +35,11 @@ glu.provider.itemsHelper = {
             glu.provider.binder.applyBindingsList(boundConfigs);
 
         } else {//view model
-            viewItem = glu.view(item, item.ns, item.viewmodelName, {}, {}, container.initialConfig);
+			var viewModelName = item.viewmodelName;
+			if( container.initialConfig.defaults && container.initialConfig.defaults.viewMode ){
+				viewModelName += '_'+container.initialConfig.defaults.viewMode;
+			}
+            viewItem = glu.view(item, item.ns, viewModelName, {}, {}, container.initialConfig);
         }
         // if(viewItem.closable) {
         // interceptCloseCommand(viewItem);
