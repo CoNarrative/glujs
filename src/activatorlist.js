@@ -43,13 +43,14 @@ glu.ViewmodelActivator = glu.extend(glu.List, {
                 this.setActiveIndex(toRemove - 1);
             }
         }
-        glu.ViewmodelActivator.superclass.removeAt.call(this, toRemove);
+        var obj = glu.ViewmodelActivator.superclass.removeAt.call(this, toRemove);
         if (toRemove === this.activeIndex) {
             this.setActiveIndex(this.getActiveIndex());
         }
         if (this.getActiveItem() == null) {
             //do nothing for now...
         }
+		return obj;
     },
 
     getActiveIndex:function () {
