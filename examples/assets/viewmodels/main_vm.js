@@ -6,7 +6,8 @@ glu.defModel('examples.assets.main', {
     sliceCounter:1,
 
     assetSetList:{
-        mtype:'activatorlist'
+        mtype:'activatorlist',
+        focusProperty:'assetSetWithFocus'
     },
 
     assetSetWithFocus: {mtype:'assetSet', name:'dummy'},

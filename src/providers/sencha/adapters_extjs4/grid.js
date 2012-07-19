@@ -167,34 +167,6 @@ glu.regAdapter('grid', {
             sm.delayedEvent.delay(1); //hopefully will keep from firing twice...
         }, control);
 
-//        //disallow store from controlling sort...it can only request...
-//        control.headerCt.onHeaderClick = function (g, index) {
-//            if (!g.sortable) {
-//                return;
-//            }
-//            control.fireEvent.call(control, "refreshdata", control);
-//            control.onHeaderClick = function(){}
-//            //g.store.sort(this.cm.getDataIndex(index));
-//        };
-//        control.getView().handleHdMenuClickActual = control.getView().handleHdMenuClick;
-//        control.getView().handleHdMenuClick = function (item) {
-//            var dataIndex = this.cm.getDataIndex(this.hdCtxIndex);
-//
-//            switch (item.getItemId()) {
-//                case 'asc':
-//                    //store.sort(dataIndex, 'ASC');
-//                    this.grid.fireEvent.call(this.grid, "sortrequest", control, {field:dataIndex, direction:'ASC'});
-//                    break;
-//                case 'desc':
-//                    //store.sort(dataIndex, 'DESC');
-//                    this.grid.fireEvent.call(this.grid, "sortrequest", control, {field:dataIndex, direction:'DESC'});
-//                    break;
-//                default:
-//                    this.handleHdMenuClickActual(item);
-//            }
-//            return true;
-//        };
-
         //override focus on Ext 4.x
         if (control.hasOwnProperty('focus')) {
             if (Ext.getVersion().major > 3) {
@@ -206,16 +178,6 @@ glu.regAdapter('grid', {
                     }
                     control.fireEvent('focuschangerequest', control, record);
                 };
-                // control.setLastFocused = function(record,suppressFocus){
-                // // this.fireEvent('focuschangerequest')
-                // // if (this.fireEvent('beforefocuschange',this, record)!==false) {
-                // // this.setLastFocusedActual(record);
-                // // }
-                // }
-                // control.on('beforefocuschange', function (g, record) {
-                // this.fireEvent('requestFocusChange', record);
-                // return false
-                // });
             }
         }
         glu.provider.adapters.Panel.prototype.afterCreate.apply(this,arguments);
@@ -243,44 +205,6 @@ glu.regAdapter('grid', {
         suppressViewmodelUpdate:true
     },
 
-    selectionsBindings:{
-        eventName:'selectionsChanged',
-        eventConverter:function (g, e) {
-            return e;
-        },
-        customControlListener:function (config) {
-            var grid = config.control;
-            grid.on('s')
-        },
-        setComponentProperty:function (value, oldValue, options, control) {
-            glu.log.info('selecting records on grid...');
-            //a hack based on an internal...
-            var sm = control.getSelectionModel();
-            sm.silent = true;
-//            sm.selectRecords(value);
-            sm.silent = false;
-        }
-    },
-
-    selectionBindings:{
-        eventName:'selectionsChanged',
-        eventConverter:function (g, e) {
-            return e.length > 0 ? e[e.length - 1] : null;
-        },
-        customControlListener:function (config) {
-            var grid = config.control;
-            grid.on('s')
-        },
-        setComponentProperty:function (value, oldValue, options, control) {
-            glu.log.info('selecting records on grid...');
-            //a hack based on an internal...
-            var sm = control.getSelectionModel();
-            sm.silent = true;
-//            sm.selectRecords(value);
-            sm.silent = false;
-        }
-    },
-
     /**
      * @cfg {Array/Ext.data.Model/Ext.data.Record} selected
      * Currently selected item(s) in the grid.
@@ -306,12 +230,10 @@ glu.regAdapter('grid', {
             grid.on('s')
         },
         setComponentProperty:function (value, oldValue, options, control) {
-            glu.log.info('selecting records on grid...');
+            glu.log.info('selecting records on grid to ' + value.length + ' rows.');
             //a hack based on an internal...
             var sm = control.getSelectionModel();
-            sm.silent = true;
-//            sm.selectRecords(value);
-            sm.silent = false;
+            sm.select (value, false, true);
         }
     },
 
