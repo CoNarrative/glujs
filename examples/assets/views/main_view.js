@@ -4,13 +4,6 @@ glu.defView('examples.assets.main', {
     tbar : ['cloneSet',{xtype:'tbfill'},'openOptions'],
     items:[
         {
-            layout:'card',
-            items:'@{assetSetList}',
-            activeItem:'@{assetSetWithFocus}',
-            region:'west',
-            width:300
-        },
-        {
             xtype:'tabpanel',
             items:'@{assetSetList}',
             activeTab:'@{assetSetWithFocus}',
