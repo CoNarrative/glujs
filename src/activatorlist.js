@@ -15,7 +15,7 @@
  * It will call enter() and exit()  (if defined) on the focus view model whenever that property is updated
  */
 glu.ViewmodelActivator = glu.extend(glu.List, {
- /**
+    /**
      * @cfg {String} focusProperty A property on the containing view model that will hold the currently "activated" or focused item.
      */
 
@@ -26,7 +26,7 @@ glu.ViewmodelActivator = glu.extend(glu.List, {
         this.focusProperty = config.focusProperty || glu.symbol(config.referenceName).until('List') + 'WithFocus';
         this.focusPropertyType = config.focusPropertyType || 'viewmodel';
         var me = this;
-        this.parentVM.on (this.focusProperty+'Changed', function(value){
+        this.parentVM.on(this.focusProperty + 'Changed', function (value) {
             if (glu.isNumber(value)) {
                 me.setActiveIndex(value);
             } else {
@@ -58,7 +58,7 @@ glu.ViewmodelActivator = glu.extend(glu.List, {
         if (this.getActiveItem() == null) {
             //do nothing for now...
         }
-		return obj;
+        return obj;
     },
 
     getActiveIndex:function () {
@@ -70,11 +70,11 @@ glu.ViewmodelActivator = glu.extend(glu.List, {
             this.activeItem.exit();
         }
 
-        this.activeIndex=idx;
+        this.activeIndex = idx;
         this.activeItem = this.getActiveItem();
 
         //push into focus property
-        this.parentVM.set(this.focusProperty, this.focusPropertyType==='viewmodel' ? this.activeItem : this.activeIndex);
+        this.parentVM.set(this.focusProperty, this.focusPropertyType === 'viewmodel' ? this.activeItem : this.activeIndex);
 
         if (this.activeItem == null) {
             //TODO: Figure out what it means to set item to null when binding
@@ -87,7 +87,7 @@ glu.ViewmodelActivator = glu.extend(glu.List, {
 
     setActiveItem:function (item) {
         var idx = this.indexOf(item);
-        if (idx == -1 && item!=null )
+        if (idx == -1 && item != null)
             throw ("You are attempting to pass in a view model that is not contained by the activator.");
         this.setActiveIndex(idx);
     }
