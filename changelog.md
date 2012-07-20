@@ -2,7 +2,7 @@
 
 ##1.1
 
-###Enhancmeents
+###Enhancements
 
  * Multiple views per view model via new 'viewMode' view property
  * Ability to set/replace sub-models entirely using normal 'set' syntax (with automatic de-linking/linking of observer patterns)
