@@ -4,12 +4,20 @@
 /**
  * @class glu.ViewmodelActivator
  * @extends glu.List
- * A dynamic activation list of sub-viewmodels that can be flipped through (to back a tab, card, wizard, etc.)
- * Constructs the subviewmodels as necessary (immediately when added)
- * Calls enter/exit and honors exit veto
- * Surfaces 'on' events across all view models if you want to register for events on any current acive.
+ * A dynamic activation list of sub-viewmodels that can be flipped through (to power a tab, card, wizard, selected item, etc.)
+ *
+ * Same as the List, but you specify a 'focusProperty' that will hold one of the items in the list (accessible as well through getActiveItem())
+ *
+ * It will make sure that any item specified in the focus property is a member of the list (throwing an error if it doesn't, though null is allowed).
+ *
+ * It will also manage changing the focus item automatically to the next one should the focus item be deleted (or setting to null if all items are removed).
+ *
+ * It will call enter() and exit()  (if defined) on the focus view model whenever that property is updated
  */
 glu.ViewmodelActivator = glu.extend(glu.List, {
+ /**
+     * @cfg {String} focusProperty A property on the containing view model that will hold the currently "activated" or focused item.
+     */
 
     constructor:function (config) {
         glu.ViewmodelActivator.superclass.constructor.call(this, config);
