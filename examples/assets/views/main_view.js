@@ -13,7 +13,7 @@ glu.defView('examples.assets.main', {
             name:'detail',
             xtype:'@{detail}',
             region:'east',
-            width:400
+            width: 300
         }
     ]
 });

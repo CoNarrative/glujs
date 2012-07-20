@@ -97,8 +97,9 @@ function gluJSExt4() {
 }
 
 //MINI-BUILD LIBRARY
-var license = "//Copyright (c) 2012 CoNarrative - http://www.conarrative.com/\n" +
-    "// License: MIT (http://www.opensource.org/licenses/mit-license.php)\n";
+var license = "// Copyright (c) 2012 CoNarrative - http://www.conarrative.com/\n" +
+    "// License: MIT (http://www.opensource.org/licenses/mit-license.php)\n" +
+    "// GluJS version 1.1.0\n";
 function concat(combined, files) {
     //make parent directory of combined output file
     var lastSlashIdx = combined.lastIndexOf('/');
