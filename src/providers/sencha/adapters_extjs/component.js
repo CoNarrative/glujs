@@ -167,28 +167,4 @@ glu.regAdapter('component', {
      * This is a 1-time binding and *NOT LIVE* (at least not yet). We will be adding support for 'mutable views' in the future, but for
      * now you can achieve the same thing easily enough with a card layout binding.
      */
-
-});
-
-glu.defView ('assets.main',{
-    layout : 'border',
-    items : [{
-        //GRID or "MASTER"
-        xtype : 'grid',
-        region : 'center',
-        //a bunch of grid definition here...
-    },{
-        region : 'right',
-        //VIEW CORRESPONDING TO DETAIL GOES HERE!
-        xtype : '@{detail}'
-    }]
-});
-glu.defView ('assets.asset',{
-    xtype : 'form',
-    items: [{
-        fieldLabel : 'name',
-        value : '@{name}'
-    },{
-        //...etc...
-    }]
 });
