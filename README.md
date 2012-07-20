@@ -124,7 +124,7 @@ http://localhost:8123/spec/extjs3
 
 ##Generating your own documentation
 
-Documentation is generated using jsduck.  The github project for jsDuck is located at [https://github.com/senchalabs/jsduck]https://github.com/senchalabs/jsduck.
+Documentation is generated using [jsduck] (https://github.com/senchalabs/jsduck).
 
 Install per their instructions so that jsduck is on your shell path.
 
