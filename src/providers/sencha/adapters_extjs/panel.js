@@ -147,6 +147,18 @@ glu.regAdapter('panel', {
         };
         control.on('collapse', expandOrCollapseFactory(false));
         control.on('expand', expandOrCollapseFactory(true));
+		
+		if (control._bindingMap && control._bindingMap.activeItem!==undefined) {
+            control.addActual = control.add;
+			control.add = function(index, item) {
+				item.on('render', function() {
+					item.getEl().on('click', function() {
+						control.fireEvent('activeitemchangerequest', control, control.items.indexOf(item));
+					});
+				});
+				control.addActual(index, item);
+			}
+        }
     },
     /**
      * @cfg {String} html
@@ -209,6 +221,10 @@ glu.regAdapter('panel', {
     },
 
     activeItemBindings : {
+	    eventName:'activeitemchangerequest',
+        eventConverter:function (control, idx) {
+            return control._activeItemValueType==='viewmodel'?control._parentList.getAt(idx):idx;
+        },
         storeValueInComponentAs : '_activeIndex',
         setComponentProperty:function (value, oldValue, options, control) {
             if (value.mtype) {
@@ -221,7 +237,10 @@ glu.regAdapter('panel', {
                 value = value.parentList.indexOf(value);
             }
             control._changeOriginatedFromModel = true;
-            control.getLayout().setActiveItem(value);
+			if( control.getLayout().type == 'card')
+				control.getLayout().setActiveItem(value);
+			else
+				control.fireEvent('activeitemchanged', control, control.items.getAt(value));
         },
         transformInitialValue : function (value, config, viewmodel){
             if (value.mtype) {
