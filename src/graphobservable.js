@@ -164,6 +164,7 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
         var edges = this.edges [refName];
         if (edges) {
             var other = this.vm[refName];
+            if (!other || !other._ob) return;
             for (var requestId in edges) {
                 var request = edges[requestId];
                 other._ob.propagateRequest(request);
@@ -175,6 +176,7 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
         var edges = this.edges [refName];
         if (edges) {
             var other = this.vm[refName];
+            if (!other || !other._ob) return;
             for (var requestId in edges) {
                 var request = edges[requestId];
                 other._ob.propagateRemoval(request);
