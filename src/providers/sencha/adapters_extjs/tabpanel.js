@@ -18,7 +18,9 @@ glu.regAdapter('tabpanel', {
     activeTabBindings : {
         storeValueInComponentAs : '_activeIndex',
         setComponentProperty:function (value, oldValue, options, control) {
-            //debugger;
+            if (value===undefined || value===-1) {
+                return; //nothing to do ... can't really "deselect" within ExtJS
+            }
             if (value.mtype) {
                 if (value.parentList === undefined) {
                     throw "Attempted to set an activeTab to a view model that is not in a list";

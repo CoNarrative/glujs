@@ -227,6 +227,9 @@ glu.regAdapter('panel', {
         },
         storeValueInComponentAs : '_activeIndex',
         setComponentProperty:function (value, oldValue, options, control) {
+            if (value===undefined || value===-1) {
+                return; //nothing to do ... can't really "deselect" within ExtJS
+            }
             if (value.mtype) {
                 if (value.parentList === undefined) {
                     throw "Attempted to set an activeItem to a view model that is not in a list";
