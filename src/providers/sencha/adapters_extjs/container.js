@@ -30,5 +30,10 @@ glu.regAdapter('container',{
     },
     isChildArray : function(propName, value){
         return propName==='items';
+    },
+    itemsBindings:{
+        custom:function (context) {
+            glu.provider.itemsHelper.bindItems(context);
+        }
     }
 });
