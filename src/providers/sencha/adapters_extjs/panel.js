@@ -239,11 +239,12 @@ glu.regAdapter('panel', {
                 //look up index...
                 value = value.parentList.indexOf(value);
             }
+            var oldItem = oldValue==-1?null : control.items.getAt(oldValue);
             control._changeOriginatedFromModel = true;
             if( control.getLayout().type == 'card')
                 control.getLayout().setActiveItem(value);
             else
-                control.fireEvent('activeitemchanged', control, control.items.getAt(value));
+                control.fireEvent('activeitemchanged', control, control.items.getAt(value), oldItem);
         },
         transformInitialValue : function (value, config, viewmodel){
             if (value.mtype) {
