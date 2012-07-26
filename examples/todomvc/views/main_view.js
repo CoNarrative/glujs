@@ -27,7 +27,7 @@ glu.defView('todo.main', {
                     bbar:[
                         {
                             xtype:'displayfield',
-                            value:'@{itemsLeft}'
+                            value:'@{itemsLeftText}'
                         },
                         {
                             xtype:'tbspacer'
@@ -53,6 +53,10 @@ glu.defView('todo.main', {
                         },
                         {
                             xtype:'tbfill'
+                        },{
+                            text : '@{clearCompletedText}',
+                            handler : '@{clearCompleted}',
+                            hidden : '@{!clearCompletedIsVisible}'
                         }
                     ]}
 

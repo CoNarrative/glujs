@@ -4,5 +4,6 @@ glu.namespace('todo').locale = {
     itemsLeft : '{count} items left',
     all:'All',
     active:'Active',
-    completed:'Completed'
+    completed:'Completed',
+    clearCompleted:'Clear completed ({count})'
 }
