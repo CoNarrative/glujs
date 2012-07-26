@@ -2,7 +2,7 @@ glu.defModel('todo.main', {
     todoList:{
         mtype:'list'
     },
-    newItemText : '',
+    newItemText : 'd',
     addNewItem : function(){
         this.todoList.add(this.model({
             mtype : 'todoitem',

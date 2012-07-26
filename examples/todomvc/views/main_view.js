@@ -1,6 +1,6 @@
 glu.defView('todo.main', {
     title:{
-        value:'Hello',
+        value:'@{newItemText}',
         field:{
             xtype:'textfield'
         }
