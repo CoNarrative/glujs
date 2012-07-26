@@ -14,7 +14,9 @@ glu.regAdapter('buttongroup', {
             config.defaults = config.defaults || {};
             config.defaults.enableToggle = true;
             config.defaults.toggleGroup = Ext.id();
-            config.toggleHandler = function(){};
+            config.defaults.toggleHandler = function(button){
+                button.ownerCt.fireEvent('activeitemchanged', button.ownerCt,button,button.ownerCt.items.indexOf(button));
+            };
         }
     },
     itemsBindings:{
@@ -31,10 +33,14 @@ glu.regAdapter('buttongroup', {
         }
     },
     activeItemBindings:{
-        eventName:'select',
-        eventConverter:function (button, idx) {
+        eventName:'activeitemchanged',
+        eventConverter:function (group, button, idx) {
             //if the button has a value, then use that, otherwise return the index
             return button.value || idx;
+        },
+        setComponentProperty:function(value,oldvalue,options,control){
+            var button = control.items.find(function(item){return value==item.value});
+            button.toggle(true);
         }
     },
 
