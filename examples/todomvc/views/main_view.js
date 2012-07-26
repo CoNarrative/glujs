@@ -8,6 +8,8 @@ glu.defView('todo.main', {
         {  //header
             xtype:'textfield',
             value : '@{newItemText}',
+            cls: 'todo-newItemText',
+            emptyText : '~~newItemText~~',
             enterKeyHandler : '@{addNewItem}'
         },
         { //list body
