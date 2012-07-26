@@ -12,7 +12,7 @@ glu.defView('todo.todoitem', {
         },
         {
             xtype:'displayfield',
-            width: 200,
+            width:300,  //flex isn't working for some reason...
             disabledCls : 'todo-list-done',
             disabled : '@{done}',
             value : {
@@ -25,6 +25,7 @@ glu.defView('todo.todoitem', {
         },
         {
             xtype : 'button',
+            width : 20,
             hidden : '@{!removeIsVisible}',
             overCls : '',
             handler : '@{remove}'
