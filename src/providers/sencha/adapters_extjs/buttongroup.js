@@ -46,6 +46,12 @@ glu.regAdapter('buttongroup', {
 
     afterCreate:function (control, viewmodel) {
         glu.provider.adapters.Container.prototype.afterCreate.apply(this, arguments);
+        var me = this;
+        control.on('afterrender',function(){
+            setTimeout(function(){
+                me.activeItemBindings.setComponentProperty(control.activeItem,null,null,control);
+            },1);
+        });
     }
 
 });

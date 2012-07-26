@@ -3,7 +3,7 @@ glu.defModel('todo.main', {
         mtype:'list'
     },
     newItemText : '',
-    filterMode : 'active',
+    filterMode : 'all',
     addNewItem : function(){
         this.todoList.add(this.model({
             mtype : 'todoitem',
