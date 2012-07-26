@@ -3,6 +3,7 @@ glu.defView('todo.todoitem', {
     layout:'hbox',
     isHovered : '@{focused}',
     height :30,
+    disabled : '@{!isVisible}',
     items:[
         {
             xtype : 'checkbox',

@@ -1,25 +1,66 @@
 glu.defView('todo.main', {
-    title:'~~todo~~',
-    layout: {
-        type: 'vbox',
-        align:'stretch'
-    },
+    layout:'hbox',
+
     items:[
-        {  //header
-            xtype:'textfield',
-            value : '@{newItemText}',
-            cls: 'todo-newItemText',
-            emptyText : '~~newItemText~~',
-            enterKeyHandler : '@{addNewItem}'
+        {
+            flex:1,
+            border:false
         },
-        { //list body
-            layout : 'vbox',
-            items : '@{todoList}'
-        },
-        { //footer
-            layout : 'hbox',
-            defaultType : 'displayfield',
-            items : [{value:'@{itemsLeft}'}]
+        {
+            title:'~~todo~~',
+            flex:1,
+            layout:{
+                type:'vbox',
+                align:'stretch'
+            },
+            items:[
+                {  //header
+                    xtype:'textfield',
+                    value:'@{newItemText}',
+                    cls:'todo-newItemText',
+                    emptyText:'~~newItemText~~',
+                    enterKeyHandler:'@{addNewItem}'
+                },
+                { //list body
+                    layout:'vbox',
+                    items:'@{todoList}',
+                    bbar:[
+                        {
+                            xtype:'displayfield',
+                            value:'@{itemsLeft}'
+                        },
+                        {
+                            xtype:'tbspacer'
+                        },
+                        {
+                            xtype:'buttongroup',
+                            flex:1,
+                            activeItem:'@{filterMode}',
+                            items:[
+                                {
+                                    text:'~~all~~',
+                                    value:'all'
+                                },
+                                {
+                                    text:'~~active~~',
+                                    value:'active'
+                                },
+                                {
+                                    text:'~~completed~~',
+                                    value:'completed'
+                                }
+                            ]
+                        },
+                        {
+                            xtype:'tbfill'
+                        }
+                    ]}
+
+            ] }
+        ,
+        {
+            flex:1,
+            border:false
         }
     ]
 });
