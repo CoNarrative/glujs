@@ -10,6 +10,11 @@ glu.defView('todo.main', {
         { //list body
             layout : 'vbox',
             items : '@{todoList}'
+        },
+        { //footer
+            layout : 'hbox',
+            defaultType : 'displayfield',
+            items : [{value:'@{itemsLeft}'}]
         }
     ]
 });
