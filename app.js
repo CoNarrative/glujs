@@ -43,6 +43,12 @@ app.get('/examples/assets/extjs4', function (req, res) {
 app.get('/examples/assets/spec', function (req, res) {
     res.render('assetsRunner.jade', {locals:{extjs_version: 4}});
 });
+app.get('/examples/todomvc/extjs4', function (req, res) {
+    res.render('todo.jade', {locals:{extjs_version: 4}});
+});
+app.get('/examples/todomvc/spec', function (req, res) {
+    res.render('todoRunner.jade', {locals:{extjs_version: 4}});
+});
 app.get('/examples/helloworld/extjs3', function (req, res) {
     res.render('helloworld.jade', {locals:{extjs_version: 3}});
 });
