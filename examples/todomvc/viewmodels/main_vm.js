@@ -2,7 +2,7 @@ glu.defModel('todo.main', {
     todoList:{
         mtype:'list'
     },
-    newItemText : 'd',
+    newItemText : '',
     addNewItem : function(){
         this.todoList.add(this.model({
             mtype : 'todoitem',
@@ -12,6 +12,9 @@ glu.defModel('todo.main', {
     },
     remove:function (item) {
         this.todoList.remove(item);
+    },
+    notifyDoneChanged:function(){
+        this.fireEvent('todolistchanged');
     },
     itemsLeft$:function () {
         var count = 0;

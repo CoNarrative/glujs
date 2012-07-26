@@ -1,11 +1,9 @@
 glu.defView('todo.main', {
-    title:{
-        value:'@{newItemText}',
-        field:{
-            xtype:'textfield'
-        }
+    title:'~~todo~~',
+    layout: {
+        type: 'vbox',
+        align:'stretch'
     },
-    layout:'vbox',
     items:[
         {  //header
             xtype:'textfield',

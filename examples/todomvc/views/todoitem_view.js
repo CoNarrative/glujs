@@ -1,14 +1,32 @@
 glu.defView('todo.todoitem', {
     xtype:'container',
     layout:'hbox',
+    isHovered : '@{focused}',
+    height :30,
     items:[
         {
-            xtype:'textfield',
-            value:'@{text}'
+            xtype : 'checkbox',
+            value : '@{done}',
+            width : 20
+        },
+        {
+            xtype:'displayfield',
+            width: 200,
+            disabledCls : 'todo-list-done',
+            disabled : '@{done}',
+            value : {
+                value:'@{text}',
+                alignment : 'l-l?',
+                field : {
+                    xtype: 'textfield'
+                }
+            }
         },
         {
             xtype : 'button',
-            name : 'remove'
+            hidden : '@{!removeIsVisible}',
+            overCls : '',
+            handler : '@{remove}'
         }
     ]
 });

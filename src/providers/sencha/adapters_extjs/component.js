@@ -92,13 +92,20 @@ glu.regAdapter('component', {
         }
     },
 
+    isHoveredBindings:{
+        eventName : 'hoverchange',
+        eventConverter:function(ctrl){
+            return ctrl.isHovered;
+        }
+    },
+
     //helper function to be called within the beforecollect of child adapters that want to add editors...
     //the config argument is an object whose keys are editable component properties
     //and whose values are either the name of the element or a function to find it
     checkForEditors:function (config, propConfigs) {
         for (var name in propConfigs) {
             var editor = config[name];
-            if (!Ext.isObject(editor)) return;
+            if (!Ext.isObject(editor)) continue;
             //it's an editor
             config[name] = editor.value; //move the fixed value or binding into the property
             config.editors = config.editors || [];
@@ -118,7 +125,7 @@ glu.regAdapter('component', {
         if (config.editors) {
             for (var i = 0; i < config.editors.length; i++) {
                 var editorCfg = config.editors[i];
-                var editor = Ext.widget('editor',editorCfg);
+                var editor = Ext.widget('editor', editorCfg);
                 control.on('afterrender', function (control) {
                     setTimeout(function () {
                         var el = Ext.isString(editor.target) ? control[editor.target] : editor.target(control);
@@ -128,6 +135,20 @@ glu.regAdapter('component', {
                     }, 1);
                 });
             }
+        }
+        if (control.isHovered != null) {
+            control.on('afterrender', function () {
+                var el = control.el;
+                control.isHovered = false;
+                el.on('mouseenter', function () {
+                    control.isHovered = true;
+                    control.fireEvent('hoverchange', control, true);
+                });
+                el.on('mouseleave', function () {
+                    control.isHovered = false;
+                    control.fireEvent('hoverchange', control, false);
+                });
+            });
         }
     }
 
