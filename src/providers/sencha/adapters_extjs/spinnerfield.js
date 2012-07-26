@@ -14,6 +14,7 @@ glu.regAdapter('spinnerfield', {
         config.enableKeyEvents = true;
     },
     afterCreate:function (control, viewmodel) {
+        glu.provider.adapters.Field.prototype.afterCreate.apply(this, arguments);
         if (glu.testMode) {
             control.addListener('keyup', function () {
                 control.fireEvent('valuechanged', control);

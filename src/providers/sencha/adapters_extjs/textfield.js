@@ -13,6 +13,7 @@ glu.regAdapter('textfield', {
     extend :'field',
 
     beforeCollect:function (config) {
+        glu.provider.adapters.Field.prototype.beforeCollect.apply(this, arguments);
         config.enableKeyEvents = true;
     },
 
@@ -21,6 +22,7 @@ glu.regAdapter('textfield', {
      * A special GluJS convenience shortcut that handles the pressing of the "Enter" key when in the field
      */
     afterCreate:function (control, viewmodel) {
+        glu.provider.adapters.Field.prototype.afterCreate.apply(this, arguments);
         if (glu.testMode) {
             control.addListener('keyup', function () {
                 control.fireEvent('valuechanged', control);

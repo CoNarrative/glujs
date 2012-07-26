@@ -18,8 +18,8 @@ glu.regAdapter('component', {
         glu.deepApplyIf(config, pattern);
     },
     //is the property an array to walk?
-    isChildArray : function(){
-        return false;
+    isChildArray: function(name) {
+        return name==='editors';
     },
     //is the property a sub-item to recurse into?
     isChildObject : function(){
@@ -90,7 +90,44 @@ glu.regAdapter('component', {
                 control.ownerCt.doLayout();
             }
         }
+    },
+
+    //helper function to be called within the beforecollect of child adapters that want to add editors...
+    //the config argument is an object whose keys are editable component properties
+    //and whose values are either the name of the element or a function to find it
+    checkForEditors : function(config, propConfigs){
+        for (var name in propConfigs) {
+            var editor = config[name];
+            if (!Ext.isObject(editor)) return;
+            //it's an editor
+            config[name] = editor.value; //move the fixed value or binding into the property
+            config.editors = config.editors || [];
+            editor.xtype='editor';
+            editor.target = propConfigs[name];
+            editor.trigger = editor.trigger || 'dblclick';
+            config.editors.push (editor);
+        }
+    },
+    beforeCollect: function(config){
+        if (config.editors) {
+            for (var i=0;i<config.editors.length;i++){
+                var editor = config.editors[i];
+                config.listeners = config.listeners || {};
+                //config.listeners.afterRender = config.listeners.afterRender ||
+                config.listeners.afterrender=function(control){
+                    var el = Ext.isString(editor.target) ? control[editor.target] : editor.target(control);
+                    debugger;
+                    el.on(editor.trigger, function(){
+                        editor.startEdit(el, control.getValue());
+                    });
+                };
+            }
+        }
+    },
+    afterCreate : function(control, viewmodel) {
+
     }
+
     /**
      * @cfg {String} viewMode
      * Specifies which "mode" to put the view in, assuming that mode is defined. If no viewMode is supplied (which is typical) then

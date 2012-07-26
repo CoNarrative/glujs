@@ -1,5 +1,10 @@
 glu.defView('todo.main', {
-    title:'~~todo~~',
+    title:{
+        value:'Hello',
+        field:{
+            xtype:'textfield'
+        }
+    },
     layout:'vbox',
     items:[
         {  //header

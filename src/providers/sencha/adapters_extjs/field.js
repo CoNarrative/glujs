@@ -17,6 +17,9 @@ glu.regAdapter('field', {
         });
         glu.provider.adapters.Component.prototype.applyConventions.apply(this, arguments);
     },
+    beforeCollect:function (config, viewmodel) {
+        this.checkForEditors(config, {fieldLabel:'labelEl',value:'inputEl'});
+    },
     /**
      * @cfg {String/Number} value
      *

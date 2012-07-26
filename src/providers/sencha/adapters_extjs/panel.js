@@ -22,7 +22,7 @@ glu.regAdapter('panel', {
     },
 
     isChildArray : function(propName, value) {
-        return propName === 'items' || propName === 'dockedItems';
+        return propName=='editors' || propName === 'items' || propName === 'dockedItems';
     },
 
     isChildObject : function(propName) {
@@ -108,6 +108,8 @@ glu.regAdapter('panel', {
      * Default: '{@close}'
      */
     beforeCollect : function(config) {
+        glu.provider.adapters.Container.prototype.beforeCollect.apply(this, arguments);
+        this.checkForEditors(config, {title: function(control){return control.header.titleCmp.textEl;}});
         //auto-add the close listener
         config.closeHandler = config.closeHandler || '@{close}';
     },
@@ -129,6 +131,7 @@ glu.regAdapter('panel', {
 
     },
     afterCreate : function(control, viewmodel) {
+        glu.provider.adapters.Container.prototype.afterCreate.apply(this, arguments);
         //make sure windows close themselves when their matching view model closes...
         if (Ext.isFunction(control.close)) {
             viewmodel.on('closed', function() {

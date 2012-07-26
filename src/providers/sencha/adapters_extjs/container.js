@@ -28,7 +28,11 @@ glu.regAdapter('container',{
         });
         glu.provider.adapters.Component.prototype.applyConventions.apply(this, arguments);
     },
+    beforeCollect:function(){
+        glu.provider.adapters.Component.prototype.beforeCollect.apply(this, arguments);
+        //do nothing
+    },
     isChildArray : function(propName, value){
-        return propName==='items';
+        return propName==='editors' || propName==='items';
     }
 });

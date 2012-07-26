@@ -18,6 +18,7 @@ glu.regAdapter('compositefield', {
         }
     },
     afterCreate:function (control, viewmodel) {
+        glu.provider.adapters.Field.prototype.afterCreate.apply(this, arguments);
         //ExtJS 3.2 Does not automatically initialize sub-items in initComponent so we do it here
         if (control.items.get === undefined) {
             for (var i = 0; i < control.items.length; i++) {
