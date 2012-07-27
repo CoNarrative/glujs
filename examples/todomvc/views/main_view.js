@@ -8,18 +8,31 @@ glu.defView('todo.main', {
         },
         {
             title:'~~todo~~',
-            flex:1,
+            width:400,
             layout:{
                 type:'vbox',
                 align:'stretch'
             },
             items:[
                 {  //header
-                    xtype:'textfield',
-                    value:'@{newItemText}',
-                    cls:'todo-newItemText',
-                    emptyText:'~~newItemText~~',
-                    enterKeyHandler:'@{addNewItem}'
+                    layout:'hbox',
+                    height:25,
+                    items:[
+                        {
+                            xtype:'checkbox',
+                            value:'@{completeAll}',
+                            disabled:'@{!completeAllIsDisabled}',
+                            width:20
+                        },
+                        {
+                            xtype:'textfield',
+                            value:'@{newItemText}',
+                            cls:'todo-newItemText',
+                            emptyText:'~~newItemText~~',
+                            enterKeyHandler:'@{addNewItem}',
+                            width:300
+                        }
+                    ]
                 },
                 { //list body
                     layout:'vbox',
@@ -53,10 +66,11 @@ glu.defView('todo.main', {
                         },
                         {
                             xtype:'tbfill'
-                        },{
-                            text : '@{clearCompletedText}',
-                            handler : '@{clearCompleted}',
-                            hidden : '@{!clearCompletedIsVisible}'
+                        },
+                        {
+                            text:'@{clearCompletedText}',
+                            handler:'@{clearCompleted}',
+                            hidden:'@{!clearCompletedIsVisible}'
                         }
                     ]}
 

@@ -23,6 +23,9 @@ glu.regAdapter('checkbox', {
         eventName:'change',
         eventConverter:function (field, newVal) {
             return field.getValue()
+        },
+        setComponentProperty: function(value,oldvalue,config,control){
+            control.setValue(value);
         }
     }
 });

@@ -17,6 +17,7 @@ glu.defView('todo.todoitem', {
             disabled : '@{done}',
             value : {
                 value:'@{text}',
+                width:300,
                 alignment : 'l-l?',
                 field : {
                     xtype: 'textfield'
