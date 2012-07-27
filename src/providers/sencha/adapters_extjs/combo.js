@@ -61,11 +61,7 @@ glu.regAdapter('combo',{
         // //control.store.un('load'); //stop listening for load event
         // });                
     },
-    valueBindings:{
-        eventName:'select',
-        eventConverter:function (control, record, idx) {
-            return control.getValue();
-        }
-
+    initAdapter : function(){
+        this.valueBindings.eventName = 'select';
     }
 });

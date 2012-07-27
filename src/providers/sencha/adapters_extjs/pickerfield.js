@@ -10,12 +10,6 @@
  */
 glu.regAdapter('pickerfield', {
     extend :'field',
-    valueBindings:{
-        eventName:'select',
-        eventConverter:function (field, newVal) {
-            return field.getValue()
-        }
-    },
     /**
      * @cfg {Boolean} html
      * *one-way binding.* Whether or not the picker is collapsed. This lets you 'auto open' the picker if needed
@@ -38,6 +32,9 @@ glu.regAdapter('pickerfield', {
                 }
             }
         }
+    },
+    initAdapter : function(){
+        this.valueBindings.eventName = 'select';
     }
 });
 

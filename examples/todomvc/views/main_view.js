@@ -20,9 +20,12 @@ glu.defView('todo.main', {
                     items:[
                         {
                             xtype:'checkbox',
-                            value:'@{completeAll}',
+                            value:'@>{allVisibleItemsAreCompleted}',
                             disabled:'@{!completeAllIsDisabled}',
-                            width:20
+                            width:20,
+                            listeners:{
+                                change:'@{batchComplete}'
+                            }
                         },
                         {
                             xtype:'textfield',

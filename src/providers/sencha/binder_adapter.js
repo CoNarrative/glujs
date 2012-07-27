@@ -67,6 +67,9 @@ Ext.apply(glu.provider.binder, {
         var adapter = new adapterClass();
         ns[name] = adapter;
         adapter.name = name;
+        if (adapter.initAdapter) {
+            adapter.initAdapter();
+        }
         adapter.initialized = true;
         return adapter;
     },

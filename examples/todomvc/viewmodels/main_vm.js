@@ -4,7 +4,6 @@ glu.defModel('todo.main', {
     },
     newItemText:'',
     filterMode:'all',
-    completeAll:false,
 
     addNewItem:function () {
         this.todoList.add(this.model({
@@ -49,31 +48,21 @@ glu.defModel('todo.main', {
     completeAllIsDisabled$:function () {
         return this.todoList.length > 0;
     },
-    setCompleteAll:function (value) {
-        if (value==this.completeAll) return;
-        this.setRaw('completeAll',value);
+    batchComplete:function (value) {
+        debugger;
         var me = this;
         this.todoList.each(function (item) {
-            item.set('done', me.completeAll)
+            item.set('done', value)
         });
     },
     allVisibleItemsAreCompleted$:function () {
         switch (this.filterMode) {
             case 'all' :
-                return this.activeCount == 0;
+                return this.activeCount == 0 && this.todoList.length > 0;
             case 'active' :
                 return false;
             case 'completed' :
                 return this.completedCount > 0;
         }
-    },
-    when_counts_changes_update_complete_all_marker:{
-        on:['allvisibleitemsarecompletedchanged'],
-        action:function () {
-            this.setRaw('completeAll', this.allVisibleItemsAreCompleted); //bypass setter so we don't trigger
-        }
     }
-
-
-
 });

@@ -13,20 +13,8 @@ glu.regAdapter('checkbox', {
     beforeCreate:function (config, viewmodel) {
         config.checked = config.checked || config.value;
     },
-    valueBindings:{
-        eventName:'change',
-        eventConverter:function (field, newVal) {
-            return field.getValue()
-        }
-    },
-    checkedBindings:{
-        eventName:'change',
-        eventConverter:function (field, newVal) {
-            return field.getValue()
-        },
-        setComponentProperty: function(value,oldvalue,config,control){
-            control.setValue(value);
-        }
+    initAdapter : function(){
+        this.checkedBindings = glu.applyIf({},this.valueBindings);
     }
 });
 

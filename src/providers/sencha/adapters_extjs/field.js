@@ -19,6 +19,7 @@ glu.regAdapter('field', {
     },
     beforeCollect:function (config, viewmodel) {
         this.checkForEditors(config, {fieldLabel:'labelEl',value:'inputEl'});
+        //prevent change checking - may be 4.0 only;
     },
     /**
      * @cfg {String/Number} value
@@ -82,6 +83,11 @@ glu.regAdapter('field', {
         eventName:'change',
         eventConverter:function (field, newVal) {
             return field.getValue()
+        },
+        setComponentProperty:function(value,oldvalue,options,control){
+            control.suspendCheckChange++;
+            control.setValue(value);
+            control.suspendCheckChange--;
         }
     }
 });
