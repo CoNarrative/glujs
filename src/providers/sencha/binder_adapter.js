@@ -56,14 +56,15 @@ Ext.apply(glu.provider.binder, {
             adapterDef.extend = 'glu.provider.adapters.' + glu.symbol(adapterDef.extend).toPascalCase();
         }
         var className = 'glu.provider.adapters.' + glu.symbol(name).toPascalCase();
-        if (Ext.getVersion().major>3 || Ext.getProvider().provider == 'touch') {
-            //adapterDef.singleton = true;   //NOT doing a singleton, but making a separate class name so that it matches Ext 3 pattern
-            var adapterClass = Ext.define (className, adapterDef);
-        } else {
-            var base = (adapterDef.extend ? glu.walk(adapterDef.extend) : null) || Object;
-            var adapterClass = Ext.extend(base,adapterDef);
-            ns[glu.symbol(name).toPascalCase()] = adapterClass;
-        }
+//        if (Ext.getVersion().major>3 || Ext.getProvider().provider == 'touch') {
+//            //adapterDef.singleton = true;   //NOT doing a singleton, but making a separate class name so that it matches Ext 3 pattern
+//            var adapterClass = Ext.define (className, adapterDef);
+//        } else {
+//            var base = (adapterDef.extend ? glu.walk(adapterDef.extend) : null) || Object;
+//            var adapterClass = Ext.extend(base,adapterDef);
+//            ns[glu.symbol(name).toPascalCase()] = adapterClass;
+//        }
+        var adapterClass =glu.define(className, adapterDef);
         var adapter = new adapterClass();
         ns[name] = adapter;
         adapter.name = name;
