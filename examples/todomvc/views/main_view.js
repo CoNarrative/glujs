@@ -23,6 +23,7 @@ glu.defView('todo.main', {
                             value:'@>{allVisibleItemsAreCompleted}',
                             disabled:'@{!completeAllIsDisabled}',
                             width:20,
+                            //handler : '@{batchComplete}'
                             listeners:{
                                 change:'@{batchComplete}'
                             }

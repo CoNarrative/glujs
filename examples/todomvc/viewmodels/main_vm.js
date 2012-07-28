@@ -1,10 +1,7 @@
 glu.defModel('todo.main', {
-    todoList:{
-        mtype:'list'
-    },
+    todoList:{ mtype:'list' },
     newItemText:'',
     filterMode:'all',
-
     addNewItem:function () {
         this.todoList.add(this.model({
             mtype:'todoitem',
@@ -12,18 +9,13 @@ glu.defModel('todo.main', {
         }));
         this.set('newItemText', '');
     },
-    remove:function (item) {
-        this.todoList.remove(item);
-    },
-    notifyDoneChanged:function () {
+    remove:function (item) { this.todoList.remove(item); },
+    notifyCompletedChanged:function () {
         this.fireEvent('todolistchanged');
     },
-    activeCount$:function () {
-        var count = 0;
-        for (var i = 0; i < this.todoList.length; i++) {
-            if (this.todoList.getAt(i).done === false) count++;
-        }
-        return count;
+    activeCount$: function(){
+        var l = this.todoList.length; //force for now!
+        return this.todoList.count(function(item){ return item.completed === false;});
     },
     itemsLeftText$:function () {
         return this.localize('itemsLeft', {count:this.activeCount});
@@ -34,7 +26,7 @@ glu.defModel('todo.main', {
     clearCompleted:function () {
         for (var i = this.todoList.length - 1; i > -1; i--) {
             var item = this.todoList.getAt(i);
-            if (item.done === true) {
+            if (item.completed === true) {
                 this.remove(item);
             }
         }
@@ -49,10 +41,9 @@ glu.defModel('todo.main', {
         return this.todoList.length > 0;
     },
     batchComplete:function (value) {
-        debugger;
-        var me = this;
+        console.log (value ? "Completing all" : "Uncompleting all")
         this.todoList.each(function (item) {
-            item.set('done', value)
+            if (item.isVisible) item.set('completed', value)
         });
     },
     allVisibleItemsAreCompleted$:function () {
