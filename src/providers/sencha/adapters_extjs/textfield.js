@@ -35,7 +35,7 @@ glu.regAdapter('textfield', {
                 control.fireEvent('valuechanged', control);
             });
         }
-        control.addListener('keyup', function () {
+        control.addListener('keyup', function (t,e,o) {
             control.delayedEvent.delay(control.keyDelay || 100); //give some time for multiple keypresses...
         }, control);
 
@@ -43,9 +43,10 @@ glu.regAdapter('textfield', {
             //special gluJS helper handler
             control.on('specialkey', function(f,e){
                 if (e.getKey() == e.ENTER) {
+                    control.fireEvent('valuechanged',control); //force most recent
                     control.enterKeyHandler();
                 }
-            });
+            },null,{delay:110});
         }
     },
     valueBindings:{

@@ -87,6 +87,7 @@ glu.regAdapter('field', {
         setComponentProperty:function(value,oldvalue,options,control){
             control.suspendCheckChange++;
             control.setValue(value);
+            control.lastValue = value;
             control.suspendCheckChange--;
         }
     }
