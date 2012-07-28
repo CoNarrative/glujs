@@ -228,13 +228,14 @@ glu = {
      *  @return {Object} the path, or null if it doesn't exist
      */
     walk:function (str, root) {
+        if (str==null) return null;
         var tokens = str.split('\.');
         root = root || window;
         for (var i = 0; i < tokens.length; i++) {
             var token = tokens[i];
             var existingChild = root[token];
             if (existingChild === undefined) {
-                return;
+                return null;
             }
             root = existingChild;
         }
@@ -618,6 +619,14 @@ glu = {
         delete classDef.constructor;
         glu.apply(constructor.prototype, classDef);
         return constructor;
+    },
+
+    define:function (name, classDef) {
+        var baseCls = glu.walk(classDef.extend) || function(){};
+        var cls = glu.extend (baseCls, classDef);
+        var ref = glu._splitReference(name);
+        glu.walk(ref.ns)[ref.name] = cls;
+        return cls;
     },
 
     getDataTypeOf:function (value) {
