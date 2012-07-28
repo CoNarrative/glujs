@@ -14,7 +14,7 @@ glu.regAdapter('checkbox', {
         config.checked = config.checked || config.value;
     },
     initAdapter : function(){
-        this.checkedBindings = glu.applyIf({},this.valueBindings);
+        this.checkedBindings = this.valueBindings;
     }
 });
 

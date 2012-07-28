@@ -62,6 +62,6 @@ glu.regAdapter('combo',{
         // });                
     },
     initAdapter : function(){
-        this.valueBindings.eventName = 'select';
+        this.valueBindings = glu.deepApplyIf({eventName : 'select'},this.valueBindings);
     }
 });

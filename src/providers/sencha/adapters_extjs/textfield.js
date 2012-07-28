@@ -25,14 +25,14 @@ glu.regAdapter('textfield', {
         glu.provider.adapters.Field.prototype.afterCreate.apply(this, arguments);
         if (glu.testMode) {
             control.addListener('keyup', function () {
-                control.fireEvent('valuechanged', control);
+                control.fireEvent('textchanged', control);
             }, control);
             return;
         }
         //adds a buffer to all key events
         if (!control.delayedEvent) {
             control.delayedEvent = new Ext.util.DelayedTask(function () {
-                control.fireEvent('valuechanged', control);
+                control.fireEvent('textchanged', control);
             });
         }
         control.addListener('keyup', function (t,e,o) {
@@ -43,16 +43,13 @@ glu.regAdapter('textfield', {
             //special gluJS helper handler
             control.on('specialkey', function(f,e){
                 if (e.getKey() == e.ENTER) {
-                    control.fireEvent('valuechanged',control); //force most recent
+                    control.fireEvent('textchanged',control); //force most recent
                     control.enterKeyHandler();
                 }
             },null,{delay:110});
         }
     },
-    valueBindings:{
-        eventName:'valuechanged',
-        eventConverter:function (control) {
-            return control.getValue();
-        }
+    initAdapter:function(){
+        this.valueBindings = glu.deepApplyIf({eventName : 'textchanged'},this.valueBindings);
     }
 });

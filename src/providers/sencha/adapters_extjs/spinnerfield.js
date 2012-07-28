@@ -34,11 +34,8 @@ glu.regAdapter('spinnerfield', {
             control.delayedEvent.delay(control.keyDelay || 100);
         })
     },
-    valueBindings:{
-        eventName:'valuechanged',
-        eventConverter:function (control) {
-            return control.getValue();
-        }
+    initAdapter : function(){
+        this.valueBindings = glu.deepApplyIf({eventName : 'valuechanged'},this.valueBindings);
     }
 });
 
