@@ -104,7 +104,7 @@ glu.apply(glu.Symbol.prototype, {
             var value = undefined;
             for (var i = 0; i < args.length; i++) {
                 value = glu.walk(key, args[i]);
-                if (value !== undefined) {
+                if (value != null) {
                     break;
                 }
             }
