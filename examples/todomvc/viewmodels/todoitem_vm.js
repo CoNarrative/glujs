@@ -16,9 +16,9 @@ glu.defModel('todo.todoitem', {
     //i.e. this.on ('todoList.*.completedchanged')
     //meaning as items are added to list we start listening on them
     when_completed_changes_notify_parent:{
-        on:'completedchanged',
+        on:['completedchanged','isvisiblechanged'],
         action:function () {
-            this.parentVM.notifyCompletedChanged();
+            this.parentVM.notifyItemChanged();
         }
     }
 });

@@ -10,12 +10,16 @@ glu.defModel('todo.main', {
         this.set('newItemText', '');
     },
     remove:function (item) { this.todoList.remove(item); },
-    notifyCompletedChanged:function () {
+    notifyItemChanged:function () {
         this.fireEvent('todolistchanged');
     },
     activeCount$: function(){
         var l = this.todoList.length; //force for now!
         return this.todoList.count(function(item){ return item.completed === false;});
+    },
+    visibleCount$: function(){
+        var l = this.todoList.length; //force for now!
+        return this.todoList.count(function(item){ return item.isVisible === true;});
     },
     itemsLeftText$:function () {
         return this.localize('itemsLeft', {count:this.activeCount});
@@ -38,7 +42,7 @@ glu.defModel('todo.main', {
         return this.completedCount > 0;
     },
     completeAllIsDisabled$:function () {
-        return this.todoList.length > 0;
+        return this.visibleCount > 0;
     },
     batchComplete:function (value) {
         console.log (value ? "Completing all" : "Uncompleting all")
