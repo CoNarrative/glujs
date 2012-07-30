@@ -109,6 +109,7 @@ glu.regAdapter('component', {
             //it's an editor
             config[name] = editor.value; //move the fixed value or binding into the property
             config.editors = config.editors || [];
+			config.propName = name;
             editor.xtype = 'editor';
             editor.target = propConfigs[name];
             editor.trigger = editor.trigger || 'dblclick';
@@ -130,7 +131,7 @@ glu.regAdapter('component', {
                     setTimeout(function () {
                         var el = Ext.isString(editor.target) ? control[editor.target] : editor.target(control);
                         el.on(editor.trigger, function () {
-                            editor.startEdit(el);//control.getValue()
+                            editor.startEdit(el, control[control.propName]);//control.getValue()
                         });
                     }, 1);
                 });
