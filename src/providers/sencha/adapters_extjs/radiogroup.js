@@ -18,6 +18,9 @@ glu.regAdapter('radiogroup', {
 	itemsBindings:{
         custom:function (context) {
             glu.provider.itemsHelper.bindItems(context);
-        }
+		}
+	},
+	isChildArray : function(propName, value){
+        return propName==='editors' || propName==='items';
     }
 });
