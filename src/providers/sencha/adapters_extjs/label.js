@@ -7,7 +7,7 @@
  * @extends glu.extjs.adapters.component
  */
 glu.regAdapter('label', {
-    extend : 'field',
+    extend : 'component',
     /**
      * @cfg {String} text
      *
@@ -19,6 +19,6 @@ glu.regAdapter('label', {
         Ext.applyIf(config, {
             'text' : '~~' + config.name + '~~'
         });
-        glu.provider.adapters.Field.prototype.applyConventions.apply(this, arguments);
+        glu.provider.adapters.Component.prototype.applyConventions.apply(this, arguments);
     }
 });

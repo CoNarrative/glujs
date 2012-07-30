@@ -9,7 +9,7 @@
  * property for organizing your views.
  */
 glu.regAdapter('component', {
-    applyConventions: function(config, viewmodel){
+    applyConventions:function (config, viewmodel) {
         var g = glu.conventions;
         var pattern = {
             disabled:g.expression(config.name + 'IsEnabled', {optional:true, not:true}),
@@ -18,14 +18,14 @@ glu.regAdapter('component', {
         glu.deepApplyIf(config, pattern);
     },
     //is the property an array to walk?
-    isChildArray : function(){
-        return false;
+    isChildArray:function (name) {
+        return name === 'editors';
     },
     //is the property a sub-item to recurse into?
-    isChildObject : function(){
+    isChildObject:function () {
         return false;
     },
-    processChildPropertyShortcut : function(propName, config){
+    processChildPropertyShortcut:function (propName, config) {
         return config;
     },
     /**
@@ -90,29 +90,90 @@ glu.regAdapter('component', {
                 control.ownerCt.doLayout();
             }
         }
+    },
+
+    isHoveredBindings:{
+        eventName : 'hoverchange',
+        eventConverter:function(ctrl){
+            return ctrl.isHovered;
+        }
+    },
+
+    //helper function to be called within the beforecollect of child adapters that want to add editors...
+    //the config argument is an object whose keys are editable component properties
+    //and whose values are either the name of the element or a function to find it
+    checkForEditors:function (config, propConfigs) {
+        for (var name in propConfigs) {
+            var editor = config[name];
+            if (!Ext.isObject(editor)) continue;
+            //it's an editor
+            config[name] = editor.value; //move the fixed value or binding into the property
+            config.editors = config.editors || [];
+            editor.xtype = 'editor';
+            editor.target = propConfigs[name];
+            editor.trigger = editor.trigger || 'dblclick';
+            editor.field.value = editor.field.value || editor.value;
+            delete editor.value;
+            config.editors.push(editor);
+        }
+    },
+    beforeCollect:function (config) {
+        //debugger;
+    },
+    afterCreate:function (control, viewmodel) {
+        var config = control;
+        if (config.editors) {
+            for (var i = 0; i < config.editors.length; i++) {
+                var editorCfg = config.editors[i];
+                var editor = Ext.widget('editor', editorCfg);
+                control.on('afterrender', function (control) {
+                    setTimeout(function () {
+                        var el = Ext.isString(editor.target) ? control[editor.target] : editor.target(control);
+                        el.on(editor.trigger, function () {
+                            editor.startEdit(el);//control.getValue()
+                        });
+                    }, 1);
+                });
+            }
+        }
+        if (control.isHovered != null) {
+            control.on('afterrender', function () {
+                var el = control.el;
+                control.isHovered = false;
+                el.on('mouseenter', function () {
+                    control.isHovered = true;
+                    control.fireEvent('hoverchange', control, true);
+                });
+                el.on('mouseleave', function () {
+                    control.isHovered = false;
+                    control.fireEvent('hoverchange', control, false);
+                });
+            });
+        }
     }
+
     /**
      * @cfg {String} viewMode
      * Specifies which "mode" to put the view in, assuming that mode is defined. If no viewMode is supplied (which is typical) then
      * it uses the default defined view. To supply different modes for a view, define it as follows in defView:
-     * 
+     *
      *     defView ('assets.asset', 'detail', { ...});
-     * 
+     *
      * where 'detail' is the name of the mode.
-     * 
+     *
      * You can then use it wherever you would insert a child view (either through items binding or as a placeholder). In the case
      * of a static child view, it looks like the following within the parent view definition:
-     * 
+     *
      *     items : [{
      *         xtype : '@{assetWithFocus}', //a property on the parent view model that contains a view model of type 'asset'
      *         viewMode : 'detail' //tells gluJS to use the 'detail' mode
      *     }]
-     * 
+     *
      * For a collection of items using items binding, use the ExtJS defaults property to assing viewMode to all of the children:
-     * 
+     *
      *     items : '@{assetList}', //a List of asset view models
      *     defaults : {viewMode:'detail'} //all of the child views will be put
-     * 
+     *
      * Currently viewMode is not bindable, but we have plans to make it bindable in a future release to make it simple to flip between
      * modes (such as read-only and edit modes, or whatever you define). For now you can achieve the same thing with a card layout that
      * contains the two views and flipping between them.
@@ -121,7 +182,7 @@ glu.regAdapter('component', {
     /**
      * @cfg {String} xtype
      * Specifies the xtype of the view per normal ExtJS. However, there are two extensions:
-     * 
+     *
      * ##Includes (xtype shortcut)
      * Sometimes a view bound to a single view model becomes big enough that you want to split it up into separate files without
      * having to make it a true nested view bound to a different view model. Since GluJS respects "local namespaces", you can simply inline the view
@@ -134,7 +195,7 @@ glu.regAdapter('component', {
      *     });
      *     glu.defineView('helloworld.aboutCompany',{
      *        title : 'Imagine a bunch of widgets about us'
-     *     }); 
+     *     });
      *
      * ##Nested views
      * Since GluJS is all about UI composition of complicated UIs, there is often the need for nesting a view bound to a different view model

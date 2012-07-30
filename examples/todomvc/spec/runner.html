@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Assets Spec Runner</title>
+
+    <link href="jasmine.css" rel="stylesheet"/>
+    <script type="text/javascript" src="jasmine.js"></script>
+    <script type="text/javascript" src="jasmine-html.js"></script>
+    <script type="text/javascript">
+        // yes, really keep this here to keep us honest, but only for jasmine's own runner! [xw]
+        undefined = "diz be undefined yo";
+    </script>
+    <!-- library files -->
+    <script type="text/javascript" src="../../../lib/extjs-4.x/bootstrap.js"></script>
+    <script type="text/javascript" src="../../../build/glu-extjs-4.js"></script>
+    <script type="text/javascript" src="../../../build/glu.js"></script>
+    <script type="text/javascript" src="../../../build/glu-test.js"></script>
+
+    <!-- source files -->
+    <script type="text/javascript" src="../locale/locale_en.js"></script>
+    <script type="text/javascript" src="../models/asset_model.js"></script>
+    <script type="text/javascript" src="../viewmodels/main_vm.js"></script>
+    <script type="text/javascript" src="../viewmodels/assetSet_vm.js"></script>
+    <script type="text/javascript" src="../viewmodels/asset_vm.js"></script>
+    <script type="text/javascript" src="../viewmodels/options_vm.js"></script>
+    <script type="text/javascript" src="../views/main_view.js"></script>
+    <script type="text/javascript" src="../views/asset_view.js"></script>
+    <script type="text/javascript" src="../views/assetSet_view.js"></script>
+    <script type="text/javascript" src="../views/assetSchedule_view.js"></script>
+    <script type="text/javascript" src="../views/assetSummary_view.js"></script>
+    <script type="text/javascript" src="../views/options_view.js"></script>
+    <script type="text/javascript" src="../spec/backend.js"></script>
+
+    <!-- include spec files here... -->
+    <script type="text/javascript" src="backend.js"></script>
+    <script type="text/javascript" src="spec.js"></script>
+
+    <script type="text/javascript">
+        (function() {
+            glu.setTestMode();
+            var jasmineEnv = jasmine.getEnv();
+            jasmineEnv.updateInterval = 1000;
+            var trivialReporter = new jasmine.TrivialReporter();
+            jasmineEnv.addReporter(trivialReporter);
+            jasmineEnv.specFilter = function(spec) {
+            return trivialReporter.specFilter(spec);
+            };
+            var currentWindowOnload = window.onload;
+            window.onload = function() {
+            if(currentWindowOnload) {
+            currentWindowOnload();
+            }
+            execJasmine();
+            };
+            function execJasmine() {
+            jasmineEnv.execute();
+            }
+        })();
+    </script>
+
+</head>
+
+<body>
+</body>
+</html>

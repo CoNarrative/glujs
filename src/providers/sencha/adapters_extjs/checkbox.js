@@ -13,17 +13,8 @@ glu.regAdapter('checkbox', {
     beforeCreate:function (config, viewmodel) {
         config.checked = config.checked || config.value;
     },
-    valueBindings:{
-        eventName:'change',
-        eventConverter:function (field, newVal) {
-            return field.getValue()
-        }
-    },
-    checkedBindings:{
-        eventName:'change',
-        eventConverter:function (field, newVal) {
-            return field.getValue()
-        }
+    initAdapter : function(){
+        this.checkedBindings = this.valueBindings;
     }
 });
 

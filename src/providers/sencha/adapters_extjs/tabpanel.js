@@ -49,7 +49,7 @@ glu.regAdapter('tabpanel', {
     },
 
     afterCreate: function (control, viewmodel){
-        //debugger;
+        glu.provider.adapters.Panel.prototype.afterCreate.apply(this, arguments);
         if (!control._bindingMap || control._bindingMap.activeTab===undefined) {
             return; //only instrument below if tracking active tab
         }

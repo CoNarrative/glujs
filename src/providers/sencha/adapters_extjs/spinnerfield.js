@@ -14,6 +14,7 @@ glu.regAdapter('spinnerfield', {
         config.enableKeyEvents = true;
     },
     afterCreate:function (control, viewmodel) {
+        glu.provider.adapters.Field.prototype.afterCreate.apply(this, arguments);
         if (glu.testMode) {
             control.addListener('keyup', function () {
                 control.fireEvent('valuechanged', control);
@@ -33,11 +34,8 @@ glu.regAdapter('spinnerfield', {
             control.delayedEvent.delay(control.keyDelay || 100);
         })
     },
-    valueBindings:{
-        eventName:'valuechanged',
-        eventConverter:function (control) {
-            return control.getValue();
-        }
+    initAdapter : function(){
+        this.valueBindings = glu.deepApplyIf({eventName : 'valuechanged'},this.valueBindings);
     }
 });
 

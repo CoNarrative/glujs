@@ -39,6 +39,7 @@ glu.regAdapter('combo',{
         });
     },
     afterCreate:function (control, viewmodel) {
+        glu.provider.adapters.Field.prototype.afterCreate.apply(this, arguments);
         //Solves a race condition in which the initial value is set before the backing store has been loaded
         //does not attempt to solve later race conditions with stores reloading
         if (!control.valueField) return;
@@ -60,11 +61,7 @@ glu.regAdapter('combo',{
         // //control.store.un('load'); //stop listening for load event
         // });                
     },
-    valueBindings:{
-        eventName:'select',
-        eventConverter:function (control, record, idx) {
-            return control.getValue();
-        }
-
+    initAdapter : function(){
+        this.valueBindings = glu.deepApplyIf({eventName : 'select'},this.valueBindings);
     }
 });
