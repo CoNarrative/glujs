@@ -14,5 +14,10 @@ glu.regAdapter('radiogroup', {
             }
 
         }
+    },
+	itemsBindings:{
+        custom:function (context) {
+            glu.provider.itemsHelper.bindItems(context);
+        }
     }
 });
