@@ -15,6 +15,27 @@ glu.regAdapter('checkbox', {
     },
     initAdapter : function(){
         this.checkedBindings = this.valueBindings;
-    }
+    },
+	boxLabelBindings : {
+		setComponentProperty: function(newValue,oldValue,options,control){
+			if (control.rendered){
+				control.boxLabelEl.update(newValue);
+			}
+			else{
+				control.boxLabel = newValue;
+			}
+		}
+	}
 });
 
+glu.regAdapter('checkboxfield', {
+	extend: 'checkbox'
+});
+
+glu.regAdapter('radiofield', {
+    extend :'checkbox'
+});
+
+glu.regAdapter('radio', {
+    extend :'radiofield'
+});
