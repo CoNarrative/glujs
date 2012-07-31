@@ -24,3 +24,27 @@ glu.regAdapter('radiogroup', {
         return propName==='editors' || propName==='items';
     }
 });
+
+glu.regAdapter('checkboxgroup', {
+    extend : 'field',
+    valueBindings:{
+        eventName:'change',
+        eventConverter:function (control, checked) {
+            if (checked) {
+                return checked.inputValue;
+            }
+            else {
+                return control
+            }
+
+        }
+    },
+	itemsBindings:{
+        custom:function (context) {
+            glu.provider.itemsHelper.bindItems(context);
+		}
+	},
+	isChildArray : function(propName, value){
+        return propName==='editors' || propName==='items';
+    }
+});
