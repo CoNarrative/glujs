@@ -154,7 +154,7 @@ Ext.apply(glu.provider.binder, {
 
 
         //STEP 4: Apply any automatic conventions (supplied by adapter) based on the config.name property
-        if (config.name != null) {
+        if (config.name != null && !xtypeAdapter.suppressNameBindings) {
             //automatically find the best default property to bind to when binding by name
             if (glu.isFunction(xtypeAdapter.applyConventions)) {
                 //perform automatic template-based name bindings
@@ -169,7 +169,7 @@ Ext.apply(glu.provider.binder, {
 
             if (propName === 'xtype' || propName === 'ptype' || propName === '_defaultVm'
                 || propName === 'id' || propName === '_bindings' || propName === '_bindingMap'
-                || propName === 'name' || propName === 'rootVM') {
+                || (propName ==='name' && !xtypeAdapter.suppressNameBindings) || propName === 'rootVM') {
                 //skip unbindable properties
                 continue;
             }

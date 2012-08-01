@@ -21,7 +21,7 @@ glu.provider.itemsHelper = {
             if (viewItemSpec === undefined)
                 return;
             //do nothing if template is null...
-            item.parentVM = list;
+            item.parentVM = list.parentVM;
             item.ns = list.ns;
             item.recType = list.recType;
             var result = glu.provider.binder.collectBindings(viewItemSpec, item, container.initialConfig);
