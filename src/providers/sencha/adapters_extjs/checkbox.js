@@ -33,7 +33,8 @@ glu.regAdapter('checkboxfield', {
 });
 
 glu.regAdapter('radiofield', {
-    extend :'checkbox'
+    extend :'checkbox',
+	suppressNameBindings: true
 });
 
 glu.regAdapter('radio', {

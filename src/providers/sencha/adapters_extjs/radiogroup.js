@@ -5,14 +5,16 @@ glu.regAdapter('radiogroup', {
     extend : 'field',
     valueBindings:{
         eventName:'change',
-        eventConverter:function (control, checked) {
-            if (checked) {
-                return checked.inputValue;
-            }
-            else {
-                return control
-            }
-
+        eventConverter:function (field, newVal) {
+            return field.getValue()[field.items.getAt(0).name];
+        },
+        setComponentProperty:function(value,oldvalue,options,control){
+            control.suspendCheckChange++;
+			var obj = {};
+			obj[control.items.getAt(0).name] = value;
+            control.setValue(obj);
+            control.lastValue = value;
+            control.suspendCheckChange--;
         }
     },
 	itemsBindings:{
@@ -27,7 +29,7 @@ glu.regAdapter('radiogroup', {
 
 glu.regAdapter('checkboxgroup', {
     extend : 'field',
-    valueBindings:{
+    /*valueBindings:{
         eventName:'change',
         eventConverter:function (control, checked) {
             if (checked) {
@@ -38,7 +40,7 @@ glu.regAdapter('checkboxgroup', {
             }
 
         }
-    },
+    },*/
 	itemsBindings:{
         custom:function (context) {
             glu.provider.itemsHelper.bindItems(context);
