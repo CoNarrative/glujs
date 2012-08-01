@@ -228,13 +228,14 @@ glu = {
      *  @return {Object} the path, or null if it doesn't exist
      */
     walk:function (str, root) {
+        if (str==null) return null;
         var tokens = str.split('\.');
         root = root || window;
         for (var i = 0; i < tokens.length; i++) {
             var token = tokens[i];
             var existingChild = root[token];
             if (existingChild === undefined) {
-                return;
+                return null;
             }
             root = existingChild;
         }
@@ -445,12 +446,12 @@ glu = {
     },
 
     /*
-     * 		@{foo} //bind to foo if available, throw exception if cannot find
-     * 		@?{foo} //bind to foo if available, ignore if not
-     * 		@{!foo} //bind to inverse of foo if a boolean
-     *		I am @{foo}; hear me roar //make a string substitution
-     * 		@>{foo} //oneway binding from model to view, do not track view back to model
-     * 		@1{foo} //bind one-time but do not track changes to foo
+     *         @{foo} //bind to foo if available, throw exception if cannot find
+     *         @?{foo} //bind to foo if available, ignore if not
+     *         @{!foo} //bind to inverse of foo if a boolean
+     *        I am @{foo}; hear me roar //make a string substitution
+     *         @>{foo} //oneway binding from model to view, do not track view back to model
+     *         @1{foo} //bind one-time but do not track changes to foo
      */
     parseBindingSyntax:function (bindingString) {
         if (!glu.isString(bindingString)) {
@@ -618,6 +619,14 @@ glu = {
         delete classDef.constructor;
         glu.apply(constructor.prototype, classDef);
         return constructor;
+    },
+
+    define:function (name, classDef) {
+        var baseCls = glu.walk(classDef.extend) || function(){};
+        var cls = glu.extend (baseCls, classDef);
+        var ref = glu._splitReference(name);
+        glu.walk(ref.ns)[ref.name] = cls;
+        return cls;
     },
 
     getDataTypeOf:function (value) {

@@ -508,9 +508,9 @@ glu.Viewmodel = glu.extend(Object, {
              * but has the disadvantage of making the bind syntax different than
              * javascript access.
              * Example:
-             * 	Bind:    '@{detail.ssn}'
+             *     Bind:    '@{detail.ssn}'
              *  Concise: this.detail.ssn
-             *  KO:	     this.detail().ssn()
+             *  KO:         this.detail().ssn()
              *  Safe:    this.detail.get('ssn')
              */
 

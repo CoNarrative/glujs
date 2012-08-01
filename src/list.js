@@ -177,3 +177,16 @@ glu.List = glu.extend(Object, {
     }
 });
 glu.mreg('list', glu.List);
+
+glu.List.prototype.where = function(filter) {
+    var f = [];
+    for (var i = 0; i < this.length; i++) {
+        var item = this.getAt(i);
+        if (filter.call(this.parentVM, item)) f.push(item);
+    }
+    return f;
+}
+
+glu.List.prototype.count = function(filter) {
+    return this.where(filter).length;
+}

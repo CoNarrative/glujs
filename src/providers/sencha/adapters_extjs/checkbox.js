@@ -13,17 +13,30 @@ glu.regAdapter('checkbox', {
     beforeCreate:function (config, viewmodel) {
         config.checked = config.checked || config.value;
     },
-    valueBindings:{
-        eventName:'change',
-        eventConverter:function (field, newVal) {
-            return field.getValue()
-        }
+    initAdapter : function(){
+        this.checkedBindings = this.valueBindings;
     },
-    checkedBindings:{
-        eventName:'change',
-        eventConverter:function (field, newVal) {
-            return field.getValue()
+    boxLabelBindings : {
+        setComponentProperty: function(newValue,oldValue,options,control){
+            if (control.rendered){
+                control.boxLabelEl.update(newValue);
+            }
+            else{
+                control.boxLabel = newValue;
+            }
         }
     }
 });
 
+glu.regAdapter('checkboxfield', {
+    extend: 'checkbox'
+});
+
+glu.regAdapter('radiofield', {
+    extend :'checkbox',
+    suppressNameBindings: true
+});
+
+glu.regAdapter('radio', {
+    extend :'radiofield'
+});

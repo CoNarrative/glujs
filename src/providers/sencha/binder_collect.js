@@ -132,25 +132,29 @@ Ext.apply(glu.provider.binder, {
         }
 
         //STEP 3: Invoke any 'beforeCollect' adapters or plugins, and get a new adapter if it changed the xtype
-        var origXtype = config.xtype;
-        if (glu.isFunction(xtypeAdapter.beforeCollect)) {
-            xtypeAdapter.beforeCollect(config, viewmodel);
-        }
-        for (var i = 0; i < transformAdapters.length; i++) {
+        //repeat until xtype stops changing!
+        var origXtype = null;
+        while (origXtype != config.xtype) {
             var origXtype = config.xtype;
-            if (glu.isFunction(transformAdapters[i].beforeCollect)) {
-                transformAdapters[i].beforeCollect(config, viewmodel);
+            if (glu.isFunction(xtypeAdapter.beforeCollect)) {
+                xtypeAdapter.beforeCollect(config, viewmodel);
             }
-        }
-        if (origXtype !== config.xtype) {
-            //the before collect routines may have changed the xtype
-            xtypeAdapter = this.getAdapter(config);
+            for (var i = 0; i < transformAdapters.length; i++) {
+                var origXtype = config.xtype;
+                if (glu.isFunction(transformAdapters[i].beforeCollect)) {
+                    transformAdapters[i].beforeCollect(config, viewmodel);
+                }
+            }
+            if (origXtype !== config.xtype) {
+                //the before collect routines may have changed the xtype
+                xtypeAdapter = this.getAdapter(config);
+            }
         }
         glu.fireEvent('beforecollect', config, viewmodel, parentPropName);
 
 
         //STEP 4: Apply any automatic conventions (supplied by adapter) based on the config.name property
-        if (config.name != null) {
+        if (config.name != null && !xtypeAdapter.suppressNameBindings) {
             //automatically find the best default property to bind to when binding by name
             if (glu.isFunction(xtypeAdapter.applyConventions)) {
                 //perform automatic template-based name bindings
@@ -165,7 +169,7 @@ Ext.apply(glu.provider.binder, {
 
             if (propName === 'xtype' || propName === 'ptype' || propName === '_defaultVm'
                 || propName === 'id' || propName === '_bindings' || propName === '_bindingMap'
-                || propName === 'name' || propName === 'rootVM') {
+                || (propName ==='name' && !xtypeAdapter.suppressNameBindings) || propName === 'rootVM') {
                 //skip unbindable properties
                 continue;
             }
