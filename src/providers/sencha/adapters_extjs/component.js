@@ -109,7 +109,7 @@ glu.regAdapter('component', {
             //it's an editor
             config[name] = editor.value; //move the fixed value or binding into the property
             config.editors = config.editors || [];
-			config.propName = name;
+            config.propName = name;
             editor.xtype = 'editor';
             editor.target = propConfigs[name];
             editor.trigger = editor.trigger || 'dblclick';

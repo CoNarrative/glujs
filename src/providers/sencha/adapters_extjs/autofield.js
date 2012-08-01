@@ -127,7 +127,7 @@ glu.regAdapter('autofield', {
                     displayField = ns.lookups[field.lookup].fields.keys[1];
                 }
                 config.triggerAction = 'all';
-                //				config.lazyRender = true;
+                //                config.lazyRender = true;
                 config.mode = 'local';
                 config.store = glu.conventions.build().start().root().literal(dataModel.ns).lookupNs().prop(field.lookup).end();
                 config.displayField = displayField;

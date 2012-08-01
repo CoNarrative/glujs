@@ -446,12 +446,12 @@ glu = {
     },
 
     /*
-     * 		@{foo} //bind to foo if available, throw exception if cannot find
-     * 		@?{foo} //bind to foo if available, ignore if not
-     * 		@{!foo} //bind to inverse of foo if a boolean
-     *		I am @{foo}; hear me roar //make a string substitution
-     * 		@>{foo} //oneway binding from model to view, do not track view back to model
-     * 		@1{foo} //bind one-time but do not track changes to foo
+     *         @{foo} //bind to foo if available, throw exception if cannot find
+     *         @?{foo} //bind to foo if available, ignore if not
+     *         @{!foo} //bind to inverse of foo if a boolean
+     *        I am @{foo}; hear me roar //make a string substitution
+     *         @>{foo} //oneway binding from model to view, do not track view back to model
+     *         @1{foo} //bind one-time but do not track changes to foo
      */
     parseBindingSyntax:function (bindingString) {
         if (!glu.isString(bindingString)) {

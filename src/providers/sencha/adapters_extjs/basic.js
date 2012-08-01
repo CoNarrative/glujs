@@ -80,7 +80,7 @@ glu.regAdapter('fieldset', {
     defaultTypes:{
         items:'textfield'
     },
-	applyConventions : function(config, viewmodel) {
+    applyConventions : function(config, viewmodel) {
         Ext.applyIf(config, {
             collapsed : glu.conventions.expression(config.name + 'IsExpanded', {
                 optional : true,

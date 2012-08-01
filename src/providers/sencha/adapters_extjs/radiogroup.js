@@ -10,19 +10,19 @@ glu.regAdapter('radiogroup', {
         },
         setComponentProperty:function(value,oldvalue,options,control){
             control.suspendCheckChange++;
-			var obj = {};
-			obj[control.items.getAt(0).name] = value;
+            var obj = {};
+            obj[control.items.getAt(0).name] = value;
             control.setValue(obj);
             control.lastValue = value;
             control.suspendCheckChange--;
         }
     },
-	itemsBindings:{
+    itemsBindings:{
         custom:function (context) {
             glu.provider.itemsHelper.bindItems(context);
-		}
-	},
-	isChildArray : function(propName, value){
+        }
+    },
+    isChildArray : function(propName, value){
         return propName==='editors' || propName==='items';
     }
 });
@@ -41,12 +41,12 @@ glu.regAdapter('checkboxgroup', {
 
         }
     },*/
-	itemsBindings:{
+    itemsBindings:{
         custom:function (context) {
             glu.provider.itemsHelper.bindItems(context);
-		}
-	},
-	isChildArray : function(propName, value){
+        }
+    },
+    isChildArray : function(propName, value){
         return propName==='editors' || propName==='items';
     }
 });
