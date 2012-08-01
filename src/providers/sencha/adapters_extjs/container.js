@@ -35,7 +35,7 @@ glu.regAdapter('container',{
     isChildArray : function(propName, value){
         return propName==='editors' || propName==='items';
     },
-	itemsBindings:{
+    itemsBindings:{
         custom:function (context) {
             glu.provider.itemsHelper.bindItems(context);
         }
