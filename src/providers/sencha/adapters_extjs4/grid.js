@@ -233,7 +233,7 @@ glu.regAdapter('grid', {
             glu.log.info('selecting records on grid to ' + value.length + ' rows.');
             //a hack based on an internal...
             var sm = control.getSelectionModel();
-            sm.select (value, false, true);
+            //sm.select (value, false, true);
         }
     },
 

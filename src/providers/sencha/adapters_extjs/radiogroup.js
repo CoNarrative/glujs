@@ -6,13 +6,16 @@ glu.regAdapter('radiogroup', {
     valueBindings:{
         eventName:'change',
         eventConverter:function (field, newVal) {
-            return field.getValue()[field.items.getAt(0).name];
+			var selected = '';
+			for( var key in newVal ){
+				selected = newVal[key];
+			}
+			return selected;
+            //return field.getValue()[field.items.getAt(0).name];
         },
         setComponentProperty:function(value,oldvalue,options,control){
             control.suspendCheckChange++;
-            var obj = {};
-            obj[control.items.getAt(0).name] = value;
-            control.setValue(obj);
+			control.setValue(value);
             control.lastValue = value;
             control.suspendCheckChange--;
         }
@@ -43,7 +46,8 @@ glu.regAdapter('checkboxgroup', {
 		setComponentProperty: function(newValue, oldValue, options, control){
 			var obj = {};
 			for( var i = 0; i < newValue.length; i++){
-				obj[newValue[i]] = true;
+				if( newValue[i] )
+					obj[newValue[i]] = true;
 			}
 			control.setValue(obj);
 		}
