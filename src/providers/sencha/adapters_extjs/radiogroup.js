@@ -29,18 +29,25 @@ glu.regAdapter('radiogroup', {
 
 glu.regAdapter('checkboxgroup', {
     extend : 'field',
-    /*valueBindings:{
+    valueBindings:{
         eventName:'change',
         eventConverter:function (control, checked) {
-            if (checked) {
-                return checked.inputValue;
-            }
-            else {
-                return control
-            }
-
-        }
-    },*/
+			var checks = [];
+			for( var key in checked ){
+				if( checked[key] == 'on' ){
+					checks.push(key);
+				}
+			}
+			return checks;
+        },
+		setComponentProperty: function(newValue, oldValue, options, control){
+			var obj = {};
+			for( var i = 0; i < newValue.length; i++){
+				obj[newValue[i]] = true;
+			}
+			control.setValue(obj);
+		}
+    },
     itemsBindings:{
         custom:function (context) {
             glu.provider.itemsHelper.bindItems(context);
