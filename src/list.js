@@ -190,3 +190,7 @@ glu.List.prototype.where = function(filter) {
 glu.List.prototype.count = function(filter) {
     return this.where(filter).length;
 }
+
+glu.List.prototype.any = function(filter) {
+    return this.where(filter).length > 0;
+}

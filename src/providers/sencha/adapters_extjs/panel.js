@@ -156,7 +156,7 @@ glu.regAdapter('panel', {
             control.add = function(index, item) {
                 item.on('render', function() {
                     item.getEl().on('click', function() {
-                        control.fireEvent('activeitemchangerequest', control, control.items.indexOf(item));
+                        control.fireEvent('activeitemchangerequest', control, control.items.indexOf(item), item);
                     });
                 });
                 control.addActual(index, item);
@@ -225,8 +225,8 @@ glu.regAdapter('panel', {
 
     activeItemBindings : {
         eventName:'activeitemchangerequest',
-        eventConverter:function (control, idx) {
-            return control._activeItemValueType==='viewmodel'?control._parentList.getAt(idx):idx;
+        eventConverter:function (control, idx, item) {
+            return control._activeItemValueType==='viewmodel'?item._vm:idx;
         },
         storeValueInComponentAs : '_activeIndex',
         setComponentProperty:function (value, oldValue, options, control) {
