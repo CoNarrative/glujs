@@ -217,8 +217,28 @@ glu.regAdapter('panel', {
      */
     closableBindings : {
         setComponentProperty : function(value, oldValue, options, control) {
-            if (Ext.getVersion().major > 3 && control.tab) {
+            if (!(Ext.getVersion().major > 3)) return;
+            if (control.tab) {
+                //for a panel in a tab panel
                 control.tab.setClosable(value);
+                return;
+            }
+            if (control.header) {
+                for (var i =0;i<control.header.items.getCount();i++){
+                    var tool = control.header.items.getAt(i);
+                    if (tool.type === 'close') {
+                        tool.setVisible(value);
+                        return;
+                    }
+                }
+                //couldn't find it so add if true
+                if (value===true) {
+                    control.addClsWithUI('closable');
+                    control.addTool({
+                        type: 'close',
+                        handler: Ext.Function.bind(control.close, control, [])
+                    });
+                }
             }
         }
     },
