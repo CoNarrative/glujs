@@ -134,4 +134,4 @@ From the command line with the path in the root of the GluJS project, run:
 
 ##Contributors
 
-Mike Gai (creator), [Nick Tackes] (https://github.com/nicktackes), [Travis Barajas] (https://github.com/tvbarajas)
+[Mike Gai] (https://github.com/mikegai) (creator), [Nick Tackes] (https://github.com/nicktackes), [Travis Barajas] (https://github.com/tvbarajas)
