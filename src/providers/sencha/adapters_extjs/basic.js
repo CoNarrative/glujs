@@ -88,5 +88,5 @@ glu.regAdapter('fieldset', {
             })
         });
         glu.provider.adapters.Container.prototype.applyConventions.apply(this, arguments);
-    },
+    }
 });
