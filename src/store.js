@@ -107,3 +107,10 @@ glu.mreg('store', Ext.data.Store);
 glu.mreg('glustore', glu.Store);
 glu.mreg('arraystore', Ext.data.ArrayStore);
 glu.mreg('jsonstore', Ext.data.JsonStore);
+glu.mreg('treestore', Ext.data.TreeStore);
+
+glu.mreg('listadapter', {
+	initMixin: function(){
+		debugger;
+	}
+});
