@@ -38,13 +38,19 @@ glu.model = function (config) {
         //not a view model
 		var mixins = config.mixins || [], applyMixins=[], i=0;
 		for (; i < mixins.length; i++) {
-			var mixinName = mixins[i];
+			var mixinConfig = mixins[i], mixinName;
+			if( glu.isObject(mixinConfig) )
+				mixinName = mixinConfig.type;
+			else
+				mixinName = mixinConfig;
 			var mixin = nsObjVM[mixinName] || nsObj[mixinName] || glu.mtypeRegistry[mixinName];
 			if (mixin === undefined) {
 				var factory = nsObjVM[mixinName + 'Factory'];
 				if (factory === undefined)     throw ('Unable to find mixin: ' + mixinName );
 				mixin = factory(config);
 			}
+			if( glu.isObject(mixinConfig) )
+				glu.apply(mixin, mixinConfig);
 			glu.deepApply(config, mixin);
 			applyMixins.push(mixin);
 			if( glu.mtypeRegistry[mixinName] )
