@@ -318,3 +318,7 @@ glu.regAdapter('grid', {
 });
 Ext.reg('checkboxsm', Ext.grid.CheckboxSelectionModel);
 Ext.reg('rowsm', Ext.grid.RowSelectionModel);
+
+glu.regAdapter('treepanel', {
+    extend:'grid'
+});
