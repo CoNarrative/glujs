@@ -72,15 +72,7 @@ glu.regAdapter('grid', {
         delete config.items; //even though a container in terms of expand/collapse, a grid cannot have items!
     },
 	
-	isChildArray : function(propName, value) {
-        return propName=='editors' || propName === 'items' || propName === 'dockedItems' || propName === 'columns';
-    },
-
-    isChildObject : function(propName) {
-        return propName === 'tbar' || propName === 'bbar' || propName === 'buttons' || propName === 'fbar' || propName === 'lbar' || propName === 'rbar' || propName == 'colModel';
-    },
-	
-    beforeCreate:function (config, viewmodel) {
+	beforeCreate:function (config, viewmodel) {
         if (config.hasOwnProperty('selected')) {
             config._singleSelect = !glu.isArray(config.selected);
             //TODO: Check by name convention possibly
@@ -127,6 +119,15 @@ glu.regAdapter('grid', {
             }
             config.columns = columns;
         }
+		
+		if( glu.isArray( config.columns ) ){
+			for( var i = 0, len=config.columns.length; i < len; i++ ){
+				var col = config.columns[i];
+				if( col.header && col.header.indexOf(glu.conventions.localizeStart) == 0 && glu.symbol(col.header).endsWith(glu.conventions.localizeEnd)){
+					col.header = glu.localize({ns:viewmodel.ns, viewmodel:config.store, key:col.header});
+				}
+			}
+		}
 
         var sm = config.sm || config.selModel;
         if (sm && sm.xtype == 'checkboxsm') {
