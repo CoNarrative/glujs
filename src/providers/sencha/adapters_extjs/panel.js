@@ -145,6 +145,8 @@ glu.regAdapter('panel', {
         }
         var expandOrCollapseFactory = function(expanded) {
             return function(control) {
+				if( control.supressCollapseEvents )
+					return true;
                 control.fireEvent('expandorcollapserequest', control, expanded);
 				return false;
             }
@@ -198,6 +200,7 @@ glu.regAdapter('panel', {
         },
         storeValueInComponentAs : 'collapsedActual',
         setComponentProperty : function(value, oldValue, options, control) {
+			control.supressCollapseEvents = true;
             if (value == true) {
                 if (control.rendered) {
                     control.collapse(control.collapseDirection, control.animCollapse);
@@ -212,6 +215,7 @@ glu.regAdapter('panel', {
                     control.collapsed = false;
                 }
             }
+			control.supressCollapseEvents = false;
         }
     },
 
