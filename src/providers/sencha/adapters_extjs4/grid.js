@@ -230,10 +230,11 @@ glu.regAdapter('grid', {
             grid.on('s')
         },
         setComponentProperty:function (value, oldValue, options, control) {
+            if (!control.getSelectionModel().onRowMouseDown) return; //meaning it must be descended from row model
             glu.log.info('selecting records on grid to ' + value.length + ' rows.');
             //a hack based on an internal...
             var sm = control.getSelectionModel();
-            //sm.select (value, false, true);
+            sm.select (value, false, true);
         }
     },
 
