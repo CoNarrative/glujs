@@ -631,7 +631,7 @@ glu.Viewmodel = glu.extend(Object, {
      */
     open:function (config) {
         config.ns = config.ns || this.ns;
-		config.parentVM = config.parentVM || this.parentVM;
+		config.parentVM = config.parentVM || this;
         var win = glu.openWindow(config);
         return win._bindings.viewmodel;
     },
