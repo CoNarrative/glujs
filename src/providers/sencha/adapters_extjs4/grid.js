@@ -71,6 +71,15 @@ glu.regAdapter('grid', {
         glu.provider.adapters.Panel.prototype.applyConventions.apply(this, arguments);
         delete config.items; //even though a container in terms of expand/collapse, a grid cannot have items!
     },
+	
+	isChildArray : function(propName, value) {
+        return propName=='editors' || propName === 'items' || propName === 'dockedItems' || propName === 'columns';
+    },
+
+    isChildObject : function(propName) {
+        return propName === 'tbar' || propName === 'bbar' || propName === 'buttons' || propName === 'fbar' || propName === 'lbar' || propName === 'rbar' || propName == 'colModel';
+    },
+	
     beforeCreate:function (config, viewmodel) {
         if (config.hasOwnProperty('selected')) {
             config._singleSelect = !glu.isArray(config.selected);
