@@ -51,7 +51,7 @@ glu.model = function (config) {
 			}
 			if( glu.isObject(mixinConfig) )
 				glu.apply(mixin, mixinConfig);
-			glu.deepApply(config, mixin);
+			glu.deepApply(config, mixin, true);
 			applyMixins.push(mixin);
 			if( glu.mtypeRegistry[mixinName] )
 				delete config.mixins;
