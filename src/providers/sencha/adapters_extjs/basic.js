@@ -89,4 +89,59 @@ glu.regAdapter('fieldset', {
         });
         glu.provider.adapters.Container.prototype.applyConventions.apply(this, arguments);
     },
+	
+	afterCreate : function(control, viewmodel) {
+        glu.provider.adapters.Container.prototype.afterCreate.apply(this, arguments);
+        var expandOrCollapseFactory = function(expanded) {
+            return function(control) {
+				if( control.supressCollapseEvents )
+					return true;
+                control.fireEvent('expandorcollapserequest', control, expanded);
+				return false;
+            }
+        };
+		
+		if( control._bindingMap.collapsed ){
+			control.on('beforecollapse', expandOrCollapseFactory(false));
+			control.on('beforeexpand', expandOrCollapseFactory(true));
+		}
+		
+        if (control._bindingMap && control._bindingMap.activeItem!==undefined) {
+            control.addActual = control.add;
+            control.add = function(index, item) {
+                item.on('render', function() {
+                    item.getEl().on('click', function() {
+                        control.fireEvent('activeitemchangerequest', control, control.items.indexOf(item));
+                    });
+                });
+                control.addActual(index, item);
+            }
+        }
+    },
+	
+	collapsedBindings : {
+        eventName : 'expandorcollapserequest',
+        eventConverter : function(control, expanded) {
+            return !expanded;
+        },
+        storeValueInComponentAs : 'collapsedActual',
+        setComponentProperty : function(value, oldValue, options, control) {
+			control.supressCollapseEvents = true;
+            if (value == true) {
+                if (control.rendered) {
+                    control.collapse();
+                } else {
+                    control.collapsed = true;
+                }
+            } else {
+                if (control.rendered) {
+                    //hack for ext 4...
+                    control.expand();
+                } else {
+                    control.collapsed = false;
+                }
+            }
+			control.supressCollapseEvents = false;
+        }
+    },
 });

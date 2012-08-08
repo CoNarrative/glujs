@@ -107,3 +107,50 @@ glu.mreg('store', Ext.data.Store);
 glu.mreg('glustore', glu.Store);
 glu.mreg('arraystore', Ext.data.ArrayStore);
 glu.mreg('jsonstore', Ext.data.JsonStore);
+glu.mreg('treestore', Ext.data.TreeStore);
+
+glu.mreg('listtreestoreadapter', {
+	initMixin: function(){
+		var attachTo = this.attachTo;
+		if( this.parentVM[attachTo] ){
+			this.on( 'update', function(store, record, operation, modifiedFieldNames, eOpts){
+				var index = store.getRootNode().childNodes.indexOf(record), viewmodel = this[attachTo].getAt(index), i=0, len=modifiedFieldNames.length;
+				for( ; i < len; i++ ){
+					viewmodel.set(modifiedFieldNames[i], record.get(modifiedFieldNames[i]));
+				}
+			}, this.parentVM);
+			
+			if( this.parentVM[attachTo].on ){
+				this.parentVM[attachTo].on('added', function(obj, index){
+					this.getRootNode().insertChild(index, obj);
+				}, this);
+				this.parentVM[attachTo].on('remove', function(obj,index){
+					this.getRootNode().removeChild(obj);
+				}, this);
+			}
+		}
+	}
+});
+
+glu.mreg('liststoreadapter', {
+	initMixin: function(){
+		var attachTo = this.attachTo;
+		if( this.parentVM[attachTo] ){
+			this.on( 'update', function(store, record, operation, modifiedFieldNames, eOpts){
+				var index = store.indexOf(record), viewmodel = this[attachTo].getAt(index), i=0, len=modifiedFieldNames.length;
+				for( ; i < len; i++ ){
+					viewmodel.set(modifiedFieldNames[i], record.get(modifiedFieldNames[i]));
+				}
+			}, this.parentVM);
+			
+			if( this.parentVM[attachTo].on ){
+				this.parentVM[attachTo].on('added', function(obj, index){
+					this.insert(index, obj);
+				}, this);
+				this.parentVM[attachTo].on('remove', function(obj,index){
+					this.remove(obj);
+				}, this);
+			}
+		}
+	}
+});

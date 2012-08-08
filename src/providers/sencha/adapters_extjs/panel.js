@@ -145,12 +145,18 @@ glu.regAdapter('panel', {
         }
         var expandOrCollapseFactory = function(expanded) {
             return function(control) {
-                control.fireEvent('expandorcollapse', control, expanded);
+				if( control.supressCollapseEvents )
+					return true;
+                control.fireEvent('expandorcollapserequest', control, expanded);
+				return false;
             }
         };
-        control.on('collapse', expandOrCollapseFactory(false));
-        control.on('expand', expandOrCollapseFactory(true));
-
+		
+		if( control._bindingMap.collapsed ){
+			control.on('beforecollapse', expandOrCollapseFactory(false));
+			control.on('beforeexpand', expandOrCollapseFactory(true));
+		}
+		
         if (control._bindingMap && control._bindingMap.activeItem!==undefined) {
             control.addActual = control.add;
             control.add = function(index, item) {
@@ -188,12 +194,13 @@ glu.regAdapter('panel', {
      * **Convention:** @{*foo*IsCollapsed}
      */
     collapsedBindings : {
-        eventName : 'expandorcollapse',
+        eventName : 'expandorcollapserequest',
         eventConverter : function(control, expanded) {
             return !expanded;
         },
         storeValueInComponentAs : 'collapsedActual',
         setComponentProperty : function(value, oldValue, options, control) {
+			control.supressCollapseEvents = true;
             if (value == true) {
                 if (control.rendered) {
                     control.collapse(control.collapseDirection, control.animCollapse);
@@ -208,6 +215,7 @@ glu.regAdapter('panel', {
                     control.collapsed = false;
                 }
             }
+			control.supressCollapseEvents = false;
         }
     },
 
