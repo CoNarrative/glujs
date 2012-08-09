@@ -21,7 +21,6 @@ glu.List = glu.extend(Object, {
             this.add(item, true);
         }
         delete this.items;
-
     },
     /**
      * Adds an item to the list
@@ -168,8 +167,16 @@ glu.List = glu.extend(Object, {
 
     //TODO: Put in glu observable mixin
     on:function (eventName, handler, scope) {
-        scope = scope || this;
-        this._private.observable.on(eventName, handler, scope);
+		if( Ext.isObject(eventName) ){
+			scope = eventName.scope || this;
+			for( var event in eventName ){
+				this._private.observable.on(event, eventName[event], scope);
+			}
+		}
+		else{
+			scope = scope || this;
+			this._private.observable.on(eventName, handler, scope);
+		}
     },
     fireEvent:function () {
         glu.log.info('List "' + this.referenceName + '" is firing event "' + arguments[0] + '""');

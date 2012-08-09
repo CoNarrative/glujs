@@ -20,25 +20,53 @@ glu.model = function (config) {
         }
         return cfg.mtype;
     }
+	
+	//determine ns...
+    var ns = '';
+    if (!config.hasOwnProperty('ns')) {
+        throw ('Unable to create model: attempting to create a specified view model without a namespace (ns).');
+    }
+    ns = config.ns;
+	var nsObj = glu.namespace(ns);
+    var nsObjVM = glu.namespace(ns + '.' + glu.conventions.viewmodelNs);
+
     config.mtype = config.mtype || 'viewmodel';
     config.mtype = upcastIfNeeded(config);
     var mtype = config.mtype;
 
     if (glu.mtypeRegistry.hasOwnProperty(mtype)) {
         //not a view model
-        return new glu.mtypeRegistry[mtype](config);
+		var mixins = config.mixins || [], applyMixins=[], i=0;
+		for (; i < mixins.length; i++) {
+			var mixinConfig = mixins[i], mixinName;
+			if( glu.isObject(mixinConfig) )
+				mixinName = mixinConfig.type;
+			else
+				mixinName = mixinConfig;
+			var mixin = nsObjVM[mixinName] || nsObj[mixinName] || glu.mtypeRegistry[mixinName];
+			if (mixin === undefined) {
+				var factory = nsObjVM[mixinName + 'Factory'];
+				if (factory === undefined)     throw ('Unable to find mixin: ' + mixinName );
+				mixin = factory(config);
+			}
+			if( glu.isObject(mixinConfig) )
+				glu.apply(mixin, mixinConfig);
+			glu.deepApply(config, mixin, true);
+			applyMixins.push(mixin);
+			if( glu.mtypeRegistry[mixinName] )
+				delete config.mixins;
+		}
+		var temp = new glu.mtypeRegistry[mtype](config);
+		for( i=0; i < applyMixins.length; i++ ){
+			if( applyMixins[i].initMixin )
+				applyMixins[i].initMixin.apply(temp);
+		}
+		return temp;
     }
     //try seeing if it is a view model in the namespace
     glu.log.debug(mtype + ' is not a built-in type, checking for a view model under the namespace. ');
-    //determine ns...
-    var ns = '';
-    if (!config.hasOwnProperty('ns')) {
-        throw ('Unable to create model: attempting to create a specified view model without a namespace (ns).');
-    }
-    ns = config.ns;
+    
     var className = mtype;
-    var nsObj = glu.namespace(ns);
-    var nsObjVM = glu.namespace(ns + '.' + glu.conventions.viewmodelNs);
     var vmSpecBase = nsObjVM[className] || nsObj[className];
     if (vmSpecBase === undefined) {
         //check for factory
@@ -51,17 +79,8 @@ glu.model = function (config) {
     //make a copy...
     var vmSpec = {};
     //apply mixins...
-    var mixins = vmSpecBase.mixins || [];
-    for (var i = 0; i < mixins.length; i++) {
-        var mixinName = mixins[i];
-        var mixin = nsObjVM[mixinName] || nsObj[mixinName];
-        if (mixin === undefined) {
-            var factory = nsObjVM[mixinName + 'Factory'];
-            if (factory === undefined)     throw ('Unable to find mixin: ' + mixinName );
-            mixin = factory(config);
-        }
-        glu.deepApply(vmSpec, mixin);
-    }
+    //applyMixins(vmSpecBase);
+	
     //apply the specification
     glu.deepApply(vmSpec, vmSpecBase);
     //apply unique configs over top...
