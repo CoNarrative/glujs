@@ -9,6 +9,13 @@ glu.DataModel = glu.extend(glu.Viewmodel, {
         if (config.recType) {
             this._private.model = glu.walk(config.ns + '.models.' + config.recType);
         } else {
+			if( glu.isArray(config.fields) ){
+				for( var i = 0, len=config.fields.length; i < len; i++){
+					if( glu.isString(config.fields[i]) ){
+						config.fields[i] = {name: config.fields[i], type: 'string'};	//TODO: Infer datatype here
+					}
+				}
+			}
             this._private.model = {fields:config.fields};
         }
         this._private.recType = config.recType;

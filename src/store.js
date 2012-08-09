@@ -147,6 +147,9 @@ glu.mreg('liststoreadapter', {
                 this.parentVM[attachTo].on('added', function(obj, index){
                     this.insert(index, obj);
                 }, this);
+				this.parentVM[attachTo].on('edited', function(obj, index){
+					this.getAt(index).set(obj);
+				}, this);
                 this.parentVM[attachTo].on('removed', function(obj,index){
                     this.removeAt(obj);
                 }, this);
