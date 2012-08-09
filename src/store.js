@@ -151,7 +151,7 @@ glu.mreg('liststoreadapter', {
 					this.getAt(index).set(obj);
 				}, this);
                 this.parentVM[attachTo].on('removed', function(obj,index){
-                    this.removeAt(obj);
+                    this.removeAt(index);
                 }, this);
             }
         }
