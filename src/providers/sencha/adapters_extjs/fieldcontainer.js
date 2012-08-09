@@ -34,9 +34,9 @@ glu.regAdapter('fieldcontainer', {
             glu.provider.itemsHelper.bindItems(context, true);
         }
     },
-	
-	beforeCollect: function(config){
-		glu.provider.adapters.Panel.prototype.beforeCollect.apply(this, arguments);
-		this.checkForEditors(config, {fieldLabel:'labelEl'});
-	}
+
+    beforeCollect: function(config){
+        glu.provider.adapters.Panel.prototype.beforeCollect.apply(this, arguments);
+        this.checkForEditors(config, {fieldLabel:'labelEl'});
+    }
 });

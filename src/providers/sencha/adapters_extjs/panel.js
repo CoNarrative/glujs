@@ -145,18 +145,18 @@ glu.regAdapter('panel', {
         }
         var expandOrCollapseFactory = function(expanded) {
             return function(control) {
-				if( control.supressCollapseEvents )
-					return true;
+                if( control.supressCollapseEvents )
+                    return true;
                 control.fireEvent('expandorcollapserequest', control, expanded);
-				return false;
+                return false;
             }
         };
-		
-		if( control._bindingMap.collapsed ){
-			control.on('beforecollapse', expandOrCollapseFactory(false));
-			control.on('beforeexpand', expandOrCollapseFactory(true));
-		}
-		
+
+        if( control._bindingMap.collapsed ){
+            control.on('beforecollapse', expandOrCollapseFactory(false));
+            control.on('beforeexpand', expandOrCollapseFactory(true));
+        }
+
         if (control._bindingMap && control._bindingMap.activeItem!==undefined) {
             control.addActual = control.add;
             control.add = function(index, item) {
@@ -200,7 +200,7 @@ glu.regAdapter('panel', {
         },
         storeValueInComponentAs : 'collapsedActual',
         setComponentProperty : function(value, oldValue, options, control) {
-			control.supressCollapseEvents = true;
+            control.supressCollapseEvents = true;
             if (value == true) {
                 if (control.rendered) {
                     control.collapse(control.collapseDirection, control.animCollapse);
@@ -215,7 +215,7 @@ glu.regAdapter('panel', {
                     control.collapsed = false;
                 }
             }
-			control.supressCollapseEvents = false;
+            control.supressCollapseEvents = false;
         }
     },
 
