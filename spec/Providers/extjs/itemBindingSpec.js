@@ -408,8 +408,8 @@ describe('Item Binding Spec', function () {
                                 xtype:'button',
                                 text:'@{name}'
                             }
-                        },
-                        bbar:'@{flavors}'
+                        }
+                        //bbar:'@{flavors}'
                     }
                 }
             };
@@ -433,11 +433,11 @@ describe('Item Binding Spec', function () {
             expect(view.getTopToolbar().items.first().text).toEqual('chocolate');
             expect(view.getTopToolbar().items.get(1).text).toEqual('vanilla');
         });
-        it('the view\'s bottom toolbar (bound with array shortcut) should have two corresponding buttons rendered by the itemTemplate', function () {
-            var tbar = view.getTopToolbar();
-            expect(view.getBottomToolbar().items.first().text).toEqual('chocolate');
-            expect(view.getBottomToolbar().items.get(1).text).toEqual('vanilla');
-        });
+//        it('the view\'s bottom toolbar (bound with array shortcut) should have two corresponding buttons rendered by the itemTemplate', function () {
+//            var tbar = view.getTopToolbar();
+//            expect(view.getBottomToolbar().items.first().text).toEqual('chocolate');
+//            expect(view.getBottomToolbar().items.get(1).text).toEqual('vanilla');
+//        });
         describe('when an existing item is modified', function () {
             beforeEach(function () {
                 vm.flavors.getAt(0).set('name', 'chocolatesupreme');

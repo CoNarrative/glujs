@@ -15,14 +15,24 @@ glu.defModel('examples.assets.asset', {
         return this.status === 'active';
     },
 
-    isPastMaintenance$:function(){
-        return true;
+    maintenanceEndDate$:function(){
+        if (this.maintenanceStartDate==null) return 0;
+        return Ext.Date.add(this.maintenanceStartDate,Ext.Date.YEAR,this.yearsOfMaintenance);
     },
 
-    showPastMaintenanceWarning$:function(){
-        return this.isPastMaintenance && this.rootVM.options.offMaintenanceWarning;
-          //TODO: can also do this.up().options.... pattern which will search up to find closest AND flag same to binder
+    yearsOfMaintenanceRemaining$:function(){
+        if (this.maintenanceStartDate==null) return 0;
+        var yearsLeft = moment(this.maintenanceEndDate).diff(Ext.Date.now(), 'years');
+        return yearsLeft;
     },
+
+//    isPastMaintenance$: function(){
+//        return this.yearsOfMaintenanceRemaining <= 0;
+//    },
+//
+//    warning$:function(){
+//        return this.isPastMaintenance ? 'Past maintenance!' : '';
+//    },
 
     save:function(){
         this.set('isSaving', true)

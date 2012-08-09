@@ -80,7 +80,10 @@ glu.regAdapter('autofield', {
                 field = dataModel.getPropertyInfo(key);
             }
             var xtype = 'textfield';
-
+            if (dataModel[key+'$']){
+                //formulas are always display-only
+                xtype = 'displayfield';
+            } else
             if (field.name == 'id') {
                 //anything named id is read-only unless otherwise indicated
                 xtype = 'displayfield';

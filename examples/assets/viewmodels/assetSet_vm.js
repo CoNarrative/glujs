@@ -22,6 +22,10 @@ glu.defModel('examples.assets.assetSet', {
     //will hold a record once selected...
     assetSelections:[],
 
+    isFocused$ : function(){
+        return this.parentVM.assetSetWithFocus == this;
+    },
+
     //likewise
     assetWithFocus:null,
 

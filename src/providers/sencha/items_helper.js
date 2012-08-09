@@ -44,6 +44,7 @@ glu.provider.itemsHelper = {
         // if(viewItem.closable) {
         // interceptCloseCommand(viewItem);
         // }
+        viewItem._vm = item; //add view model directly to view (for now)
         if (container.insert) {
             container.insert(idx, viewItem);
         } else {

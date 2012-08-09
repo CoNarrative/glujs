@@ -89,23 +89,23 @@ glu.regAdapter('fieldset', {
         });
         glu.provider.adapters.Container.prototype.applyConventions.apply(this, arguments);
     },
-	
-	afterCreate : function(control, viewmodel) {
+
+    afterCreate : function(control, viewmodel) {
         glu.provider.adapters.Container.prototype.afterCreate.apply(this, arguments);
         var expandOrCollapseFactory = function(expanded) {
             return function(control) {
-				if( control.supressCollapseEvents )
-					return true;
+                if( control.supressCollapseEvents )
+                    return true;
                 control.fireEvent('expandorcollapserequest', control, expanded);
-				return false;
+                return false;
             }
         };
-		
-		if( control._bindingMap.collapsed ){
-			control.on('beforecollapse', expandOrCollapseFactory(false));
-			control.on('beforeexpand', expandOrCollapseFactory(true));
-		}
-		
+
+        if( control._bindingMap.collapsed ){
+            control.on('beforecollapse', expandOrCollapseFactory(false));
+            control.on('beforeexpand', expandOrCollapseFactory(true));
+        }
+
         if (control._bindingMap && control._bindingMap.activeItem!==undefined) {
             control.addActual = control.add;
             control.add = function(index, item) {
@@ -118,15 +118,15 @@ glu.regAdapter('fieldset', {
             }
         }
     },
-	
-	collapsedBindings : {
+
+    collapsedBindings : {
         eventName : 'expandorcollapserequest',
         eventConverter : function(control, expanded) {
             return !expanded;
         },
         storeValueInComponentAs : 'collapsedActual',
         setComponentProperty : function(value, oldValue, options, control) {
-			control.supressCollapseEvents = true;
+            control.supressCollapseEvents = true;
             if (value == true) {
                 if (control.rendered) {
                     control.collapse();
@@ -141,7 +141,7 @@ glu.regAdapter('fieldset', {
                     control.collapsed = false;
                 }
             }
-			control.supressCollapseEvents = false;
+            control.supressCollapseEvents = false;
         }
     },
 });
