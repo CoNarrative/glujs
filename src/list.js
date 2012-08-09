@@ -167,16 +167,16 @@ glu.List = glu.extend(Object, {
 
     //TODO: Put in glu observable mixin
     on:function (eventName, handler, scope) {
-		if( Ext.isObject(eventName) ){
-			scope = eventName.scope || this;
-			for( var event in eventName ){
-				this._private.observable.on(event, eventName[event], scope);
-			}
-		}
-		else{
-			scope = scope || this;
-			this._private.observable.on(eventName, handler, scope);
-		}
+        if( Ext.isObject(eventName) ){
+            scope = eventName.scope || this;
+            for( var event in eventName ){
+                this._private.observable.on(event, eventName[event], scope);
+            }
+        }
+        else{
+            scope = scope || this;
+            this._private.observable.on(eventName, handler, scope);
+        }
     },
     fireEvent:function () {
         glu.log.info('List "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
@@ -196,4 +196,8 @@ glu.List.prototype.where = function(filter) {
 
 glu.List.prototype.count = function(filter) {
     return this.where(filter).length;
+}
+
+glu.List.prototype.any = function(filter) {
+    return this.where(filter).length > 0;
 }

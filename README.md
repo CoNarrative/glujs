@@ -131,3 +131,7 @@ Install per their instructions so that jsduck is on your shell path.
 From the command line with the path in the root of the GluJS project, run:
 
     jsduck --config jsduck.json
+
+##Contributors
+
+[Mike Gai] (https://github.com/mikegai) (creator), [Nick Tackes] (https://github.com/nicktackes), [Travis Barajas] (https://github.com/tvbarajas)

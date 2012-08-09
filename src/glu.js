@@ -414,9 +414,9 @@ glu = {
         } else {
             cfg.key = key;
         }
-		if( cfg.key.indexOf(glu.conventions.localizeStart) == 0 && glu.symbol(cfg.key).endsWith(glu.conventions.localizeEnd) ){
-			cfg.key = cfg.key.substring(glu.conventions.localizeStart.length, cfg.key.length - glu.conventions.localizeEnd.length);
-		}
+        if( cfg.key.indexOf(glu.conventions.localizeStart) == 0 && glu.symbol(cfg.key).endsWith(glu.conventions.localizeEnd) ){
+            cfg.key = cfg.key.substring(glu.conventions.localizeStart.length, cfg.key.length - glu.conventions.localizeEnd.length);
+        }
         cfg.ns = cfg.ns || cfg.viewmodel.ns;
         cfg.params = cfg.params || {};
         return this.localizer(cfg);

@@ -1,0 +1,3 @@
+.panel-focus-true .x-panel-header {
+   background-image : -webkit-radial-gradient(5% 50%, circle closest-corner, white, lightblue);
+}
