@@ -40,6 +40,22 @@ glu.regAdapter('combo',{
     },
     afterCreate:function (control, viewmodel) {
         glu.provider.adapters.Field.prototype.afterCreate.apply(this, arguments);
+		
+		if( control.enableKeyEvents ){
+			if (!control.delayedEvent) {
+				control.delayedEvent = new Ext.util.DelayedTask(function () {
+					control.fireEvent('valuechanged', control);
+				});
+			}
+			control.addListener('keyup', function (t,e,o) {
+				control.delayedEvent.delay(control.keyDelay || 100); //give some time for multiple keypresses...
+			}, control);
+		}
+		
+		control.addListener('select', function (t,e,o) {
+				control.delayedEvent.delay(control.keyDelay || 100); //give some time for multiple keypresses...
+			}, control);
+		
         //Solves a race condition in which the initial value is set before the backing store has been loaded
         //does not attempt to solve later race conditions with stores reloading
         if (!control.valueField) return;
@@ -61,7 +77,13 @@ glu.regAdapter('combo',{
         // //control.store.un('load'); //stop listening for load event
         // });                
     },
+	beforeCollect:function (config) {
+        glu.provider.adapters.Field.prototype.beforeCollect.apply(this, arguments);
+		if( config.editable )
+            config.enableKeyEvents = true;
+    },
     initAdapter : function(){
-        this.valueBindings = glu.deepApplyIf({eventName : 'select'},this.valueBindings);
+        //this.valueBindings = glu.deepApplyIf({eventName : 'select'},this.valueBindings);
+		this.valueBindings = glu.deepApplyIf({eventName : 'valuechanged'},this.valueBindings);
     }
 });

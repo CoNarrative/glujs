@@ -125,7 +125,7 @@ glu.mreg('listtreestoreadapter', {
                     this.getRootNode().insertChild(index, obj);
                 }, this);
                 this.parentVM[attachTo].on('removed', function(obj,index){
-                    this.getRootNode().removeChild(obj);
+                    this.getRootNode().removeChild(this.getRootNode().getChildAt(index));
                 }, this);
             }
         }
