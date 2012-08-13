@@ -87,3 +87,7 @@ glu.regAdapter('combo',{
 		this.valueBindings = glu.deepApplyIf({eventName : 'valuechanged'},this.valueBindings);
     }
 });
+
+glu.regAdapter('combobox',{
+    extend : 'combo'
+});

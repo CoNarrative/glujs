@@ -145,3 +145,7 @@ glu.regAdapter('fieldset', {
         }
     },
 });
+
+glu.regAdapter('multiselect', {
+    extend: 'field'
+});
