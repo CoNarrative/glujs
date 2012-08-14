@@ -18,9 +18,15 @@ Ext.apply(glu.provider.binder, {
             return; //has no bindings
         }
         var control = Ext.getCmp(config.id);
+        var bindingAdapter = config._bindings.adapter;
         if (control === undefined) {
-            glu.log.warn('unable to find and apply bindings to control ' + config.id);
-            return;
+            if (bindingAdapter.findControl) {
+                control = bindingAdapter.findControl(config);
+            }
+            if (control === undefined) {
+                glu.log.warn('unable to find and apply bindings to control ' + config.id);
+                return;
+            }
         }
         if (control._private != null && control._private.isBound == true) {
             return; //already bound
@@ -30,7 +36,7 @@ Ext.apply(glu.provider.binder, {
 
         control._private = control._private || {};
         control._private.isBound = true;
-        var bindingAdapter = config._bindings.adapter;
+
 
         var bindings = config._bindings;
         for (var i = 0; i < bindings.length; i++) {
