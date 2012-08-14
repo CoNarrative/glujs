@@ -116,7 +116,8 @@ glu.mreg('listtreestoreadapter', {
             this.on( 'update', function(store, record, operation, modifiedFieldNames, eOpts){
                 var index = store.getRootNode().childNodes.indexOf(record), viewmodel = this[attachTo].getAt(index), i=0, len=modifiedFieldNames.length;
                 for( ; i < len; i++ ){
-                    viewmodel.set(modifiedFieldNames[i], record.get(modifiedFieldNames[i]));
+					if( viewmodel[modifiedFieldNames[i]] !== undefined )
+						viewmodel.set(modifiedFieldNames[i], record.get(modifiedFieldNames[i]));
                 }
             }, this.parentVM);
 
@@ -127,6 +128,19 @@ glu.mreg('listtreestoreadapter', {
                 this.parentVM[attachTo].on('removed', function(obj,index){
                     this.getRootNode().removeChild(this.getRootNode().getChildAt(index));
                 }, this);
+				//Child node listners
+				this.parentVM[attachTo].on('appendchild', function(obj, parentIndex){
+					var node = this.getRootNode().getChildAt(parentIndex);
+					node.appendChild(obj);
+					if( !node.isExpanded() )
+						node.expand();
+				}, this);
+				this.parentVM[attachTo].on('removechild', function(parentIndex, child){
+					this.getRootNode().getChildAt(parentIndex).removeChild(child);
+				}, this);
+				this.parentVM[attachTo].on('editedchild', function(parentIndex, child, newChild){
+					this.getRootNode().getChildAt(parentIndex).replaceChild(newChild, child);
+				}, this);
             }
         }
     }
