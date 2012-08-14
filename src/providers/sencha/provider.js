@@ -8,13 +8,14 @@ Ext.apply(glu.provider, {
         return Ext.getCmp(id);
     },
     widget:(Ext.getVersion().major > 3 || Ext.getProvider().provider == 'touch') ? function (config) {
-        return Ext.widget(config.xtype, config);
+        return config.xtype.indexOf('svg-')==0?Ext.createByAlias('svgwidgets.' + config.xtype, config): Ext.widget(config.xtype, config);
     } : function (config) {
         return Ext.create(config)
     },
 
     view:function (vm, viewSpec, parent) {
         viewSpec.xtype = viewSpec.xtype || 'panel';
+        if (parent && parent.svgParentId) viewSpec.svgParentId = parent.svgParentId; //for svg controls pass down root element
         var bindings = glu.provider.binder.collectBindings(viewSpec, vm, parent).bindings;
         var view = this.widget(viewSpec);
         glu.provider.binder.applyBindingsList(bindings);
