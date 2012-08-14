@@ -41,12 +41,13 @@ glu.regAdapter('combo',{
     afterCreate:function (control, viewmodel) {
         glu.provider.adapters.Field.prototype.afterCreate.apply(this, arguments);
 		
+		if (!control.delayedEvent) {
+			control.delayedEvent = new Ext.util.DelayedTask(function () {
+				control.fireEvent('valuechanged', control);
+			});
+		}
+			
 		if( control.enableKeyEvents ){
-			if (!control.delayedEvent) {
-				control.delayedEvent = new Ext.util.DelayedTask(function () {
-					control.fireEvent('valuechanged', control);
-				});
-			}
 			control.addListener('keyup', function (t,e,o) {
 				control.delayedEvent.delay(control.keyDelay || 100); //give some time for multiple keypresses...
 			}, control);
