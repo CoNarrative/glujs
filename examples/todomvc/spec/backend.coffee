@@ -1,32 +1,30 @@
 (glu.ns 'todo').createMockBackend = (auto, recordNum)->
-  assets = glu.test.createTable todo.models.asset, 8
-  assets.create({id:'7777', name:'aardvark',status:'active'});
-  assets.create({id:'8888', name:'aare',status:'active'});
-  assets.create({id:'9999', name:'aarf',status:'active'});
+  tasks = glu.test.createTable todo.models.task, 8
+  tasks.create({id:'7777', description:'do stuff', priority:'high'});
   backend = glu.test.createBackend
     defaultRoot: '/json/',
     fallbackToAjax: auto,
     autoRespond: auto,
     routes:
-      'removeAssets':
-        url: 'assets/action/remove',
-        handle: (req) -> assets.remove req.params.ids
+      'removeTodos':
+        url: 'todos/action/remove',
+        handle: (req) -> todo.remove req.params.ids
       ,
       'requestVerification':
-        url: 'assets/action/requestVerification',
-        handle: (req) -> assets.update req.params.ids , {status:'verifying'}
+        url: 'todo/action/requestVerification',
+        handle: (req) -> todo.update req.params.ids , {status:'verifying'}
       ,
       #TODO: Support "put" method
-      'assetSave':
-        url: 'assets/:id/action/save',
-        handle: (req) -> assets.replace req.params.id , req.jsonData
+      'todoSave':
+        url: 'todo/:id/action/save',
+        handle: (req) -> todo.replace req.params.id , req.jsonData
       ,
-      'assets':
-        url: 'assets',
-        handle: (req) -> assets.list req.params
+      'todos':
+        url: 'todo',
+        handle: (req) -> todo.list req.params
       ,
-      'asset':
-        url: 'assets/:id',
-        handle: (req) -> assets.get req.params.id
+      'todo':
+        url: 'todo/:id',
+        handle: (req) -> todo.get req.params.id
   backend.capture()
-  return {backend: backend, assets: assets}
+  return {backend: backend, tasks: tasks}
