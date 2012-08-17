@@ -55,6 +55,7 @@ app.get('/examples/helloworld/extjs3', function (req, res) {
 app.get('/examples/helloworld/extjs4', function (req, res) {
     res.render('helloworld.jade', {locals:{extjs_version: 4}});
 });
+
 //app.get('/examples/medical/extjs4', function (req, res) {
 //    res.render('medical.jade', {locals:{extjs_version:4}});
 //});
@@ -63,18 +64,16 @@ app.get('/examples/helloworld/extjs4', function (req, res) {
 //});
 
 //Sencha Touch (Experimental)
-app.get('/examples/senchatouch/simple/index.html',function(req,res){
-    res.render('senchatouch-school-1.jade',{title:''});
-});
-
-app.get('/examples/senchatouch/school/index.html',function(req,res){
-    res.render('senchatouch-school-1.jade',{title:''});
-});
-
 app.get('/spec/touch2',function(req,res){
-    res.render('senchatouch-runner.jade',{title:''});
+    res.render('senchatouch-runner.jade',{extjs_version:'touch'});
+});
+app.get('/examples/assets-touch',function(req,res){
+    res.render('asset-touch.jade',{locals:{extjs_version: 'touch'}});
 });
 
+app.get('/examples/todomvc/touch', function (req, res) {
+    res.render('todo.jade', {locals:{extjs_version: 'touch'}});
+});
 //startup
 var port = process.env.PORT || 8123;
 app.listen(port, function () {

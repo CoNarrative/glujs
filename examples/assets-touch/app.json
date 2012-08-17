@@ -1,0 +1,56 @@
+{
+    "name": "Ajax",
+    "js": [
+        {
+            "path": "views/main_view.js",
+            "update": "delta"
+        },
+	    {
+		    "path": "viewmodels/main_vm.js",
+		    "update": "delta"
+	    },
+	    {
+		    "path": "app.js",
+		    "update": "delta"
+	    },
+	    {
+		    "path":"locale/locale_en.js",
+		    "update":"delta"
+	    }
+
+    ],
+    "css": [
+        {
+            "path": "resources/css/app.css",
+            "update": "delta"
+        }
+    ],
+    "appCache": {
+        "cache": [
+            "index.html"
+        ],
+        "network": [
+            "*"
+        ],
+        "fallback": []
+    },
+    "extras": [
+        "resources/icons",
+        "resources/loading",
+        "test.json"
+    ],
+    "archivePath": "archive",
+    "buildPaths": {
+        "testing": "../../deploy/testing/ajax",
+        "production": "../../deploy/production/ajax",
+        "package": "../../deploy/package/ajax",
+        "native": "../../deploy/native/ajax"
+    },
+    "buildOptions": {
+        "product": "touch",
+        "minVersion": 3,
+        "debug": false,
+        "logger": "no"
+    },
+    "id": "3a867610-670a-11e1-a90e-4318029d18bb"
+}

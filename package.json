@@ -3,12 +3,12 @@
     "version":"1.1.0",
     "private":true,
     "engines": {
-        "node": "0.6.x",
-        "npm":  "1.1.x"
+        "node": ">=0.6.x",
+        "npm":  ">=1.1.x"
     },
     "dependencies":{
-        "express":"2.5.4",
-        "jade":"0.19.0",
+        "express":"2.x.x",
+        "jade":"0.26.x",
         "uglify-js":">=1.2.6",
         "wrench":"1.3.9",
         "commander":"0.6.0",
