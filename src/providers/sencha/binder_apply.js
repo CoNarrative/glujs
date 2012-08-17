@@ -128,7 +128,12 @@ Ext.apply(glu.provider.binder, {
         var wrapper = function (value, oldValue, options) {
             var control = Ext.getCmp(controlId);
             if (control===undefined) {
-                return 'discard';
+                if (bindingAdapter.findControl) {
+                    control = bindingAdapter.findControl(config);
+                }
+                if (control === undefined) {
+                    return 'discard';
+                }
             }
             if (binding.invertValue) {
                 value = !value;
