@@ -185,6 +185,13 @@ glu.regAdapter('panel', {
             control.update(value);
         }
     },
+    tplBindings : {
+        setComponentProperty : function(value, oldValue, options, control) {
+            // if the value is an object
+            var template = new Ext.XTemplate(value);
+            control.tpl = template;
+        }
+    },
 
     /**
      * @cfg {Boolean} html
