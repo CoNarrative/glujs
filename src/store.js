@@ -163,7 +163,12 @@ glu.mreg('liststoreadapter', {
                     this.insert(index, obj);
                 }, this);
 				this.parentVM[attachTo].on('edited', function(obj, index){
-					this.getAt(index).set(obj);
+					var editObj = {};
+					for( var i = 0; i < this.model.getFields().length; i++ ){
+						var fieldName = this.model.getFields()[i].name;
+						editObj[fieldName] = obj[fieldName];
+					}
+					this.getAt(index).set(editObj);
 				}, this);
                 this.parentVM[attachTo].on('removed', function(obj,index){
                     this.removeAt(index);
