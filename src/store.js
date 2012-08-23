@@ -3,8 +3,8 @@
  */
 if (Ext.getVersion().major > 3 || Ext.getProvider().provider == 'touch') {
     Ext.define('glu.Store', {
-        extend:'Ext.data.Store',
-        constructor:function (config) {
+        extend : 'Ext.data.Store',
+        constructor : function(config) {
             var modelDefName = config.model;
             if (config.model && config.model.indexOf('\.') == -1) {
                 config.model = config.ns + '.models.extjs.' + config.model;
@@ -13,14 +13,15 @@ if (Ext.getVersion().major > 3 || Ext.getProvider().provider == 'touch') {
             if (!found) {
                 if (Ext.getProvider().provider == 'touch') {
                     Ext.define(config.model, {
-                        extend:'Ext.data.Model',
-                        config:{fields:glu.walk(config.ns + '.models.' + modelDefName).fields}
+                        extend : 'Ext.data.Model',
+                        config : {
+                            fields : glu.walk(config.ns + '.models.' + modelDefName).fields
+                        }
                     });
-                }
-                else {
+                } else {
                     Ext.define(config.model, {
-                        extend:'Ext.data.Model',
-                        fields:glu.walk(config.ns + '.models.' + modelDefName).fields
+                        extend : 'Ext.data.Model',
+                        fields : glu.walk(config.ns + '.models.' + modelDefName).fields
                     });
                 }
             }
@@ -30,13 +31,13 @@ if (Ext.getVersion().major > 3 || Ext.getProvider().provider == 'touch') {
     });
 } else {
     glu.Store = glu.extend(Ext.data.JsonStore, {
-        remoteSort:true,
-        _lastSortField:null,
-        _lastSortOrder:'ASC',
-        constructor:function (config) {
+        remoteSort : true,
+        _lastSortField : null,
+        _lastSortOrder : 'ASC',
+        constructor : function(config) {
             Ext.applyIf(config, {
-                totalProperty:'totalCount',
-                root:'result'
+                totalProperty : 'totalCount',
+                root : 'result'
             });
             if (config.hasOwnProperty('recType')) {
                 var model = glu.walk(config.ns + '.models.' + config.recType);
@@ -48,32 +49,32 @@ if (Ext.getVersion().major > 3 || Ext.getProvider().provider == 'touch') {
                 delete config.params;
             }
             config.proxy = config.proxy || new Ext.data.HttpProxy({
-                method:'POST',
-                prettyUrls:false,
-                url:config.url
+                method : 'POST',
+                prettyUrls : false,
+                url : config.url
             });
             config.proxy.url = config.proxy.url || config.url;
             delete config.url;
             this.deferredLoader = new Ext.util.DelayedTask();
             if (Ext.getVersion().major > 3 || Ext.getProvider().provider == 'touch') {
                 config.reader = {
-                    type:'json',
-                    root:config.root,
-                    totalProperty:config.totalProperty
+                    type : 'json',
+                    root : config.root,
+                    totalProperty : config.totalProperty
                 }
             }
             glu.Store.superclass.constructor.call(this, config);
         },
-        loadActual:function (loadConfig) {
+        loadActual : function(loadConfig) {
             if (this.paramGenerator) {
                 loadConfig = {
-                    params:{}
+                    params : {}
                 };
                 loadConfig.params = Ext.apply(loadConfig.params, this._serialize(Ext.createDelegate(this.paramGenerator, this.parentVM)()));
             }
             glu.Store.superclass.load.call(this, loadConfig);
         },
-        load:function (loadConfig) {
+        load : function(loadConfig) {
             if (glu.testMode === true) {
                 this.loadActual(loadConfig);
                 return;
@@ -83,7 +84,7 @@ if (Ext.getVersion().major > 3 || Ext.getProvider().provider == 'touch') {
             return true;
             //always happy to oblige...
         },
-        loadData:function (config, append) {
+        loadData : function(config, append) {
             if ((Ext.getVersion().major > 3 || Ext.getProvider().provider == 'touch') && !Ext.isArray(config)) {
                 glu.Store.superclass.loadData.call(this, config[this.root], append);
                 this.totalCount = config[this.totalProperty];
@@ -91,7 +92,7 @@ if (Ext.getVersion().major > 3 || Ext.getProvider().provider == 'touch') {
                 glu.Store.superclass.loadData.call(this, config, append);
             }
         },
-        _serialize:function (data) {
+        _serialize : function(data) {
             if (data) {
                 for (var k in data) {
                     if (glu.isArray(data[k])) {
@@ -110,22 +111,36 @@ glu.mreg('jsonstore', Ext.data.JsonStore);
 glu.mreg('treestore', Ext.data.TreeStore);
 
 glu.mreg('listtreestoreadapter', {
-    initMixin: function(){
+    initMixin : function() {
         var attachTo = this.attachTo;
-        if( this.parentVM[attachTo] ){
-            this.on( 'update', function(store, record, operation, modifiedFieldNames, eOpts){
-                var index = store.getRootNode().childNodes.indexOf(record), viewmodel = this[attachTo].getAt(index), i=0, len=modifiedFieldNames.length;
-                for( ; i < len; i++ ){
-                    viewmodel.set(modifiedFieldNames[i], record.get(modifiedFieldNames[i]));
+        if (this.parentVM[attachTo]) {
+            this.on('update', function(store, record, operation, modifiedFieldNames, eOpts) {
+                var index = store.getRootNode().childNodes.indexOf(record), viewmodel = this[attachTo].getAt(index), i = 0, len = modifiedFieldNames.length;
+                for (; i < len; i++) {
+                    if (viewmodel[modifiedFieldNames[i]] !== undefined)
+                        viewmodel.set(modifiedFieldNames[i], record.get(modifiedFieldNames[i]));
                 }
             }, this.parentVM);
 
-            if( this.parentVM[attachTo].on ){
-                this.parentVM[attachTo].on('added', function(obj, index){
+            if (this.parentVM[attachTo].on) {
+                this.parentVM[attachTo].on('added', function(obj, index) {
                     this.getRootNode().insertChild(index, obj);
                 }, this);
-                this.parentVM[attachTo].on('remove', function(obj,index){
-                    this.getRootNode().removeChild(obj);
+                this.parentVM[attachTo].on('removed', function(obj, index) {
+                    this.getRootNode().removeChild(this.getRootNode().getChildAt(index));
+                }, this);
+                //Child node listners
+                this.parentVM[attachTo].on('appendchild', function(obj, parentIndex) {
+                    var node = this.getRootNode().getChildAt(parentIndex);
+                    node.appendChild(obj);
+                    if (!node.isExpanded())
+                        node.expand();
+                }, this);
+                this.parentVM[attachTo].on('removechild', function(parentIndex, child) {
+                    this.getRootNode().getChildAt(parentIndex).removeChild(child);
+                }, this);
+                this.parentVM[attachTo].on('editedchild', function(parentIndex, child, newChild) {
+                    this.getRootNode().getChildAt(parentIndex).replaceChild(newChild, child);
                 }, this);
             }
         }
@@ -133,22 +148,31 @@ glu.mreg('listtreestoreadapter', {
 });
 
 glu.mreg('liststoreadapter', {
-    initMixin: function(){
+    initMixin : function() {
         var attachTo = this.attachTo;
-        if( this.parentVM[attachTo] ){
-            this.on( 'update', function(store, record, operation, modifiedFieldNames, eOpts){
-                var index = store.indexOf(record), viewmodel = this[attachTo].getAt(index), i=0, len=modifiedFieldNames.length;
-                for( ; i < len; i++ ){
-                    viewmodel.set(modifiedFieldNames[i], record.get(modifiedFieldNames[i]));
+        if (this.parentVM[attachTo]) {
+            this.on('update', function(store, record, operation, modifiedFieldNames, eOpts) {
+                var index = store.indexOf(record), viewmodel = this[attachTo].getAt(index), i = 0, len = modifiedFieldNames.length;
+                for (; i < len; i++) {
+                    if (viewmodel[modifiedFieldNames[i]] !== undefined)
+                        viewmodel.set(modifiedFieldNames[i], record.get(modifiedFieldNames[i]));
                 }
             }, this.parentVM);
 
-            if( this.parentVM[attachTo].on ){
-                this.parentVM[attachTo].on('added', function(obj, index){
+            if (this.parentVM[attachTo].on) {
+                this.parentVM[attachTo].on('added', function(obj, index) {
                     this.insert(index, obj);
                 }, this);
-                this.parentVM[attachTo].on('remove', function(obj,index){
-                    this.remove(obj);
+                this.parentVM[attachTo].on('edited', function(obj, index) {
+                    var editObj = {};
+                    for (var i = 0; i < this.model.getFields().length; i++) {
+                        var fieldName = this.model.getFields()[i].name;
+                        editObj[fieldName] = obj[fieldName];
+                    }
+                    this.getAt(index).set(editObj);
+                }, this);
+                this.parentVM[attachTo].on('removed', function(obj, index) {
+                    this.removeAt(index);
                 }, this);
             }
         }

@@ -651,6 +651,11 @@ glu.Viewmodel = glu.extend(Object, {
             if(!glu.isFunction(child.init))continue;
             child.init();
         }
-    }
+    },
+	
+	unParent: function(){
+		this._ob.detach('parentVM');
+		delete this.parentVM;
+	}
 });
 glu.mreg('viewmodel', glu.Viewmodel);

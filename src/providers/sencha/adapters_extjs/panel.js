@@ -47,7 +47,7 @@ glu.regAdapter('panel', {
         }
     },
 
-    buttonsShortcut : function(value) {
+    buttonsShortcut : function(value, config) {
         return {
             xtype : 'toolbar',
             defaultType : 'button',
@@ -55,12 +55,12 @@ glu.regAdapter('panel', {
             dock : 'bottom',
             layout : {
                 // default to 'end' (right-aligned)
-                pack : 'end'
+                pack : { left:'start', center:'center' }[config.buttonAlign] || 'end'
             }
         }
     },
 
-    fbarShortcut : function(value) {
+    fbarShortcut : function(value, config) {
         return {
             xtype : 'toolbar',
             defaultType : 'button',
@@ -68,7 +68,7 @@ glu.regAdapter('panel', {
             dock : 'bottom',
             layout : {
                 // default to 'end' (right-aligned)
-                pack : 'end'
+                pack : { left:'start', center:'center' }[config.buttonAlign] || 'end'
             }
         }
     },
