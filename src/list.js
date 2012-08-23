@@ -206,6 +206,9 @@ glu.mreg('keytracking',{
     },
     containsKey:function(key){
         return this.keyMap[key]!==undefined;
+    },
+    getById:function(key){
+        return this.keyMap[key];
     }
 })
 
