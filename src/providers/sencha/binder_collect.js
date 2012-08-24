@@ -195,7 +195,7 @@ Ext.apply(glu.provider.binder, {
                     //appears to be an array shortcut for an actual single special item like a menu or toolbar...
                     var shortcutConverter = xtypeAdapter[propName + 'Shortcut'];
                     if (shortcutConverter) {
-                        value = shortcutConverter(value);
+                        value = shortcutConverter(value, config);
                         config[propName] = value;
                     }
                     if (glu.isString(value) || glu.isArray(value)) {

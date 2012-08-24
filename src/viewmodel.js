@@ -655,6 +655,12 @@ glu.Viewmodel = glu.extend(Object, {
 
     commitBulkUpdate : function(){
         this.fireEvent('bulkupdatecommitted',this);
-    }
+    },
+	
+	unParent: function(){
+		this._ob.detach('parentVM');
+		delete this.parentVM;
+	}
+>>>>>>> ryan/master
 });
 glu.mreg('viewmodel', glu.Viewmodel);
