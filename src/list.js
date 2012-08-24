@@ -73,6 +73,7 @@ glu.List = glu.extend(Object, {
     removeAt:function (index) {
         var obj = this.getAt(index);
         this._private.objs.splice(index, 1);
+        this.length--;
         if (obj._ob) {
             //remove from observation graph...since it can only go child-> parent don't worry about other direction
             obj._ob.detach('parentVM');
@@ -82,7 +83,6 @@ glu.List = glu.extend(Object, {
         if (index < this.activeIndex) {
             this.setActiveIndex(this.getActiveIndex() - 1);
         }
-        this.length--;
         this.fireEvent('lengthchanged',this.length,this.length+1);
         return obj;
     },
@@ -195,6 +195,10 @@ glu.mreg('keytracking',{
     initMixin:function(){
         this.keyMap ={};
         this.idProperty = this.idProperty || 'id';
+        //add initial keys since this is after constructor...
+        for (var i=0;i<this._private.objs.length;i++){
+            this.addKey(this._private.objs[i]);
+        }
         this.on('added',this.addKey)
         this.on('removed',this.removeKey)
     },
