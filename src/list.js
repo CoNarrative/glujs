@@ -179,6 +179,10 @@ glu.List = glu.extend(Object, {
             this._private.observable.on(eventName, handler, scope);
         }
     },
+
+    toArray:function(){
+        return this._private.objs.slice();
+    },
     fireEvent:function () {
         glu.log.info('List "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
         this._private.observable.fireEvent.apply(this._private.observable, arguments);
