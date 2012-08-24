@@ -151,6 +151,13 @@ glu.regAdapter('component', {
                 });
             });
         }
+        if (control.tpl){
+            //VERY SPECIAL BINDINGS!
+            var task = new Ext.util.DelayedTask(function(){control.update(viewmodel)});
+            control.data = viewmodel; //use viewmodel as initialtemplate source
+            //TODO: FInd all the bound guys and LISTEN ON THEM!
+            viewmodel.on('bulkupdatecommitted', function(){task.delay(10);});
+        }
     }
 
     /**
