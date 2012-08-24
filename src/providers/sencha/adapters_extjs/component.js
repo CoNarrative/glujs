@@ -153,7 +153,12 @@ glu.regAdapter('component', {
         }
         if (control.tpl){
             //VERY SPECIAL BINDINGS!
-            var task = new Ext.util.DelayedTask(function(){control.update(viewmodel)});
+            var task = new Ext.util.DelayedTask(
+                function(){
+                    control.update(viewmodel);
+                    control.fireEvent('updated',control);
+                });
+            control.on('render',function(){control.fireEvent('updated',control)});
             control.data = viewmodel; //use viewmodel as initialtemplate source
             //TODO: FInd all the bound guys and LISTEN ON THEM!
             viewmodel.on('bulkupdatecommitted', function(){task.delay(10);});
