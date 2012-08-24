@@ -651,6 +651,10 @@ glu.Viewmodel = glu.extend(Object, {
             if(!glu.isFunction(child.init))continue;
             child.init();
         }
+    },
+
+    commitBulkUpdate : function(){
+        this.fireEvent('bulkupdatecommitted',this);
     }
 });
 glu.mreg('viewmodel', glu.Viewmodel);
