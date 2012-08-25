@@ -15,7 +15,7 @@ glu.List = glu.extend(Object, {
         this.length = 0;
         this._private = this._private || {};
         this._private.objs = [];
-        this._private.observable = this._private.observable || new glu.GraphObservable({vm:this});
+        new glu.GraphObservable({vm:this});
         config.items = config.items || config.data || [];
         for (var i = 0; i < config.items.length; i++) {
             var item = config.items[i];
@@ -166,18 +166,9 @@ glu.List = glu.extend(Object, {
         }
     },
 
-    //TODO: Put in glu observable mixin
     on:function (eventName, handler, scope) {
-        if( Ext.isObject(eventName) ){
-            scope = eventName.scope || this;
-            for( var event in eventName ){
-                this._private.observable.on(event, eventName[event], scope);
-            }
-        }
-        else{
-            scope = scope || this;
-            this._private.observable.on(eventName, handler, scope);
-        }
+        scope = scope || this;
+        this._ob.on(eventName, handler, scope);
     },
 
     toArray:function(){
@@ -185,7 +176,7 @@ glu.List = glu.extend(Object, {
     },
     fireEvent:function () {
         glu.log.info('List "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
-        this._private.observable.fireEvent.apply(this._private.observable, arguments);
+        this._ob.fireEvent.apply(this._ob, arguments);
     }
 });
 

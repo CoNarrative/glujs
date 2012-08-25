@@ -229,7 +229,7 @@ glu.Viewmodel = glu.extend(Object, {
         //TO DO - separate between formulas and reactors proper...
         this._private.reactors = [];
         this._private.data = this._private.data || {};
-        this._private.observable = new glu.GraphObservable({vm:this});
+        new glu.GraphObservable({vm:this});
         this._private.viewmodelName = config.viewmodelName;
         this._private.children = [];
 
@@ -365,7 +365,7 @@ glu.Viewmodel = glu.extend(Object, {
      */
     on:function (eventName, handler, scope) {
         scope = scope || this;
-        this._private.observable.on(eventName, handler, scope);
+        this._ob.on(eventName, handler, scope);
     },
 
     /**
@@ -376,7 +376,7 @@ glu.Viewmodel = glu.extend(Object, {
      */
     fireEvent:function () {
         glu.log.info('Viewmodel "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
-        this._private.observable.fireEvent.apply(this._private.observable, arguments);
+        this._ob.fireEvent.apply(this._ob, arguments);
     },
 
     _walkConfig:function () {
