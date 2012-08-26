@@ -166,9 +166,9 @@ glu.List = glu.extend(Object, {
         }
     },
 
-    on:function (eventName, handler, scope) {
-        scope = scope || this;
-        this._ob.on(eventName, handler, scope);
+    on:function (eventName, handler, scope, callbackOnAttach) {
+        scope = scope || this.parentVM || this;
+        this._ob.on(eventName, handler, scope, callbackOnAttach);
     },
 
     toArray:function(){

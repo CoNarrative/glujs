@@ -239,15 +239,6 @@ glu.Viewmodel = glu.extend(Object, {
 
         delete config.viewmodelName;
 
-        this.init = config.init || function () {
-            this.initChildren();
-        };
-        this.activate = config.activate || function () {
-        };
-        this.deactivate = config.deactivate || function () {
-        };
-        this.close = config.close || this.doClose;
-
         //run a custom onCreate if it exists
         if (config.onCreate) {
             config.onCreate.call(this);
@@ -277,6 +268,12 @@ glu.Viewmodel = glu.extend(Object, {
         glu.log.debug('END viewmodel construction');
     },
 
+    init: function(){
+        this.initChildren();
+    },
+    close : function(){this.doClose();},
+    activate:function(){},
+    deactivate:function(){},
     /**
      * Performs the underlying close operation on this view model. Of course this only makes sense where the viewmodel
      * corresponds to either a floating dialog, a screen on a mobile stack, or an item in a container (tabpanel, card, etc.)
@@ -363,9 +360,9 @@ glu.Viewmodel = glu.extend(Object, {
      * @param handler
      * @param scope
      */
-    on:function (eventName, handler, scope) {
+    on:function (eventName, handler, scope, callbackOnAttach) {
         scope = scope || this;
-        this._ob.on(eventName, handler, scope);
+        this._ob.on(eventName, handler, scope, callbackOnAttach);
     },
 
     /**
