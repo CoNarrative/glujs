@@ -418,7 +418,8 @@ Ext.apply(glu.provider.binder, {
             getModel:function(){return viewmodel;},
             localModel:viewmodel,
             invertValue:false,
-            initialValue:null
+            initialValue:null,
+            propPath:binding.bindExpression
         });
         //DETECT IF the whole expression is a locale key. Assume it begins and ends with those delimiters.
         if (binding.localizationKey) {
@@ -437,6 +438,7 @@ Ext.apply(glu.provider.binder, {
         if (bindExpression.indexOf('!') == 0) {
             binding.invertValue = true;
             bindExpression = bindExpression.substring(1);
+            binding.propPath = bindExpression;
         }
         if (bindExpression.substring(0, glu.conventions.windowPath.length) == glu.conventions.windowPath) {
             //root traversal
