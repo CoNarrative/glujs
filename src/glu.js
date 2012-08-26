@@ -633,6 +633,7 @@ glu = {
     },
 
     getDataTypeOf:function (value) {
+        var type='string';
         if (glu.isString(value)) {
             type = 'string';
         }

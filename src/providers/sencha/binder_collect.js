@@ -31,8 +31,9 @@ Ext.apply(glu.provider.binder, {
      * @param {Object} viewmodel The view model
      * @return {Array} The bindings array
      */
-    collectBindings:function (config, viewmodel, parentConfig, parentPropName, parentAdapter, bindingsList, bindContext, indents) {
+    collectBindings:function (config, viewmodel, parentConfig, parentPropName, parentAdapter, bindingsList, bindContext, targetModel, indents) {
         var bindContext = bindContext || '';
+        var targetModel = targetModel || viewmodel;
         //STEP 1: apply parentage and things that only make sense when it is a child item
         if (parentConfig) {
             //preprocess
@@ -129,8 +130,15 @@ Ext.apply(glu.provider.binder, {
             if (config.bindContext=='') {
                 //reset to root
                 bindContext = '';
+                targetModel = viewModel;
             } else {
                 bindContext = bindContext + config.bindContext + '.';
+                var traversalExpression = this.traverseExpression(viewmodel, bindContext.substring(0,bindContext.length-1));
+                if (traversalExpression.getModel()[traversalExpression.prop]) {
+                    targetModel = traversalExpression.getModel()[traversalExpression.prop];
+                } else {
+                    throw 'Attempted to switch to unreachable bind context: ' + bindContext
+                }
             }
         }
 
@@ -140,12 +148,12 @@ Ext.apply(glu.provider.binder, {
         while (origXtype != config.xtype) {
             var origXtype = config.xtype;
             if (glu.isFunction(xtypeAdapter.beforeCollect)) {
-                xtypeAdapter.beforeCollect(config, viewmodel);
+                xtypeAdapter.beforeCollect(config, targetModel);
             }
             for (var i = 0; i < transformAdapters.length; i++) {
                 var origXtype = config.xtype;
                 if (glu.isFunction(transformAdapters[i].beforeCollect)) {
-                    transformAdapters[i].beforeCollect(config, viewmodel);
+                    transformAdapters[i].beforeCollect(config, targetModel);
                 }
             }
             if (origXtype !== config.xtype) {
@@ -153,7 +161,7 @@ Ext.apply(glu.provider.binder, {
                 xtypeAdapter = this.getAdapter(config);
             }
         }
-        glu.fireEvent('beforecollect', config, viewmodel, parentPropName);
+        glu.fireEvent('beforecollect', config, targetModel, parentPropName);
 
 
         //STEP 4: Apply any automatic conventions (supplied by adapter) based on the config.name property
@@ -161,7 +169,7 @@ Ext.apply(glu.provider.binder, {
             //automatically find the best default property to bind to when binding by name
             if (glu.isFunction(xtypeAdapter.applyConventions)) {
                 //perform automatic template-based name bindings
-                xtypeAdapter.applyConventions(config, viewmodel);
+                xtypeAdapter.applyConventions(config, targetModel);
             }
         }
 
@@ -226,7 +234,7 @@ Ext.apply(glu.provider.binder, {
         }
 
         if (glu.isFunction(xtypeAdapter.beforeCollectChildren)) {
-            xtypeAdapter.beforeCollectChildren(config, viewmodel);
+            xtypeAdapter.beforeCollectChildren(config, targetModel);
         }
 
         //STEP 6: Walk child objects
@@ -238,13 +246,13 @@ Ext.apply(glu.provider.binder, {
                     var newItems = [];
                     for (var i = 0; i < childContainer.length; i++) {
                         var childItem = childContainer[i];
-                        var result = this.collectBindings(childItem, viewmodel, config, childContainerPropName, xtypeAdapter, bindingsList, bindContext, indents + 1);
+                        var result = this.collectBindings(childItem, viewmodel, config, childContainerPropName, xtypeAdapter, bindingsList, bindContext, targetModel, indents + 1);
                         newItems.push(result.config);
                     }
                     config[childContainerPropName] = newItems;
                 } else {
                     //otherwise do a simple recursion
-                    this.collectBindings(childContainer, viewmodel, config, childContainerPropName, xtypeAdapter, bindingsList, bindContext, indents + 1);
+                    this.collectBindings(childContainer, viewmodel, config, childContainerPropName, xtypeAdapter, bindingsList, bindContext, targetModel, indents + 1);
                 }
             }
         }
@@ -254,12 +262,12 @@ Ext.apply(glu.provider.binder, {
 
         //STEP 7: Call any beforeCreate on the adapter (now that the config is all prepared)
         if (glu.isFunction(xtypeAdapter.beforeCreate)) {
-            xtypeAdapter.beforeCreate(config, viewmodel);
+            xtypeAdapter.beforeCreate(config, targetModel);
         }
 
         for (var i = 0; i < transformAdapters.length; i++) {
             if (glu.isFunction(transformAdapters[i].beforeCreate)) {
-                var upshot = transformAdapters[i].beforeCreate(config, viewmodel) || {};
+                var upshot = transformAdapters[i].beforeCreate(config, targetModel) || {};
                 //sometimes in rare case a transformer will need to rebind the children after a radical change
                 if (upshot.rebindChildren) {
                     bindChildren.apply(this);
@@ -280,12 +288,12 @@ Ext.apply(glu.provider.binder, {
                     //xtype:'Ext.plugin.adapterPlugin',
                     init:function (control) {
                         if (glu.isFunction(xtypeAdapter.afterCreate)) {
-                            xtypeAdapter.afterCreate(control, viewmodel);
+                            xtypeAdapter.afterCreate(control, targetModel);
                         }
                         for (var i = 0; i < transformAdapters.length; i++) {
                             var tAdapter = transformAdapters[i];
                             if (glu.isFunction(tAdapter.afterCreate)) {
-                                tAdapter.afterCreate(control, viewmodel);
+                                tAdapter.afterCreate(control, targetModel);
                             }
                         }
                     }
@@ -300,12 +308,12 @@ Ext.apply(glu.provider.binder, {
                     isBinderPlugin:true,
                     init:function (control) {
                         if (glu.isFunction(xtypeAdapter.afterCreate)) {
-                            xtypeAdapter.afterCreate(control, viewmodel);
+                            xtypeAdapter.afterCreate(control, targetModel);
                         }
                         for (var i = 0; i < transformAdapters.length; i++) {
                             var tAdapter = transformAdapters[i];
                             if (glu.isFunction(tAdapter.afterCreate)) {
-                                tAdapter.afterCreate(control, viewmodel);
+                                tAdapter.afterCreate(control, targetModel);
                             }
                         }
                     }
@@ -316,7 +324,7 @@ Ext.apply(glu.provider.binder, {
         //STEP 9: Store the binding in the list and return
         if (config._bindings != null && config._bindings.length > 0) {
             config.id = config.id || Ext.id();
-            config._bindings.defaultModel = viewmodel;
+            config._bindings.defaultModel = targetModel;
             config._bindings.adapter = xtypeAdapter;
             bindingsList.push(config);
         }
@@ -433,7 +441,8 @@ Ext.apply(glu.provider.binder, {
             return binding;
         }
 
-        var bindExpression = bindContext + binding.bindExpression;
+        var isFromRootPath = binding.bindExpression.substring(0, glu.conventions.windowPath.length) == glu.conventions.windowPath;
+        var bindExpression = isFromRootPath ? binding.bindExpression : bindContext + binding.bindExpression;
         binding.propPath = bindExpression;
 
         //VERY SIMPLE EXPRESSION PROCESSING
@@ -443,7 +452,8 @@ Ext.apply(glu.provider.binder, {
             bindExpression = bindExpression.substring(1);
             binding.propPath = bindExpression;
         }
-        if (bindExpression.substring(0, glu.conventions.windowPath.length) == glu.conventions.windowPath) {
+        
+        if (isFromRootPath) {
             //root traversal
             bindExpression = bindExpression.substring(glu.conventions.windowPath.length);
             var traversed = this.traverseExpression(window, bindExpression);
