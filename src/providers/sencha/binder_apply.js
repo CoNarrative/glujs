@@ -37,6 +37,8 @@ Ext.apply(glu.provider.binder, {
         control._private = control._private || {};
         control._private.isBound = true;
 
+        //add an observer! There shouldn't be one until now...
+        new glu.GraphObservable({node:control});
 
         var bindings = config._bindings;
         for (var i = 0; i < bindings.length; i++) {
@@ -47,13 +49,12 @@ Ext.apply(glu.provider.binder, {
     },
 
     applyOneBindingToControl:function (bindingAdapter, config, control, binding) {
-        var propBindings = bindingAdapter[binding.controlPropName + 'Bindings'] || {};
-
-        if (propBindings && glu.isFunction(propBindings.custom)) {
-            var handledCustom = propBindings.custom({
+        var propBindingAdapter = bindingAdapter[binding.controlPropName + 'Bindings'] || {};
+        if (propBindingAdapter && glu.isFunction(propBindingAdapter.custom)) {
+            var handledCustom = propBindingAdapter.custom({
                 binding:binding,
                 config:config,
-                viewmodel:binding.model,
+                viewmodel:binding.getModel(),
                 control:control
             });
             if (!(handledCustom === false)) {
@@ -61,30 +62,31 @@ Ext.apply(glu.provider.binder, {
             }
         }
         //MODEL -> CONTROL
-        if (binding.model.on != null) {//only listen to model when model is observable
-            this.applyPropBindingToControl(bindingAdapter, config, binding.model, control, binding, propBindings);
+        if (binding.localModel.on != null) {//only listen to model when model is observable
+            this.applyPropBindingToControl(bindingAdapter, config, control, binding, propBindingAdapter);
         }
 
         // MODEL -> CONTROL IS FINISHED.
-        if (propBindings && propBindings.onInit) {
-            propBindings.onInit.call(binding.model, binding, control);
+        if (propBindingAdapter && propBindingAdapter.onInit) {
+            propBindingAdapter.onInit.call(binding.getModel(), binding, control);
         }
 
         // CONTROL -> MODEL
-        if (propBindings === undefined || propBindings.suppressViewmodelUpdate || propBindings.eventName === undefined) {
+        if (propBindingAdapter === undefined || propBindingAdapter.suppressViewmodelUpdate || propBindingAdapter.eventName === undefined) {
             //can't bind from control -> model because control property doesn't surface any behavior to user
             return;
         }
 
-        glu.log.debug('LISTENING on control property ' + propBindings.eventName);
+        glu.log.debug('LISTENING on control property ' + propBindingAdapter.eventName);
 
-        control.on(propBindings.eventName, function () {
-            var adaptedValue = propBindings.eventConverter.apply(bindingAdapter, arguments);
+        control.on(propBindingAdapter.eventName, function () {
+            var adaptedValue = propBindingAdapter.eventConverter.apply(bindingAdapter, arguments);
             if (binding.invertValue) {
                 adaptedValue = !adaptedValue;
             }
-            binding.model.set.call(this, binding.modelPropName, adaptedValue);
-        }, binding.model);
+            var model = binding.getModel(); //always get the *currently referenced* view model
+            model.set.call(model, binding.modelPropName, adaptedValue);
+        });
 
     },
 
@@ -95,36 +97,35 @@ Ext.apply(glu.provider.binder, {
      * @private
      * @param bindingAdapter
      * @param config
-     * @param viewmodel
      * @param theControl
      * @param binding
-     * @param propBindings
+     * @param propBindingAdapter
      */
-    applyPropBindingToControl:function (bindingAdapter, config, viewmodel, theControl, binding, propBindings) {
+    applyPropBindingToControl:function (bindingAdapter, config, theControl, binding, propBindingAdapter) {
         // if glu.testMode then store a reference to the control within the view model
         //TODO: Make sure registerCOntrolBinding just hands in Id
         if (glu.testMode) {
-            viewmodel.registerControlBinding(binding.modelPropName, theControl);
+            binding.localModel.registerControlBinding(binding.propPath, theControl);
         }
 
-        var modelEventName = binding.modelPropName + 'Changed';
+        var modelEventName = binding.propPath + 'Changed';
         glu.log.debug('binding model event name of ' + modelEventName);
 
         var controlId = theControl.id;
-        var valueSetter = propBindings.setComponentProperty;
-        if (valueSetter === undefined) {//default to the form 'control.setFoo(value)', where foo is the name
+        var controlValueSetter = propBindingAdapter.setComponentProperty;
+        if (controlValueSetter === undefined) {//default to the form 'control.setFoo(value)', where foo is the name
             var setterName = 'set' + glu.string(binding.controlPropName).toPascalCase();
             var testSetter = theControl[setterName];
             if (testSetter === undefined) {
                 glu.log.debug('Attempted to bind non-existent value setter "' + setterName + '" on xtype: ' + theControl.xtype);
                 return;
             }
-            valueSetter = function (value, oldValue, options, control) {
+            controlValueSetter = function (value, oldValue, options, control) {
                 control[setterName].call(control, value);
             };
         }
-
-        var storeInControlAs = propBindings.storeValueInComponentAs || binding.controlPropName;
+        //sometimes you need to store the control property somewhere else because of ExtJS internals
+        var storeInControlAs = propBindingAdapter.storeValueInComponentAs || binding.controlPropName;
         var wrapper = function (value, oldValue, options) {
             var control = Ext.getCmp(controlId);
             if (control===undefined) {
@@ -153,12 +154,12 @@ Ext.apply(glu.provider.binder, {
                 oldValue = binding.prefix + oldValue + binding.suffix;
             }
             glu.log.debug('setting control property "' + binding.controlPropName + '" to "' + value + '"');
-            valueSetter(value, oldValue, options, control);
+            controlValueSetter(value, oldValue, options, control);
             //set the underlying field as a tracker
             control[storeInControlAs] = value;
         };
 
         glu.log.debug('LISTENING on viewmodel property ' + modelEventName);
-        viewmodel.on(modelEventName, wrapper, viewmodel);
+        binding.localModel.on(modelEventName, wrapper);
     }
 });

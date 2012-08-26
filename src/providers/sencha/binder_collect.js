@@ -350,11 +350,11 @@ Ext.apply(glu.provider.binder, {
             if (binding.reason == 'Missing bind target') {
                 throw 'Binding Exception - The control config property "' + propName +
                     '" is non-optionally bound to view model property "' +
-                    propValue + '" but that target does not exist.';
+                    propValue + '" but that does not exist in the view model.';
             }
             if (binding.reason == 'Illegal function binding') {
-                throw "Binding Exception: " + 'Attempted to bind config property "' + propName + '" to a function when "'
-                    + propName + '" is not a handler or listener.';
+                throw "Binding Exception: " + 'Attempted to bind view config property "' + propName + '" to a function when "'
+                    + propName + '" is not a name of a view handler or listener.';
             }
             throw 'Binding Exception: ' + binding.reason
         }
@@ -369,7 +369,8 @@ Ext.apply(glu.provider.binder, {
                     //if there is a value, put that first in the list
                     args.unshift(config.value);
                 }
-                binding.model[binding.modelPropName].apply(binding.model, args);
+                var targetModel = binding.getModel();
+                targetModel[binding.modelPropName].apply(targetModel, args);
             };
             config[binding.controlPropName] = binding.initialValue;
             return;
@@ -385,7 +386,7 @@ Ext.apply(glu.provider.binder, {
         if (xtypeAdapter) {
             var propBindings = xtypeAdapter[binding.controlPropName + 'Bindings'];
             if (propBindings && propBindings.transformInitialValue) {
-                binding.initialValue = propBindings.transformInitialValue(binding.initialValue, config, binding.model);
+                binding.initialValue = propBindings.transformInitialValue(binding.initialValue, config, binding.getModel());
             }
         }
 
@@ -412,15 +413,17 @@ Ext.apply(glu.provider.binder, {
         if (binding == null || !binding.valid) {
             return binding;
         }
+
         binding = Ext.apply(binding, {
-            model:viewmodel,
+            getModel:function(){return viewmodel;},
+            localModel:viewmodel,
             invertValue:false,
             initialValue:null
         });
         //DETECT IF the whole expression is a locale key. Assume it begins and ends with those delimiters.
         if (binding.localizationKey) {
             binding.initialValue = glu.localize({
-                viewmodel:binding.model,
+                viewmodel:viewmodel,
                 ns:viewmodel.ns,
                 key:binding.localizationKey
             });
@@ -436,24 +439,33 @@ Ext.apply(glu.provider.binder, {
             bindExpression = bindExpression.substring(1);
         }
         if (bindExpression.substring(0, glu.conventions.windowPath.length) == glu.conventions.windowPath) {
+            //root traversal
             bindExpression = bindExpression.substring(glu.conventions.windowPath.length);
             var traversed = this.traverseExpression(window, bindExpression);
-            binding.model = traversed.model;
+            binding.propPath = bindExpression;
+            binding.getModel = traversed.getModel;
             bindExpression = traversed.prop;
         } else if (bindExpression.indexOf(glu.conventions.autoUp) > -1) {
+            //parent traversal
+            binding.propPath = bindExpression;
             bindExpression = bindExpression.substring(glu.conventions.autoUp.length);
-            binding.model = this.traverseUpExpression(binding.model, bindExpression);
-        } else
-        //is there a traversal
-        if (bindExpression.indexOf('\.') > -1) {
-            var traversed = this.traverseExpression(binding.model, bindExpression);
-            binding.model = traversed.model;
+            binding.getModel = this.traverseUpExpression(viewmodel, bindExpression);
+        } else if (bindExpression.indexOf('\.') > -1) {
+            //child or other traversal
+            var traversed = this.traverseExpression(viewmodel, bindExpression);
+            binding.propPath = bindExpression;
+            binding.getModel = traversed.model;
             bindExpression = traversed.prop;
         }
         binding.modelPropName = bindExpression;
-        binding.initialValue = binding.model.get ? binding.model.get(bindExpression) : binding.model[bindExpression];
-
-        if (binding.initialValue === undefined && !binding.model.hasOwnProperty(bindExpression)) {
+        var targetModel = binding.getModel();
+        if (targetModel == null) {
+            binding.valid = false;
+            binding.reason = 'Missing bind target';
+            return binding;
+        }
+        binding.initialValue = targetModel.get ? targetModel.get(bindExpression) : targetModel[bindExpression];
+        if (binding.initialValue === undefined && !targetModel.hasOwnProperty(bindExpression)) {
             binding.valid = false;
             binding.reason = 'Missing bind target';
             return binding;
@@ -461,13 +473,12 @@ Ext.apply(glu.provider.binder, {
         if (isEventListener) {
             return binding; //nothing more to do at this point...
         }
-
         if (Ext.isFunction(binding.initialValue)) {
+            //this is not an event listener so should not be a function!
             binding.valid = false;
             binding.reason = "Illegal function binding";
         }
-
-        //make substitution:
+        //make initial value substitution:
         if (binding.invertValue) {
             binding.initialValue = !binding.initialValue;
         }
@@ -477,9 +488,17 @@ Ext.apply(glu.provider.binder, {
         return binding;
     },
 
+    /**
+     * @private
+     * Walks expression to make sure it is there, then returns a relative model getter and a property
+     * @param model
+     * @param expression
+     * @return {Object}
+     */
     traverseExpression:function (model, expression) {
         var tokens = expression.split('\.');
         var actualModel = model;
+        var modelFinder = 'function goGetter(){ return model';
         for (var i = 0; i < tokens.length - 1; i++) {
             var token = tokens[i];
             var child = actualModel.get ? actualModel.get(token) : actualModel[token];
@@ -487,22 +506,34 @@ Ext.apply(glu.provider.binder, {
                 throw "Unable to find child '" + token + "' within expression '" + expression + "'";
             }
             actualModel = child;
+            modelFinder+='[' + token + ']';
         }
+        eval(modelFinder + ';}');
         return {
             model:actualModel,
-            prop:tokens[tokens.length - 1]
+            prop:tokens[tokens.length - 1],
+            getModel:goGetter
         }
     },
 
+    /**
+     * Walks expression and returns model getter
+     * @param model
+     * @param expression
+     * @return {*}
+     */
     traverseUpExpression:function (model, expression) {
+        var modelFinder = 'function goGetter(){ return model';
         var foundModel = model;
         do {
             var hasProp = foundModel.hasOwnProperty(expression);
             if (hasProp)
                 break;
             foundModel = foundModel.parentVM;
+            modelFinder+='.parentVM';
         } while (foundModel != null);
 
-        return foundModel || model;
+        eval(modelFinder + ';}');
+        return goGetter;
     }
 });
