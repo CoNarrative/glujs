@@ -449,14 +449,15 @@ Ext.apply(glu.provider.binder, {
             bindExpression = traversed.prop;
         } else if (bindExpression.indexOf(glu.conventions.autoUp) > -1) {
             //parent traversal
-            binding.propPath = bindExpression;
             bindExpression = bindExpression.substring(glu.conventions.autoUp.length);
-            binding.getModel = this.traverseUpExpression(viewmodel, bindExpression);
+            var traversed = this.traverseUpExpression(viewmodel, bindExpression);
+            binding.propPath = traversed.propPath;
+            binding.getModel = traversed.getModel;
         } else if (bindExpression.indexOf('\.') > -1) {
             //child or other traversal
             var traversed = this.traverseExpression(viewmodel, bindExpression);
             binding.propPath = bindExpression;
-            binding.getModel = traversed.model;
+            binding.getModel = traversed.getModel;
             bindExpression = traversed.prop;
         }
         binding.modelPropName = bindExpression;
@@ -508,11 +509,10 @@ Ext.apply(glu.provider.binder, {
                 throw "Unable to find child '" + token + "' within expression '" + expression + "'";
             }
             actualModel = child;
-            modelFinder+='[' + token + ']';
+            modelFinder+='.' + token;
         }
         eval(modelFinder + ';}');
         return {
-            model:actualModel,
             prop:tokens[tokens.length - 1],
             getModel:goGetter
         }
@@ -526,6 +526,7 @@ Ext.apply(glu.provider.binder, {
      */
     traverseUpExpression:function (model, expression) {
         var modelFinder = 'function goGetter(){ return model';
+        var propPath = '';
         var foundModel = model;
         do {
             var hasProp = foundModel.hasOwnProperty(expression);
@@ -533,9 +534,13 @@ Ext.apply(glu.provider.binder, {
                 break;
             foundModel = foundModel.parentVM;
             modelFinder+='.parentVM';
+            propPath+='parentVM.';
         } while (foundModel != null);
 
         eval(modelFinder + ';}');
-        return goGetter;
+        return {
+            propPath : propPath + expression,
+            getModel : goGetter
+        };
     }
 });
