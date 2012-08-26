@@ -34,9 +34,14 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
             origin:{
                 fn:fn,
                 scope:scope,
-                callbackOnAttach: callbackOnAttach===true
+                //callbackOnAttach: callbackOnAttach===true,
+                initialOnRequest: true
             }
         });
+        if (callbackOnAttach && path.indexOf('.')>-1){
+            var subpath = path.substring(0,path.lastIndexOf('.')) + 'changed';
+            this.on(subpath,fn,scope,callbackOnAttach);
+        }
     },
 
     fireEvent:function () {
@@ -82,11 +87,16 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
                 };
                 evt.listenersCount++;
             }
-            if (request.origin.callbackOnAttach) {
-                //note that this fires the event WITHOUT ANY ARGUMENTS! (naturally of course)
-                this.fireEvent(evtName);
-            }
-            return;
+            //DOESN'T REALLY WORK DOING IT THIS WAY!!!
+//            if (request.origin.callbackOnAttach) {
+//                //note that this fires the event WITHOUT ANY ARGUMENTS! (naturally of course)
+//                if (request.origin.initialOnRequest){
+//                    delete request.origin.initialOnRequest;
+//                    return;
+//                }
+//                this.fireEvent(evtName);
+//            }
+//            return;
         }
         //otherwise, add as something to seek
         var myRequest = {
