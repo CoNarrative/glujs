@@ -21,12 +21,13 @@ glu.Reactor = {
                 while (matches = regex.exec(code)) {
                     var prop = matches[1];
                     if (prop === 'get' || prop === 'localize') continue;
-                    var tokens = prop.split('\.');
-                    var lastProp='';
-                    for (var i =0 ;i<tokens.length; i++){
-                        toWatch[lastProp + tokens[i] + 'Changed'] = true;
-                        lastProp = lastProp + tokens[i] + '.';
-                    }
+                    toWatch[prop+'Changed'] = true;
+//                    var tokens = prop.split('\.');
+//                    var lastProp='';
+//                    for (var i =0 ;i<tokens.length; i++){
+//                        toWatch[lastProp + tokens[i] + 'Changed'] = true;
+//                        lastProp = lastProp + tokens[i] + '.';
+//                    }
                 }
             }
             find (thisMatchesRe);
@@ -63,6 +64,7 @@ glu.Reactor = {
         for (var i = 0; i < evts.length; i++) {
             var eventName = evts[i];
             var fullEventName = eventName;
+            if (i>0)             console.log('---------------------------------' + fullEventName);
             var thisVm = vmOfReactor;
             var tokens = eventName.split(/[\$\.]/);
             for (var tidx = 0; tidx < tokens.length - 1; tidx++) {
@@ -72,16 +74,10 @@ glu.Reactor = {
                     throw glu.string('Could not find association "{0}" along path {1}').format(tokens[tidx], eventName);
                 }
             }
-
-            eventName = tokens[tokens.length - 1];
-
-            //the actual listening *disregards* the walking going on above and just treats that as a validation...
+           //the actual listening *disregards* the walking going on above and just treats that as a validation...
             if (vmOfReactor.on) {
-                vmOfReactor.on(fullEventName, action, vmOfReactor);
+                vmOfReactor.on(fullEventName, action, vmOfReactor, true);
             }
-//            if (thisVm.on) {
-//                thisVm.on(eventName, action, vmOfReactor);
-//            }
         }
         return reactor;
     }

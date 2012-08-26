@@ -25,7 +25,7 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
         })
     },
 
-    on:function (path, fn, scope, callbackOnAttach) {
+    on:function (path, fn, scope, wireFullPropertyPath) {
         var tokens = path.split('.');
         scope = scope || this.node;
         this.propagateRequest({
@@ -38,9 +38,11 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
                 initialOnRequest: true
             }
         });
-        if (callbackOnAttach && path.indexOf('.')>-1){
+        if (wireFullPropertyPath && path.indexOf('.')>-1){
             var subpath = path.substring(0,path.lastIndexOf('.')) + 'changed';
-            this.on(subpath,fn,scope,callbackOnAttach);
+            console.log('---------------------------------' + subpath);
+            this.on(subpath,fn,scope,true);
+
         }
     },
 
