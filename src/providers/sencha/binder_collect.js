@@ -31,7 +31,8 @@ Ext.apply(glu.provider.binder, {
      * @param {Object} viewmodel The view model
      * @return {Array} The bindings array
      */
-    collectBindings:function (config, viewmodel, parentConfig, parentPropName, parentAdapter, bindingsList, indents) {
+    collectBindings:function (config, viewmodel, parentConfig, parentPropName, parentAdapter, bindingsList, bindContext, indents) {
+        var bindContext = bindContext || '';
         //STEP 1: apply parentage and things that only make sense when it is a child item
         if (parentConfig) {
             //preprocess
@@ -73,7 +74,7 @@ Ext.apply(glu.provider.binder, {
                 if (origXtype && origXtype.substring(0, 2) == '@{') {
                     var expr = origXtype.substring(2, origXtype.length - 1);
                     var split = this.traverseExpression(viewmodel, expr);
-                    var target = split.model[split.prop];
+                    var target = split.getModel()[split.prop];
                     var viewname = target.viewmodelName + (config.viewMode?'_'+config.viewMode:'');
                     var spec = glu.getViewSpec(target, viewmodel.ns, viewname, config);
                     if (Ext.isString(spec))
@@ -125,9 +126,11 @@ Ext.apply(glu.provider.binder, {
 
         //if bindContext is specified, then offset the viewmodel to that sub model.
         if (config.hasOwnProperty('bindContext')) {
-            var traversalExpression = this.traverseExpression(viewmodel, config.bindContext);
-            if (traversalExpression.model[traversalExpression.prop]) {
-                viewmodel = traversalExpression.model[traversalExpression.prop];
+            if (config.bindContext=='') {
+                //reset to root
+                bindContext = '';
+            } else {
+                bindContext = bindContext + config.bindContext + '.';
             }
         }
 
@@ -183,7 +186,7 @@ Ext.apply(glu.provider.binder, {
                 var listeners = value;
                 for (var propName in listeners) {
                     config._bindingMap.listeners[propName] = config.listeners[propName];
-                    this.collectPropertyBinding(propName, config.listeners, viewmodel, true);
+                    this.collectPropertyBinding(bindContext, propName, config.listeners, viewmodel, true);
                 }
                 continue;
             }
@@ -219,7 +222,7 @@ Ext.apply(glu.provider.binder, {
             var isEventListener = propName == 'handler' || glu.symbol(propName).endsWith('Handler');
 
             //Finally, process this individual property binding
-            this.collectPropertyBinding(propName, config, viewmodel, isEventListener, isChildArray, xtypeAdapter);
+            this.collectPropertyBinding(bindContext,propName, config, viewmodel, isEventListener, isChildArray, xtypeAdapter);
         }
 
         if (glu.isFunction(xtypeAdapter.beforeCollectChildren)) {
@@ -235,13 +238,13 @@ Ext.apply(glu.provider.binder, {
                     var newItems = [];
                     for (var i = 0; i < childContainer.length; i++) {
                         var childItem = childContainer[i];
-                        var result = this.collectBindings(childItem, viewmodel, config, childContainerPropName, xtypeAdapter, bindingsList, indents + 1);
+                        var result = this.collectBindings(childItem, viewmodel, config, childContainerPropName, xtypeAdapter, bindingsList, bindContext, indents + 1);
                         newItems.push(result.config);
                     }
                     config[childContainerPropName] = newItems;
                 } else {
                     //otherwise do a simple recursion
-                    this.collectBindings(childContainer, viewmodel, config, childContainerPropName, xtypeAdapter, bindingsList, indents + 1);
+                    this.collectBindings(childContainer, viewmodel, config, childContainerPropName, xtypeAdapter, bindingsList, bindContext, indents + 1);
                 }
             }
         }
@@ -327,9 +330,9 @@ Ext.apply(glu.provider.binder, {
     /*
      * Collect and activate property binding on the config
      */
-    collectPropertyBinding:function (propName, config, viewmodel, isEventListener, isChildArray, xtypeAdapter) {
+    collectPropertyBinding:function (bindContext, propName, config, viewmodel, isEventListener, isChildArray, xtypeAdapter) {
         var propValue = config[propName];
-        var binding = this.readPropertyBinding(propValue, viewmodel, isEventListener);
+        var binding = this.readPropertyBinding(bindContext, propValue, viewmodel, isEventListener);
         if (binding == null) {
             return; //nothing to do
         }
@@ -408,7 +411,7 @@ Ext.apply(glu.provider.binder, {
     /* DOCS DISABLED FOR NOW
      * Simply collect a binding without actually activating it on the configuration
      */
-    readPropertyBinding:function (propValue, viewmodel, isEventListener) {
+    readPropertyBinding:function (bindContext, propValue, viewmodel, isEventListener) {
         var binding = glu.parseBindingSyntax(propValue);
         if (binding == null || !binding.valid) {
             return binding;
@@ -418,8 +421,7 @@ Ext.apply(glu.provider.binder, {
             getModel:function(){return viewmodel;},
             localModel:viewmodel,
             invertValue:false,
-            initialValue:null,
-            propPath:binding.bindExpression
+            initialValue:null
         });
         //DETECT IF the whole expression is a locale key. Assume it begins and ends with those delimiters.
         if (binding.localizationKey) {
@@ -431,7 +433,8 @@ Ext.apply(glu.provider.binder, {
             return binding;
         }
 
-        var bindExpression = binding.bindExpression;
+        var bindExpression = bindContext + binding.bindExpression;
+        binding.propPath = bindExpression;
 
         //VERY SIMPLE EXPRESSION PROCESSING
         //Starts with not "!" ?
