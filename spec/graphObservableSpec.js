@@ -78,6 +78,42 @@ describe('Graph Observable specs', function () {
                 })
             })
         });
+        Given('C listening fo event myB.myA.zed with callback on reattach true and the three attached',function(){
+            var APrime, BPrime;
+            Meaning(function () {
+                C.on('myB.myA.zed', zedCallback, C, true)
+                C.attach('myB', B);
+                B.attach('myA', A);
+                APrime = new glu.GraphObservable({name : 'APrime'});
+                BPrime = new glu.GraphObservable({name:'BPrime'});
+                BPrime.attach('myA',APrime);
+            });
+            When('A fires event Zed', function () {
+                Meaning(function () {
+                    A.fireEvent('zed');
+                });
+                ShouldHave('called back to C function', function () {
+                    expect(zedCallback).toHaveBeenCalled();
+                });
+            });
+            When('C is removed from B and attached instead to B Prime (which is attached to A Prime)', function(){
+                Meaning(function(){
+                    C.detach('myB');
+                    C.attach('myB',BPrime);
+                });
+                ShouldHave('called back to C function', function () {
+                    expect(zedCallback).toHaveBeenCalled();
+                });
+                When('A prime fires event Zed', function(){
+                    Meaning(function () {
+                        APrime.fireEvent('zed');
+                    });
+                    ShouldHave('called back to C function', function () {
+                        expect(zedCallback).toHaveBeenCalled();
+                    });
+                });
+            })
+        });
 
     });
 });

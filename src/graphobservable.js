@@ -25,7 +25,7 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
         })
     },
 
-    on:function (path, fn, scope) {
+    on:function (path, fn, scope, callbackOnAttach) {
         var tokens = path.split('.');
         scope = scope || this.node;
         this.propagateRequest({
@@ -33,7 +33,8 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
             remainder:tokens,
             origin:{
                 fn:fn,
-                scope:scope
+                scope:scope,
+                callbackOnAttach: callbackOnAttach===true
             }
         });
     },
@@ -81,6 +82,10 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
                 };
                 evt.listenersCount++;
             }
+            if (request.origin.callbackOnAttach) {
+                //note that this fires the event WITHOUT ANY ARGUMENTS! (naturally of course)
+                this.fireEvent(evtName);
+            }
             return;
         }
         //otherwise, add as something to seek
@@ -96,7 +101,7 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
         if (edgeVM && edgeVM._ob) {
             edgeVM._ob.propagateRequest(myRequest);
         } else {
-            //TODO: If edge is array, stop there and change to just watch it instead...
+            //TODO: If edge is array/list, stop there and change to just watch it instead...
 //            if (edgeVM && edgeVM._ob === undefined && edgeVM.mtype) {
 //                debugger;
 //            }
