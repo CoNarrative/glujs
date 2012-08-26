@@ -441,18 +441,16 @@ Ext.apply(glu.provider.binder, {
             return binding;
         }
 
-        var isFromRootPath = binding.bindExpression.substring(0, glu.conventions.windowPath.length) == glu.conventions.windowPath;
-        var bindExpression = isFromRootPath ? binding.bindExpression : bindContext + binding.bindExpression;
-        binding.propPath = bindExpression;
+        var bindExpression = binding.bindExpression;
 
         //VERY SIMPLE EXPRESSION PROCESSING
         //Starts with not "!" ?
         if (bindExpression.indexOf('!') == 0) {
             binding.invertValue = true;
             bindExpression = bindExpression.substring(1);
-            binding.propPath = bindExpression;
         }
-        
+
+        var isFromRootPath = binding.bindExpression.substring(0, glu.conventions.windowPath.length) == glu.conventions.windowPath;
         if (isFromRootPath) {
             //root traversal
             bindExpression = bindExpression.substring(glu.conventions.windowPath.length);
@@ -462,17 +460,22 @@ Ext.apply(glu.provider.binder, {
             bindExpression = traversed.prop;
         } else if (bindExpression.indexOf(glu.conventions.autoUp) > -1) {
             //parent traversal
-            bindExpression = bindExpression.substring(glu.conventions.autoUp.length);
+            bindExpression = bindContext + bindExpression.substring(glu.conventions.autoUp.length);
             var traversed = this.traverseUpExpression(viewmodel, bindExpression);
             binding.propPath = traversed.propPath;
             binding.getModel = traversed.getModel;
-        } else if (bindExpression.indexOf('\.') > -1) {
+        } else {
+            //time to add the bind context
+            bindExpression = bindContext + bindExpression;
+            binding.propPath = bindExpression;
+        }
+        if (bindExpression.indexOf('\.') > -1) {
             //child or other traversal
             var traversed = this.traverseExpression(viewmodel, bindExpression);
-            binding.propPath = bindExpression;
             binding.getModel = traversed.getModel;
             bindExpression = traversed.prop;
         }
+        //the bind expression has been now stripped down to just a prop name
         binding.modelPropName = bindExpression;
         var targetModel = binding.getModel();
         if (targetModel == null) {
