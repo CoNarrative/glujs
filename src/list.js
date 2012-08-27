@@ -10,6 +10,7 @@
  */
 glu.List = glu.extend(Object, {
     constructor:function (config) {
+        config = config || {};
         glu.deepApply(this, config);
         this.length = 0;
         this._private = this._private || {};
@@ -178,12 +179,43 @@ glu.List = glu.extend(Object, {
             this._private.observable.on(eventName, handler, scope);
         }
     },
+
+    toArray:function(){
+        return this._private.objs.slice();
+    },
     fireEvent:function () {
         glu.log.info('List "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
         this._private.observable.fireEvent.apply(this._private.observable, arguments);
     }
 });
+
 glu.mreg('list', glu.List);
+
+glu.mreg('keytracking',{
+    initMixin:function(){
+        this.keyMap ={};
+        this.idProperty = this.idProperty || 'id';
+        this.on('added',this.addKey)
+        this.on('removed',this.removeKey)
+    },
+    addKey:function(item, idx){
+        var key=item[this.idProperty];
+        if (key===undefined) return;
+        this.keyMap[key] = item;
+    },
+    removeKey:function(item){
+        var key=item[this.idProperty];
+        if (key===undefined) return;
+        delete this.keyMap[key];
+    },
+    containsKey:function(key){
+        return this.keyMap[key]!==undefined;
+    },
+    getById:function(key){
+        return this.keyMap[key];
+    }
+})
+
 
 glu.List.prototype.where = function(filter) {
     var f = [];
