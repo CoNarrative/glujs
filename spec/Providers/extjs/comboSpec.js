@@ -52,7 +52,7 @@ describe('given a name-bound combo field', function () {
     describe('when the model value changes', function () {
         beforeEach(function () {
             vm.set('statusText', 'BAD');
-            jasmine.Clock.tick(101);
+            jasmine.Clock.tick(201);
         });
         it('the control value should change as usual', function () {
             expect(Ext.getCmp(itemId).getValue()).toEqual('BAD');
@@ -61,8 +61,9 @@ describe('given a name-bound combo field', function () {
     describe('when the user selects an item', function () {
         beforeEach(function () {
             exthelper.select(itemId, 'BAD');
+            jasmine.Clock.tick(201);
         });
-        it('the control value should change as usual', function () {
+        it('the model value should change as usual', function () {
             expect(vm.get('statusText')).toEqual('BAD');
         });
     });
