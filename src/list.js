@@ -208,6 +208,11 @@ glu.mreg('keytracking',{
     },
     getById:function(key){
         return this.keyMap[key];
+    },
+    removeAtKey:function(key){
+        var item = this.keyMap[key];
+        if (item==null) return;
+        this.remove(item);
     }
 })
 
