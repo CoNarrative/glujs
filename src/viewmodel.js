@@ -661,6 +661,6 @@ glu.Viewmodel = glu.extend(Object, {
 		this._ob.detach('parentVM');
 		delete this.parentVM;
 	}
->>>>>>> ryan/master
+
 });
 glu.mreg('viewmodel', glu.Viewmodel);
