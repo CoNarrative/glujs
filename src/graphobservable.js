@@ -11,8 +11,8 @@
 glu.GraphObservable = Ext.extend(Ext.emptyFn, {
     constructor:function (config) {
         glu.apply(this, config);
-        this.vm = this.vm || this;
-        this.vm._ob = this;
+        this.node = this.node || this.vm || this;
+        this.node._ob = this;
         glu.apply(this, {
 
             edges:{
@@ -27,7 +27,7 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
 
     on:function (path, fn, scope) {
         var tokens = path.split('.');
-        scope = scope || this.vm;
+        scope = scope || this.node;
         this.propagateRequest({
             id:Ext.id(),
             remainder:tokens,
@@ -92,7 +92,7 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
         var nextEdge = request.remainder[0];
         this.edges[nextEdge] = this.edges[nextEdge] || {};
         this.edges[nextEdge][myRequest.id] = myRequest;
-        var edgeVM = this.vm[nextEdge];
+        var edgeVM = this.node[nextEdge];
         if (edgeVM && edgeVM._ob) {
             edgeVM._ob.propagateRequest(myRequest);
         } else {
@@ -126,7 +126,7 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
             return;
         }
         delete edge[myRequest.id];
-        var edgeVM = this.vm[nextEdge];
+        var edgeVM = this.node[nextEdge];
         if (edgeVM && edgeVM._ob) {
             edgeVM._ob.propagateRemoval(myRequest);
         }
@@ -139,19 +139,19 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
      * @private
      */
     attach:function (forwardRefName, other, backRefName) {
-        other = other || this.vm[forwardRefName];
-        this.vm[forwardRefName] = other;
+        other = other || this.node[forwardRefName];
+        this.node[forwardRefName] = other;
         this.attachOneWay(forwardRefName);
         if (backRefName) {
-            other[backRefName] = this.vm;
-            var other = this.vm[forwardRefName];
+            other[backRefName] = this.node;
+            var other = this.node[forwardRefName];
             if (!other._ob) return;
             other._ob.attachOneWay(backRefName);
         }
     },
 
     detach:function (forwardRefName, backRefName) {
-        var other = this.vm[forwardRefName];
+        var other = this.node[forwardRefName];
         this.detachOneWay(forwardRefName);
         if (backRefName) {
             other[backRefName] = null;
@@ -163,7 +163,7 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
     attachOneWay:function (refName) {
         var edges = this.edges [refName];
         if (edges) {
-            var other = this.vm[refName];
+            var other = this.node[refName];
             if (!other || !other._ob) return;
             for (var requestId in edges) {
                 var request = edges[requestId];
@@ -175,7 +175,7 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
     detachOneWay:function (refName) {
         var edges = this.edges [refName];
         if (edges) {
-            var other = this.vm[refName];
+            var other = this.node[refName];
             if (!other || !other._ob) return;
             for (var requestId in edges) {
                 var request = edges[requestId];
