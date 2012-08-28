@@ -220,7 +220,7 @@ glu.DataModel = glu.extend(glu.Viewmodel, {
     commit:function () {
         this._private.record.commit(true);
         for (var i = 0; i < this._private.model.fields.length; i++) {
-            var field = this._private.model.fields[i].name;
+            var field = this._private.model.fields[i].name || this._private.model.fields[i];
             this.set(field + 'IsDirty', false);
         }
         this._private.dirtyCount = 0;
