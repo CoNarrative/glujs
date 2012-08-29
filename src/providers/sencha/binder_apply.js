@@ -83,6 +83,7 @@ Ext.apply(glu.provider.binder, {
             if (binding.invertValue) {
                 adaptedValue = !adaptedValue;
             }
+            glu.log.info(glu.symbol('USER changed {0}.{1}').format(binding.model.toString(), binding.modelPropName));
             binding.model.set.call(this, binding.modelPropName, adaptedValue);
         }, binding.model);
 
