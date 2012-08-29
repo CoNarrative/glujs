@@ -639,7 +639,7 @@ glu = {
         var baseCls = glu.walk(classDef.extend) || function(){};
         var cls = glu.extend (baseCls, classDef);
         var ref = glu._splitReference(name);
-        glu.walk(ref.ns)[ref.name] = cls;
+        glu.ns(ref.ns)[ref.name] = cls;
         return cls;
     },
 
