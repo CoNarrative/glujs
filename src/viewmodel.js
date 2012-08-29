@@ -222,6 +222,7 @@ glu.Viewmodel = glu.extend(Object, {
     constructor:function (config) {
         glu.log.debug('BEGIN viewmodel construction');
         glu.Viewmodel.superclass.constructor.call(this);
+        this._setRawMessage = glu.symbol('Viewmodel property {name} changed from {oldValue} to {newValue}');
         glu.deepApply(this, config);
         this._private = this._private || {};
         this._private.setters = {};
@@ -326,6 +327,7 @@ glu.Viewmodel = glu.extend(Object, {
         if (glu.equivalent(oldValue, value)) {
             return; //do nothing if it's the same thing.
         }
+        glu.log.info(this._setRawMessage.format({name:propName,newValue:value,oldValue:oldValue}));
         this._private.data[propName] = value;
         if (!glu.isFunction(this[propName])) { //if not in "knockout" mode
             this[propName] = value;
@@ -375,7 +377,7 @@ glu.Viewmodel = glu.extend(Object, {
      * better just to invoke methods directly for clarity.
      */
     fireEvent:function () {
-        glu.log.info('Viewmodel "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
+        glu.log.debug('Viewmodel "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
         this._ob.fireEvent.apply(this._ob, arguments);
     },
 
