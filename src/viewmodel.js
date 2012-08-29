@@ -222,7 +222,7 @@ glu.Viewmodel = glu.extend(Object, {
     constructor:function (config) {
         glu.log.debug('BEGIN viewmodel construction');
         glu.Viewmodel.superclass.constructor.call(this);
-        this._setRawMessage = glu.symbol('Viewmodel property {name} changed from {oldValue} to {newValue}');
+        this._setRawMessage = glu.symbol('[viewmodel {vmName}] {name}: {oldValue} --> {newValue}');
         glu.deepApply(this, config);
         this._private = this._private || {};
         this._private.setters = {};
@@ -257,10 +257,12 @@ glu.Viewmodel = glu.extend(Object, {
         this._walkConfig();
 
         //set all reactors...
+        this.firingInitialReactors = true;
         for (var i = 0; i < this._private.reactors.length; i++) {
             var reactor = this._private.reactors[i];
             if (reactor.init) reactor.init();
         }
+        delete this.firingInitialReactors;
         this._private.isInstantiated = true;
         if (glu.testMode) {
             this.message = jasmine.createSpy('message');
@@ -312,6 +314,10 @@ glu.Viewmodel = glu.extend(Object, {
         }
         setter.call(this, value);
     },
+
+    getDebugLabel:function(){
+        return this.id || this.name || '';
+    },
     /**
      * Sets the raw value of a property and bypasses any custom setter. This is usually used within
      * the custom setter itself to set the underlying property after any preprocessing.
@@ -327,7 +333,7 @@ glu.Viewmodel = glu.extend(Object, {
         if (glu.equivalent(oldValue, value)) {
             return; //do nothing if it's the same thing.
         }
-        glu.log.info(this._setRawMessage.format({name:propName,newValue:value,oldValue:oldValue}));
+        if (!this.firingInitialReactors) glu.log.info(this._setRawMessage.format({vmName:this.getDebugLabel(),name:propName,newValue:value,oldValue:oldValue}));
         this._private.data[propName] = value;
         if (!glu.isFunction(this[propName])) { //if not in "knockout" mode
             this[propName] = value;

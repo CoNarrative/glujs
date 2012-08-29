@@ -65,7 +65,7 @@ glu = {
         viewmodelName = viewmodelName || vm.viewmodelName;
         configOverlay = configOverlay || {};
         var viewName = viewmodelName;
-        glu.log.info('Creating view ' + ns + '.' + viewName);
+        glu.log.debug('Creating view ' + ns + '.' + viewName);
         var nsSubObj = glu.namespace(ns + '.' + glu.conventions.viewNs);
         var viewSpec = nsSubObj[viewName];
         if (!viewSpec) {
