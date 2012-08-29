@@ -369,6 +369,7 @@ Ext.apply(glu.provider.binder, {
                     //if there is a value, put that first in the list
                     args.unshift(config.value);
                 }
+                glu.log.info(glu.symbol('USER triggered {0}.{1}').format(binding.model.toString(), binding.modelPropName));
                 binding.model[binding.modelPropName].apply(binding.model, args);
             };
             config[binding.controlPropName] = binding.initialValue;

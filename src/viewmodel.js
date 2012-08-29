@@ -222,6 +222,7 @@ glu.Viewmodel = glu.extend(Object, {
     constructor:function (config) {
         glu.log.debug('BEGIN viewmodel construction');
         glu.Viewmodel.superclass.constructor.call(this);
+        this._setRawMessage = glu.symbol('{vmName}.{name}: {oldValue} --> {newValue}');
         glu.deepApply(this, config);
         this._private = this._private || {};
         this._private.setters = {};
@@ -256,10 +257,12 @@ glu.Viewmodel = glu.extend(Object, {
         this._walkConfig();
 
         //set all reactors...
+        this.firingInitialReactors = true;
         for (var i = 0; i < this._private.reactors.length; i++) {
             var reactor = this._private.reactors[i];
             if (reactor.init) reactor.init();
         }
+        delete this.firingInitialReactors;
         this._private.isInstantiated = true;
         if (glu.testMode) {
             this.message = jasmine.createSpy('message');
@@ -311,6 +314,12 @@ glu.Viewmodel = glu.extend(Object, {
         }
         setter.call(this, value);
     },
+
+    toString:function(){
+        //default to some common identifiers
+        var label = this.name || this.id || '?';
+        return '[' + this.viewmodelName + ' ' + label + ']'
+    },
     /**
      * Sets the raw value of a property and bypasses any custom setter. This is usually used within
      * the custom setter itself to set the underlying property after any preprocessing.
@@ -326,6 +335,7 @@ glu.Viewmodel = glu.extend(Object, {
         if (glu.equivalent(oldValue, value)) {
             return; //do nothing if it's the same thing.
         }
+        if (!this.firingInitialReactors) glu.log.info(this._setRawMessage.format({vmName:this.toString(),name:propName,newValue:value,oldValue:oldValue}));
         this._private.data[propName] = value;
         if (!glu.isFunction(this[propName])) { //if not in "knockout" mode
             this[propName] = value;
@@ -375,7 +385,7 @@ glu.Viewmodel = glu.extend(Object, {
      * better just to invoke methods directly for clarity.
      */
     fireEvent:function () {
-        glu.log.info('Viewmodel "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
+        glu.log.debug('Viewmodel "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
         this._ob.fireEvent.apply(this._ob, arguments);
     },
 
