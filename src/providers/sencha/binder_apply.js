@@ -135,6 +135,10 @@ Ext.apply(glu.provider.binder, {
                     return 'discard';
                 }
             }
+            if (glu.isArray(value)){
+                //make a copy--arrays are handled by equivalence not reference
+                value = value.slice();
+            }
             if (binding.invertValue) {
                 value = !value;
             }

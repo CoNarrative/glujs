@@ -531,8 +531,19 @@ glu = {
         return glu.provider.panel.apply(glu.provider, arguments);
     },
     equivalent:function (oldVal, newVal) {
-        if ((oldVal === null && newVal != null) || (oldVal != null && newVal == null)) return false;
-        if (glu.isObject(newVal) || glu.isArray(newVal)) {
+        if ((oldVal === null && newVal != null) || (oldVal != null && newVal == null)) return false
+        if (glu.isArray(newVal)){
+            //array equivalency is if all the members are equivalent...
+            if (oldVal==newVal){
+                return true;
+            }
+            if (oldVal.length!=newVal.length) return false;
+            for (var i=0;i<oldVal.length;i++){
+                if (oldVal[i]!=newVal[i]) return false;
+            }
+            return true;
+        }
+        if (glu.isObject(newVal)) {
             if (newVal == oldVal) {//by reference
                 return true;
             }
