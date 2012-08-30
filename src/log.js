@@ -39,7 +39,6 @@ glu.log = function () {
             this.indents++;
             this.indent = (new Array(this.indents)).join('   ');
         },
-
         indentLess:function () {
             this.indents--;
             if (this.indents < 0) this.indents = 0;

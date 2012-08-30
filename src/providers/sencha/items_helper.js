@@ -8,7 +8,7 @@ glu.provider.itemsHelper = {
      */
     respondToAdd:function (item, idx, context, needsDoLayout) {
         glu.log.indentMore();
-        glu.log.debug(glu.log.indent + 'processing item added to collection');
+        glu.log.debug(glu.log.indent + 'Processing a view item added to collection at index ' + idx);
         var list = context.viewmodel.get(context.binding.modelPropName);
         var container = context.control;
         if (!container.itemTemplate && !(item.mtype == 'viewmodel' || item.mtype == 'datamodel')) {

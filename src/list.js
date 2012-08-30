@@ -175,7 +175,7 @@ glu.List = glu.extend(Object, {
         return this._private.objs.slice();
     },
     fireEvent:function () {
-        glu.log.info('List "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
+        glu.log.debug('List "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
         this._ob.fireEvent.apply(this._ob, arguments);
     }
 });

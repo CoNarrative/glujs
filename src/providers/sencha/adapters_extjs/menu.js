@@ -37,6 +37,9 @@ glu.regAdapter('menuitem', {
         eventName:'checkchange',
         eventConverter:function (item, checked) {
             return checked;
+        },
+        setComponentProperty : function(value, oldValue, options, control) {
+            control.setChecked(value,true);//suppress event
         }
     }
 });
