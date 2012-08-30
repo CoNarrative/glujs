@@ -2,10 +2,12 @@
 (function() {
 
   Given('the todo application', function() {
-    var ns;
+    var main, newItem, ns;
     ns = todo;
+    main = null;
+    newItem = null;
     Meaning(function() {
-      var backend, main, res;
+      var backend, res;
       res = todo.createMockBackend();
       backend = res.backend;
       main = glu.model({
@@ -14,14 +16,21 @@
       });
       return main.init();
     });
-    ShouldHave('set value to true', function() {
-      return expect(true).toBe(true);
+    ShouldHave('todo list is empty', function() {
+      return expect(main.todoList.length).toBe(0);
     });
-    return When('user enters in a new todo', function() {
-      return Meaning(function() {
-        return ShouldHave('trimmed the input', function() {
-          return expect(true).toBe(false);
-        });
+    return When('User clicks add button', function() {
+      Meaning(function() {
+        main.set('newItemText', '    Finish Todo spec     ');
+        main.addNewItem();
+        return newItem = main.todoList.getAt(0);
+      });
+      ShouldHave('change new item text to empty', function() {
+        return expect(newItem.text).toBe('Finish Todo spec');
+      });
+      ShouldHave('change new item text ');
+      return ShouldHave('add new todo ', function() {
+        return expect(newItem.text).toBe('Finish Todo spec');
       });
     });
   });
