@@ -16,21 +16,34 @@
       });
       return main.init();
     });
-    ShouldHave('todo list is empty', function() {
-      return expect(main.todoList.length).toBe(0);
-    });
     return When('User clicks add button', function() {
       Meaning(function() {
         main.set('newItemText', '    Finish Todo spec     ');
         main.addNewItem();
         return newItem = main.todoList.getAt(0);
       });
-      ShouldHave('change new item text to empty', function() {
+      Should('change new item text to empty', function() {
         return expect(newItem.text).toBe('Finish Todo spec');
       });
-      ShouldHave('change new item text ');
-      return ShouldHave('add new todo ', function() {
+      Should('add new todo ', function() {
+        return expect(main.todoList.length).toBe(1);
+      });
+      Should('trim new todo text', function() {
         return expect(newItem.text).toBe('Finish Todo spec');
+      });
+      Should('set items left to 1', function() {
+        return expect(main.activeCount).toBe(1);
+      });
+      return When('User clicks the delete icon', function() {
+        Meaning(function() {
+          return main.remove(newItem);
+        });
+        Should('remove item from todo list', function() {
+          return expect(main.todoList.length).toBe(0);
+        });
+        return Should('set items left to 0', function() {
+          return expect(main.activeCount).toBe(0);
+        });
       });
     });
   });
