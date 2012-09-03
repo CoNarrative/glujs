@@ -52,5 +52,5 @@ glu.regAdapter('menuitem', {
             defaultType:'menuitem',
             items:value
         };
-    },
+    }
 });
