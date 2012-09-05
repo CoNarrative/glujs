@@ -72,6 +72,7 @@ glu.List = glu.extend(Object, {
      */
     removeAt:function (index) {
         var obj = this.getAt(index);
+        if (obj==null) return; //nothing to do
         this._private.objs.splice(index, 1);
         this.length--;
         if (obj._ob) {
