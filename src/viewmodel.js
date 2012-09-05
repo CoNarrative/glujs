@@ -452,9 +452,9 @@ glu.Viewmodel = glu.extend(Object, {
             //SUBMODEL!
             propValue.referenceName = propName;
             this._private.children.push(propName);
-            var model = this.model(propValue);
+            var model = glu.isInstantiated(propValue)? propValue: this.model(propValue);
             propValue = model;
-            this[propName] = propValue;
+            this[propName] = model;
             //attach (so that it doesn't matter what order the graph was built up in...
             this._ob.attach(propName,model,"parentVM");
             this.makePropertyAccessors(propName,propValue,true);

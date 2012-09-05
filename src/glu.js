@@ -193,6 +193,13 @@ glu = {
         return typeof(target) == 'number';
     },
 
+    /**
+     * Returns true if this is an actual instantiated view model
+     */
+    isInstantiated:function(target){
+        return target._private;
+    },
+
     namespaces:{},
     /**
      * Creates namespace to be used for scoping variables and classes so that they are not global.
@@ -280,7 +287,7 @@ glu = {
                 propName !== 'parentList' && //parent list
                 propName !== 'meta' && //don't remember
                 propName !== 'ownerCt' &&
-                !(propValue._private) //make sure this isn't a glu object
+                !glu.isInstantiated(propValue) //make sure this isn't a glu object
                 )
             {
 //                if (propValue.constructor!==Object.prototype.constructor) {
