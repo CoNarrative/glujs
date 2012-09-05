@@ -217,7 +217,7 @@ glu.mreg('keytracking',{
     }
 })
 
-
+glu.List.prototype.forEach = glu.List.prototype.foreach;
 glu.List.prototype.where = function(filter) {
     var f = [];
     for (var i = 0; i < this.length; i++) {
