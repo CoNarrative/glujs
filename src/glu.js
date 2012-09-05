@@ -68,8 +68,8 @@ glu = {
         glu.log.debug('Creating view ' + ns + '.' + viewName);
         var nsSubObj = glu.namespace(ns + '.' + glu.conventions.viewNs);
         var viewSpec = nsSubObj[viewName];
-        if (!viewSpec) {
-            var factory = nsSubObj[viewName + 'Factory'];
+        if (!viewSpec || glu.isFunction(viewSpec)) { //functions are now automatically treated as factories instead of constructors...
+            var factory = viewSpec || nsSubObj[viewName + 'Factory'];
             if (factory === undefined) {
                 return 'unable to find view config spec for ' + viewName;
             }
