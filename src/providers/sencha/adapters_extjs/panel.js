@@ -168,13 +168,13 @@ glu.regAdapter('panel', {
                 control.addActual(index, item);
             }
         }
-		
-		if (control._activeIndex !== undefined) {
-			control.on('render', function(panel){
-				panel._changeOriginatedFromModel = true;
-				panel.getLayout().setActiveItem(panel._activeIndex);
-			});
-		}
+
+        if (control._activeIndex !== undefined) {
+            control.on('render', function(panel){
+                panel._changeOriginatedFromModel = true;
+                panel.getLayout().setActiveItem(panel._activeIndex);
+            });
+        }
     },
     /**
      * @cfg {String} html
@@ -289,10 +289,10 @@ glu.regAdapter('panel', {
                 if (value.parentList === undefined) {
                     throw "Attempted to set an activeTab to a view model that is not in a list.  You should always set the activeItem in the init()";
                 }
-				config._activeItemValueType = 'viewmodel';
-				config._activeIndex = value.parentList.indexOf(value);
-				//This is never going to work anyway because ExtJS doesn't care about activeTab when there are no items
-				//And we haven't put the items in yet
+                config._activeItemValueType = 'viewmodel';
+                config._activeIndex = value.parentList.indexOf(value);
+                //This is never going to work anyway because ExtJS doesn't care about activeTab when there are no items
+                //And we haven't put the items in yet
                 return -1;
             }
             return value;
