@@ -276,7 +276,7 @@ glu.Viewmodel = glu.extend(Object, {
                 }
                 next.args[0].fn.call(me,btn,txt);
             };
-			this.message.respond = function(btn, txt) {
+            this.message.respond = function(btn, txt) {
                 //TODO: Respond to confirmations in order in case they have stacked.
                 var next = me.message.mostRecentCall;
                 if (next === undefined || next.args === undefined || next.args.length === 0) {
