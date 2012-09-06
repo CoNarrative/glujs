@@ -16,4 +16,7 @@ Meaning = function (fn) {
 Shouldve = function (text, fn) {
     it('Should have ' + text, fn)
 };
+Should = function (text, fn) {
+    it('Should ' + text, fn)
+};
 ShouldHave = Shouldve;

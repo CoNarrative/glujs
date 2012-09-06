@@ -68,8 +68,8 @@ glu = {
         glu.log.debug('Creating view ' + ns + '.' + viewName);
         var nsSubObj = glu.namespace(ns + '.' + glu.conventions.viewNs);
         var viewSpec = nsSubObj[viewName];
-        if (!viewSpec) {
-            var factory = nsSubObj[viewName + 'Factory'];
+        if (!viewSpec || glu.isFunction(viewSpec)) { //functions are now automatically treated as factories instead of constructors...
+            var factory = viewSpec || nsSubObj[viewName + 'Factory'];
             if (factory === undefined) {
                 return 'unable to find view config spec for ' + viewName;
             }
@@ -193,6 +193,13 @@ glu = {
         return typeof(target) == 'number';
     },
 
+    /**
+     * Returns true if this is an actual instantiated view model
+     */
+    isInstantiated:function(target){
+        return target._private;
+    },
+
     namespaces:{},
     /**
      * Creates namespace to be used for scoping variables and classes so that they are not global.
@@ -280,7 +287,7 @@ glu = {
                 propName !== 'parentList' && //parent list
                 propName !== 'meta' && //don't remember
                 propName !== 'ownerCt' &&
-                !(propValue._private) //make sure this isn't a glu object
+                !glu.isInstantiated(propValue) //make sure this isn't a glu object
                 )
             {
 //                if (propValue.constructor!==Object.prototype.constructor) {
@@ -639,7 +646,7 @@ glu = {
         var baseCls = glu.walk(classDef.extend) || function(){};
         var cls = glu.extend (baseCls, classDef);
         var ref = glu._splitReference(name);
-        glu.walk(ref.ns)[ref.name] = cls;
+        glu.ns(ref.ns)[ref.name] = cls;
         return cls;
     },
 

@@ -37,6 +37,20 @@ glu.regAdapter('menuitem', {
         eventName:'checkchange',
         eventConverter:function (item, checked) {
             return checked;
+        },
+        setComponentProperty : function(value, oldValue, options, control) {
+            control.setChecked(value,true);//suppress event
         }
+    },
+    isChildObject : function(propName){
+        return propName==='menu';
+    },
+
+    menuShortcut : function(value) {
+        return {
+            xtype:'menu',
+            defaultType:'menuitem',
+            items:value
+        };
     }
 });

@@ -72,6 +72,7 @@ glu.List = glu.extend(Object, {
      */
     removeAt:function (index) {
         var obj = this.getAt(index);
+        if (obj==null) return; //nothing to do
         this._private.objs.splice(index, 1);
         this.length--;
         if (obj._ob) {
@@ -216,7 +217,7 @@ glu.mreg('keytracking',{
     }
 })
 
-
+glu.List.prototype.forEach = glu.List.prototype.foreach;
 glu.List.prototype.where = function(filter) {
     var f = [];
     for (var i = 0; i < this.length; i++) {
