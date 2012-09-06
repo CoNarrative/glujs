@@ -278,7 +278,7 @@ glu.Viewmodel = glu.extend(Object, {
             };
 			this.message.respond = function(btn, txt) {
                 //TODO: Respond to confirmations in order in case they have stacked.
-                var next = me.confirm.mostRecentCall;
+                var next = me.message.mostRecentCall;
                 if (next === undefined || next.args === undefined || next.args.length === 0) {
                     throw "A confirmation was not requested"
                 }
