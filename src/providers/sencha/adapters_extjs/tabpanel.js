@@ -35,16 +35,20 @@ glu.regAdapter('tabpanel', {
         },
         transformInitialValue : function (value, config, viewmodel){
             if (value.mtype) {
-                if (value.parentList === undefined) {
+                /*if (value.parentList === undefined) {
                     throw "Attempted to set an activeTab to a view model that is not in a list";
-                }
-                return value.parentList.indexOf(value);
+                }*/
+				config._activeItemValueType = 'viewmodel';
+				config._activeIndex = value.parentList.indexOf(value);
+				//This is never going to work anyway because ExtJS doesn't care about activeTab when there are no items
+				//And we haven't put the items in yet
+                return -1;
             }
             return value;
         },
         eventName:'tabchangerequest',
-        eventConverter:function (control, idx) {
-            return control._activeItemValueType==='viewmodel'?control._parentList.getAt(idx):idx;
+        eventConverter:function (control, panel, idx) {
+            return control._activeItemValueType==='viewmodel'?panel._vm:idx;
         }
     },
 
@@ -62,9 +66,14 @@ glu.regAdapter('tabpanel', {
             var newIndex = tab.items.indexOf(newpanel);
             //a) set up a "request" and reject the change, so that the tab won't switch without passing through the view model
             control.valueSetTask.delay(1,function(){
-                control.fireEvent('tabchangerequest', control, newIndex);
+                control.fireEvent('tabchangerequest', control, newpanel, newIndex);
             });
             return false;
         }, this);
+		
+		control.on('render', function(tabpanel){
+			tabpanel._changeOriginatedFromModel = true;
+			tabpanel.setActiveTab(tabpanel._activeIndex);
+		});
     }
 });
