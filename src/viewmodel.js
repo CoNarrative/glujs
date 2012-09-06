@@ -268,13 +268,21 @@ glu.Viewmodel = glu.extend(Object, {
             this.message = jasmine.createSpy('message');
             this.confirm = jasmine.createSpy('confirm');
             var me = this;
-            this.confirm.respond = function(btn) {
+            this.confirm.respond = function(btn, txt) {
                 //TODO: Respond to confirmations in order in case they have stacked.
                 var next = me.confirm.mostRecentCall;
                 if (next === undefined || next.args === undefined || next.args.length === 0) {
                     throw "A confirmation was not requested"
                 }
-                next.args[0].fn.call(me,btn);
+                next.args[0].fn.call(me,btn,txt);
+            };
+			this.message.respond = function(btn, txt) {
+                //TODO: Respond to confirmations in order in case they have stacked.
+                var next = me.message.mostRecentCall;
+                if (next === undefined || next.args === undefined || next.args.length === 0) {
+                    throw "A confirmation was not requested"
+                }
+                next.args[0].fn.call(me,btn,txt);
             };
         }
         glu.log.debug('END viewmodel construction');
