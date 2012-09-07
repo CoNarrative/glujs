@@ -442,6 +442,9 @@ glu = {
     message:function (title, message, fn, scope) {
         return glu.provider.message(title, message, fn, scope);
     },
+    prompt:function (title, message, fn, scope) {
+        return glu.provider.prompt(title, message, fn, scope);
+    },
 
     /**
      * Registers a GluJS view adapter

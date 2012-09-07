@@ -641,6 +641,23 @@ glu.Viewmodel = glu.extend(Object, {
     },
 
     /**
+     * Shortcut for a quick prompt dialog.
+     * In test mode will be replaced with a jasmine spy.
+     * @param title
+     * @param message
+     * @param fn
+     * @param scope
+     * @return {*}
+     */
+    prompt:function (title, message, fn, scope) {
+        if (glu.isObject(title)) {
+            title.scope = title.scope || this;
+        }
+        scope = scope || this;
+        return glu.prompt(title, message, fn, scope);
+    },
+
+    /**
      * Opens a view model as a popup (usually modal) dialog or pushes a screen on to a mobile navigation stack.
      * @param config
      * A normal config block that you would pass into glu.model, only in this case it also displays the view model in a window.

@@ -50,6 +50,9 @@ Ext.apply(glu.provider, {
     message:function (title, message, fn, scope) {
         return Ext.Msg.alert(title, message, fn, scope);
     },
+    prompt:function (title, message, fn, scope){
+        return Ext.Msg.prompt(title,message,fn,scope);
+    },
 
     /* returns a viewmodel entry point as a constructor
      * and registers it with ExtJS
