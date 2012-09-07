@@ -276,7 +276,7 @@ glu.Viewmodel = glu.extend(Object, {
                 }
                 next.args[0].fn.call(me,btn,txt);
             };
-			this.message.respond = function(btn, txt) {
+            this.message.respond = function(btn, txt) {
                 //TODO: Respond to confirmations in order in case they have stacked.
                 var next = me.message.mostRecentCall;
                 if (next === undefined || next.args === undefined || next.args.length === 0) {
@@ -641,6 +641,23 @@ glu.Viewmodel = glu.extend(Object, {
     },
 
     /**
+     * Shortcut for a quick prompt dialog.
+     * In test mode will be replaced with a jasmine spy.
+     * @param title
+     * @param message
+     * @param fn
+     * @param scope
+     * @return {*}
+     */
+    prompt:function (title, message, fn, scope) {
+        if (glu.isObject(title)) {
+            title.scope = title.scope || this;
+        }
+        scope = scope || this;
+        return glu.prompt(title, message, fn, scope);
+    },
+
+    /**
      * Opens a view model as a popup (usually modal) dialog or pushes a screen on to a mobile navigation stack.
      * @param config
      * A normal config block that you would pass into glu.model, only in this case it also displays the view model in a window.
@@ -674,11 +691,11 @@ glu.Viewmodel = glu.extend(Object, {
     commitBulkUpdate : function(){
         this.fireEvent('bulkupdatecommitted',this);
     },
-	
-	unParent: function(){
-		this._ob.detach('parentVM');
-		delete this.parentVM;
-	}
+
+    unParent: function(){
+        this._ob.detach('parentVM');
+        delete this.parentVM;
+    }
 
 });
 glu.mreg('viewmodel', glu.Viewmodel);
