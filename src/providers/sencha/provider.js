@@ -117,8 +117,8 @@ Ext.apply(glu.provider, {
     /*
      * 'windowizes' a panel and pops it up
      */
-    openWindow:function (config) {
-        var view = glu.createViewmodelAndView(config, true);
+    openWindow:function (config, viewMode) {
+        var view = glu.createViewmodelAndView(config, true, viewMode);
         if (glu.testMode!==true){
             view.show();
         }
