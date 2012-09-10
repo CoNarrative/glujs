@@ -22,15 +22,15 @@ glu = {
      * @param {Object} view model config
      * @return {Object} the created view
      */
-    createViewmodelAndView:function (config, asWindow) {
+    createViewmodelAndView:function (config, asWindow, viewMode) {
         var vm;
         if (config._private && config._private.isInstantiated) {
             vm = config;
         } else {
             vm = glu.model(config);
         }
-
-        var viewSpec = this.getViewSpec(vm);
+        var viewName = viewMode? vm.viewmodelName+'_'+viewMode : vm.viewmodelName;
+        var viewSpec = this.getViewSpec(vm, null, viewName);
         if (glu.isString(viewSpec)) throw viewSpec;
         vm.init();
         if (asWindow) {
@@ -528,8 +528,8 @@ glu = {
         }
         return results;
     },
-    openWindow:function (config) {
-        return glu.provider.openWindow(config);
+    openWindow:function (config, viewModel) {
+        return glu.provider.openWindow(config, viewModel);
     },
     /**
      * Creates a glu ViewPort

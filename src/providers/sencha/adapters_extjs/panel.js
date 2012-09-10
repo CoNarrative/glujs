@@ -133,7 +133,7 @@ glu.regAdapter('panel', {
     afterCreate : function(control, viewmodel) {
         glu.provider.adapters.Container.prototype.afterCreate.apply(this, arguments);
         //make sure windows close themselves when their matching view model closes...
-        if (Ext.isFunction(control.close)) {
+        if (control.isWindow && Ext.isFunction(control.close)) {
             viewmodel.on('closed', function() {
                 glu.log.debug('closed matching window since viewmodel was closed');
                 if (control.hidden) {

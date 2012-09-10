@@ -267,25 +267,23 @@ glu.Viewmodel = glu.extend(Object, {
         if (glu.testMode) {
             this.message = jasmine.createSpy('message');
             this.confirm = jasmine.createSpy('confirm');
+            this.prompt = jasmine.createSpy('prompt');
             var me = this;
-            this.confirm.respond = function(btn, txt) {
-                //TODO: Respond to confirmations in order in case they have stacked.
-                var next = me.confirm.mostRecentCall;
-                if (next === undefined || next.args === undefined || next.args.length === 0) {
-                    throw "A confirmation was not requested"
-                }
-                next.args[0].fn.call(me,btn,txt);
-            };
-            this.message.respond = function(btn, txt) {
-                //TODO: Respond to confirmations in order in case they have stacked.
-                var next = me.message.mostRecentCall;
-                if (next === undefined || next.args === undefined || next.args.length === 0) {
-                    throw "A confirmation was not requested"
-                }
-                next.args[0].fn.call(me,btn,txt);
-            };
+            this.confirm.respond = function(btn,txt){me._fakeRespond('confirm',btn,txt);};
+            this.message.respond = function(btn,txt){me._fakeRespond('message',btn,txt);};
+            this.prompt.respond = function(btn,txt){me._fakeRespond('prompt',btn,txt);};
         }
         glu.log.debug('END viewmodel construction');
+    },
+
+    _fakeRespond:function(action, btn, txt) {
+        //TODO: Respond to confirmations in order in case they have stacked.
+        var next = this[action].mostRecentCall;
+        if (next === undefined || next.args === undefined || next.args.length === 0) {
+            throw action +  "was never called"
+        }
+        var fn=Ext.isString(next.args[0])?next.args[2]:next.args[0].fn;
+        fn.call(this,btn,txt);
     },
 
     /**
@@ -664,10 +662,10 @@ glu.Viewmodel = glu.extend(Object, {
      * In test mode it instantiates the new view model but does not instantiate the view.
      * @return {*}
      */
-    open:function (config) {
+    open:function (config, viewMode) {
         config.ns = config.ns || this.ns;
         config.parentVM = config.parentVM || this;
-        var win = glu.openWindow(config);
+        var win = glu.openWindow(config, viewMode);
         return win._bindings.viewmodel;
     },
 
