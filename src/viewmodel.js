@@ -247,10 +247,10 @@ glu.Viewmodel = glu.extend(Object, {
                 glu.log.warn('attempted to initialize an already initialized view model. Init() is a lifecycle function so please put any code you need to call multiple times elsewhere.');
                 return;
             }
+            this._private.isInitialized=true;
             if (config.init) {
                 config.init.apply(this,arguments);
             }
-            this._private.isInitialized=true;
             this.initChildren();
         };
         this.activate = config.activate || function () {
