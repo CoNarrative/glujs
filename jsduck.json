@@ -1,5 +1,5 @@
 {
-    "--title": "GluJS 1.1.0 for ExtJS docs",
+    "--title": "GluJS 1.2.0 for ExtJS docs",
     "--warnings": ["-link", "-no_doc"],
     "--output": "docs/api",
     "--img": "docs/img",
