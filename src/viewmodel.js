@@ -233,6 +233,7 @@ glu.Viewmodel = glu.extend(Object, {
         new glu.GraphObservable({vm:this});
         this._private.viewmodelName = config.viewmodelName;
         this._private.children = [];
+        this._private.isInitialized=false;
 
         //A view model either always has a parent or is the root. It has a parent even if "disconnected".
         //so need a different way to register disconnection than being null
@@ -240,7 +241,16 @@ glu.Viewmodel = glu.extend(Object, {
 
         delete config.viewmodelName;
 
-        this.init = config.init || function () {
+        //configure lazy initialization so children are not initialized until parent is complete
+        this.init = function () {
+            if (this._private && this._private.isInitialized) {
+                glu.log.warn('attempted to initialize an already initialized view model. Init() is a lifecycle function so please put any code you need to call multiple times elsewhere.');
+                return;
+            }
+            this._private.isInitialized=true;
+            if (config.init) {
+                config.init.apply(this,arguments);
+            }
             this.initChildren();
         };
         this.activate = config.activate || function () {
@@ -569,7 +579,13 @@ glu.Viewmodel = glu.extend(Object, {
         config.ns = this.ns;
         config.parentVM = this;
         config.rootVM = this.rootVM;
-        return glu.model(config);
+        var vm = glu.model(config);
+        //if this model is itself already initialized and the new model is initializable, init it
+        //otherwise, it will be handled through initChildren...
+        if (this._private.isInitialized && vm._private && vm.init && !vm._private.isInitialized) {
+            vm.init();
+        }
+        return vm;
     },
 
     /**
@@ -682,7 +698,9 @@ glu.Viewmodel = glu.extend(Object, {
         for (var i =0;i<this._private.children.length;i++){
             var child = this[this._private.children[i]];
             if(!glu.isFunction(child.init))continue;
-            child.init();
+            if (!child._private.isInitialized) {
+                child.init();
+            }
         }
     },
 

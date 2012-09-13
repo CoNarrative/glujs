@@ -32,7 +32,9 @@ glu = {
         var viewName = viewMode? vm.viewmodelName+'_'+viewMode : vm.viewmodelName;
         var viewSpec = this.getViewSpec(vm, null, viewName);
         if (glu.isString(viewSpec)) throw viewSpec;
-        vm.init();
+        if (vm._private && !vm._private.isInitialized) {
+            vm.init();
+        }
         if (asWindow) {
             if (viewSpec.asWindow) {
                 viewSpec = glu.deepApply({
