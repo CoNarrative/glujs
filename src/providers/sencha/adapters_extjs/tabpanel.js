@@ -22,13 +22,9 @@ glu.regAdapter('tabpanel', {
                 return; //nothing to do ... can't really "deselect" within ExtJS
             }
             if (value.mtype) {
-                if (value.parentList === undefined) {
-                    throw "Attempted to set an activeTab to a view model that is not in a list";
-                }
                 control._activeItemValueType = 'viewmodel';
-                control._parentList = value.parentList;
-                //look up index...
-                value = value.parentList.indexOf(value);
+                value = control.items.findIndexBy(function(card){return card._vm == value;});
+                if (value==-1) throw "Could not find a item in card layout bound to the view model passed to activeItem";
             }
             control._changeOriginatedFromModel = true;
             control.setActiveTab(value);
