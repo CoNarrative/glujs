@@ -130,6 +130,7 @@ glu.regAdapter('component', {
                 control.on('afterrender', function (control) {
                     setTimeout(function () {
                         var el = Ext.isString(editor.target) ? control[editor.target] : editor.target(control);
+                        if( el )
                         el.on(editor.trigger, function () {
                             editor.startEdit(el, control[control.propName]);//control.getValue()
                         });
