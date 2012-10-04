@@ -100,7 +100,7 @@ glu.regAdapter('fieldset', {
             }
             control.supressCollapseEvents = false;
         }
-    },
+    }
 });
 
 glu.regAdapter('multiselect', {
