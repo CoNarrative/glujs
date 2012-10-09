@@ -139,6 +139,12 @@ glu.mreg('listtreestoreadapter', {
                     if (!node.isExpanded())
                         node.expand();
                 }, this);
+                this.parentVM[attachTo].on('insertchild', function(obj, parentIndex, childIndex) {
+                    var node = this.getRootNode().getChildAt(parentIndex);
+                    node.insertChild(childIndex, obj);
+                    if (!node.isExpanded())
+                        node.expand();
+                }, this);
                 this.parentVM[attachTo].on('removechild', function(parentIndex, child) {
                     this.getRootNode().getChildAt(parentIndex).removeChild(child);
                 }, this);
