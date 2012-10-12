@@ -129,10 +129,19 @@ glu.mreg('listtreestoreadapter', {
                 this.parentVM[attachTo].on('removed', function(obj, index) {
                     this.getRootNode().removeChild(this.getRootNode().getChildAt(index));
                 }, this);
+                this.parentVM[attachTo].on('edited', function(obj, index) {
+                    this.getRootNode().getChildAt(index).set(obj.asObject());
+                }, this);
                 //Child node listners
                 this.parentVM[attachTo].on('appendchild', function(obj, parentIndex) {
                     var node = this.getRootNode().getChildAt(parentIndex);
                     node.appendChild(obj);
+                    if (!node.isExpanded())
+                        node.expand();
+                }, this);
+                this.parentVM[attachTo].on('insertchild', function(obj, parentIndex, childIndex) {
+                    var node = this.getRootNode().getChildAt(parentIndex);
+                    node.insertChild(childIndex, obj);
                     if (!node.isExpanded())
                         node.expand();
                 }, this);
