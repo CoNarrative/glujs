@@ -85,7 +85,8 @@ glu.regAdapter('component', {
                     }
                 }
             }
-            control.setVisible(!newValue);
+            if( control.tab )control.tab.setVisible(!newValue);
+            else control.setVisible(!newValue);
             if (control.ownerCt) {
                 control.ownerCt.doLayout();
             }
