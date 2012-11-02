@@ -47,7 +47,7 @@ glu.regAdapter('panel', {
         }
     },
 
-    buttonsShortcut : function(value) {
+    buttonsShortcut : function(value, config) {
         return {
             xtype : 'toolbar',
             defaultType : 'button',
@@ -55,12 +55,12 @@ glu.regAdapter('panel', {
             dock : 'bottom',
             layout : {
                 // default to 'end' (right-aligned)
-                pack : 'end'
+                pack : { left:'start', center:'center' }[config.buttonAlign] || 'end'
             }
         }
     },
 
-    fbarShortcut : function(value) {
+    fbarShortcut : function(value, config) {
         return {
             xtype : 'toolbar',
             defaultType : 'button',
@@ -68,7 +68,7 @@ glu.regAdapter('panel', {
             dock : 'bottom',
             layout : {
                 // default to 'end' (right-aligned)
-                pack : 'end'
+                pack : { left:'start', center:'center' }[config.buttonAlign] || 'end'
             }
         }
     },
@@ -133,7 +133,7 @@ glu.regAdapter('panel', {
     afterCreate : function(control, viewmodel) {
         glu.provider.adapters.Container.prototype.afterCreate.apply(this, arguments);
         //make sure windows close themselves when their matching view model closes...
-        if (Ext.isFunction(control.close)) {
+        if (control.isWindow && Ext.isFunction(control.close)) {
             viewmodel.on('closed', function() {
                 glu.log.debug('closed matching window since viewmodel was closed');
                 if (control.hidden) {
@@ -157,7 +157,7 @@ glu.regAdapter('panel', {
             control.on('beforeexpand', expandOrCollapseFactory(true));
         }
 
-        if (control._bindingMap && control._bindingMap.activeItem!==undefined) {
+        if (control._bindingMap && control._bindingMap.activeItem!==undefined && control.getLayout().type != 'card') {
             control.addActual = control.add;
             control.add = function(index, item) {
                 item.on('render', function() {
@@ -167,6 +167,13 @@ glu.regAdapter('panel', {
                 });
                 control.addActual(index, item);
             }
+        }
+
+        if (control._activeIndex !== undefined) {
+            control.on('render', function(panel){
+                panel._changeOriginatedFromModel = true;
+                panel.getLayout().setActiveItem(panel._activeIndex);
+            });
         }
     },
     /**
@@ -259,16 +266,12 @@ glu.regAdapter('panel', {
         storeValueInComponentAs : '_activeIndex',
         setComponentProperty:function (value, oldValue, options, control) {
             if (value===undefined || value===-1) {
-                return; //nothing to do ... can't really "deselect" within ExtJS
+                return; //nothing to do ... can't really "deselect" card/tab within ExtJS
             }
             if (value.mtype) {
-                if (value.parentList === undefined) {
-                    throw "Attempted to set an activeItem to a view model that is not in a list";
-                }
                 control._activeItemValueType = 'viewmodel';
-                control._parentList = value.parentList;
-                //look up index...
-                value = value.parentList.indexOf(value);
+                value = control.items.findIndexBy(function(card){return card._vm == value;});
+                if (value==-1) throw "Could not find a item in card layout bound to the view model passed to activeItem";
             }
             var oldItem = oldValue==-1?null : control.items.getAt(oldValue);
             control._changeOriginatedFromModel = true;
@@ -280,9 +283,13 @@ glu.regAdapter('panel', {
         transformInitialValue : function (value, config, viewmodel){
             if (value.mtype) {
                 if (value.parentList === undefined) {
-                    throw "Attempted to set an activeTab to a view model that is not in a list";
+                    throw "Attempted to set an activeTab to a view model that is not in a list.  You should always set the activeItem in the init()";
                 }
-                return value.parentList.indexOf(value);
+                config._activeItemValueType = 'viewmodel';
+                config._activeIndex = value.parentList.indexOf(value);
+                //This is never going to work anyway because ExtJS doesn't care about activeTab when there are no items
+                //And we haven't put the items in yet
+                return -1;
             }
             return value;
         }

@@ -195,7 +195,7 @@ Ext.apply(glu.provider.binder, {
                     //appears to be an array shortcut for an actual single special item like a menu or toolbar...
                     var shortcutConverter = xtypeAdapter[propName + 'Shortcut'];
                     if (shortcutConverter) {
-                        value = shortcutConverter(value);
+                        value = shortcutConverter(value, config);
                         config[propName] = value;
                     }
                     if (glu.isString(value) || glu.isArray(value)) {
@@ -369,6 +369,7 @@ Ext.apply(glu.provider.binder, {
                     //if there is a value, put that first in the list
                     args.unshift(config.value);
                 }
+                glu.log.info(glu.symbol('USER triggered {0}.{1}').format(binding.model.toString(), binding.modelPropName));
                 binding.model[binding.modelPropName].apply(binding.model, args);
             };
             config[binding.controlPropName] = binding.initialValue;

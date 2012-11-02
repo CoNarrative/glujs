@@ -56,7 +56,7 @@ Ext.onReady(function(){glu.viewport('helloworld.main');});
 
 If you really just want the minified libraries, grab them here:
 
-[http://www.conarrative.com/download/glujs-1.0.0.zip](http://www.conarrative.com/download/glujs-1.0.0.zip)
+[http://www.conarrative.com/download/glujs-1.2.0.zip](http://www.conarrative.com/download/glujs-1.2.0.zip)
 
 If you want the source and full examples, clone this project from github.
 

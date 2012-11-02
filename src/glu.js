@@ -22,17 +22,19 @@ glu = {
      * @param {Object} view model config
      * @return {Object} the created view
      */
-    createViewmodelAndView:function (config, asWindow) {
+    createViewmodelAndView:function (config, asWindow, viewMode) {
         var vm;
         if (config._private && config._private.isInstantiated) {
             vm = config;
         } else {
             vm = glu.model(config);
         }
-
-        var viewSpec = this.getViewSpec(vm);
+        var viewName = viewMode? vm.viewmodelName+'_'+viewMode : vm.viewmodelName;
+        var viewSpec = this.getViewSpec(vm, null, viewName);
         if (glu.isString(viewSpec)) throw viewSpec;
-        vm.init();
+        if (vm._private && !vm._private.isInitialized) {
+            vm.init();
+        }
         if (asWindow) {
             if (viewSpec.asWindow) {
                 viewSpec = glu.deepApply({
@@ -65,11 +67,11 @@ glu = {
         viewmodelName = viewmodelName || vm.viewmodelName;
         configOverlay = configOverlay || {};
         var viewName = viewmodelName;
-        glu.log.info('Creating view ' + ns + '.' + viewName);
+        glu.log.debug('Creating view ' + ns + '.' + viewName);
         var nsSubObj = glu.namespace(ns + '.' + glu.conventions.viewNs);
         var viewSpec = nsSubObj[viewName];
-        if (!viewSpec) {
-            var factory = nsSubObj[viewName + 'Factory'];
+        if (!viewSpec || glu.isFunction(viewSpec)) { //functions are now automatically treated as factories instead of constructors...
+            var factory = viewSpec || nsSubObj[viewName + 'Factory'];
             if (factory === undefined) {
                 return 'unable to find view config spec for ' + viewName;
             }
@@ -193,6 +195,13 @@ glu = {
         return typeof(target) == 'number';
     },
 
+    /**
+     * Returns true if this is an actual instantiated view model
+     */
+    isInstantiated:function(target){
+        return target._private;
+    },
+
     namespaces:{},
     /**
      * Creates namespace to be used for scoping variables and classes so that they are not global.
@@ -280,7 +289,7 @@ glu = {
                 propName !== 'parentList' && //parent list
                 propName !== 'meta' && //don't remember
                 propName !== 'ownerCt' &&
-                !(propValue._private) //make sure this isn't a glu object
+                !glu.isInstantiated(propValue) //make sure this isn't a glu object
                 )
             {
 //                if (propValue.constructor!==Object.prototype.constructor) {
@@ -435,6 +444,9 @@ glu = {
     message:function (title, message, fn, scope) {
         return glu.provider.message(title, message, fn, scope);
     },
+    prompt:function (title, message, fn, scope) {
+        return glu.provider.prompt(title, message, fn, scope);
+    },
 
     /**
      * Registers a GluJS view adapter
@@ -518,8 +530,8 @@ glu = {
         }
         return results;
     },
-    openWindow:function (config) {
-        return glu.provider.openWindow(config);
+    openWindow:function (config, viewModel) {
+        return glu.provider.openWindow(config, viewModel);
     },
     /**
      * Creates a glu ViewPort
@@ -531,8 +543,19 @@ glu = {
         return glu.provider.panel.apply(glu.provider, arguments);
     },
     equivalent:function (oldVal, newVal) {
-        if ((oldVal === null && newVal != null) || (oldVal != null && newVal == null)) return false;
-        if (glu.isObject(newVal) || glu.isArray(newVal)) {
+        if ((oldVal === null && newVal != null) || (oldVal != null && newVal == null)) return false
+        if (glu.isArray(newVal)){
+            //array equivalency is if all the members are equivalent...
+            if (oldVal==newVal){
+                return true;
+            }
+            if (oldVal.length!=newVal.length) return false;
+            for (var i=0;i<oldVal.length;i++){
+                if (oldVal[i]!=newVal[i]) return false;
+            }
+            return true;
+        }
+        if (glu.isObject(newVal)) {
             if (newVal == oldVal) {//by reference
                 return true;
             }
@@ -628,7 +651,7 @@ glu = {
         var baseCls = glu.walk(classDef.extend) || function(){};
         var cls = glu.extend (baseCls, classDef);
         var ref = glu._splitReference(name);
-        glu.walk(ref.ns)[ref.name] = cls;
+        glu.ns(ref.ns)[ref.name] = cls;
         return cls;
     },
 

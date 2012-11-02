@@ -22,13 +22,9 @@ glu.regAdapter('tabpanel', {
                 return; //nothing to do ... can't really "deselect" within ExtJS
             }
             if (value.mtype) {
-                if (value.parentList === undefined) {
-                    throw "Attempted to set an activeTab to a view model that is not in a list";
-                }
                 control._activeItemValueType = 'viewmodel';
-                control._parentList = value.parentList;
-                //look up index...
-                value = value.parentList.indexOf(value);
+                value = control.items.findIndexBy(function(card){return card._vm == value;});
+                if (value==-1) throw "Could not find a item in card layout bound to the view model passed to activeItem";
             }
             control._changeOriginatedFromModel = true;
             control.setActiveTab(value);
@@ -36,15 +32,19 @@ glu.regAdapter('tabpanel', {
         transformInitialValue : function (value, config, viewmodel){
             if (value.mtype) {
                 if (value.parentList === undefined) {
-                    throw "Attempted to set an activeTab to a view model that is not in a list";
+                    throw "Attempted to set an activeTab to a view model that is not in a list.  You should always set an activeTab in the init().";
                 }
-                return value.parentList.indexOf(value);
+                config._activeItemValueType = 'viewmodel';
+                config._activeIndex = value.parentList.indexOf(value);
+                //This is never going to work anyway because ExtJS doesn't care about activeTab when there are no items
+                //And we haven't put the items in yet
+                return -1;
             }
             return value;
         },
         eventName:'tabchangerequest',
-        eventConverter:function (control, idx) {
-            return control._activeItemValueType==='viewmodel'?control._parentList.getAt(idx):idx;
+        eventConverter:function (control, panel, idx) {
+            return control._activeItemValueType==='viewmodel'?panel._vm:idx;
         }
     },
 
@@ -62,9 +62,16 @@ glu.regAdapter('tabpanel', {
             var newIndex = tab.items.indexOf(newpanel);
             //a) set up a "request" and reject the change, so that the tab won't switch without passing through the view model
             control.valueSetTask.delay(1,function(){
-                control.fireEvent('tabchangerequest', control, newIndex);
+                control.fireEvent('tabchangerequest', control, newpanel, newIndex);
             });
             return false;
         }, this);
+
+        if( control._activeIndex !== undefined ){
+            control.on('render', function(tabpanel){
+                tabpanel._changeOriginatedFromModel = true;
+                tabpanel.setActiveTab(tabpanel._activeIndex);
+            });
+        }
     }
 });

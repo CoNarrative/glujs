@@ -2,10 +2,12 @@
 (function() {
 
   Given('the todo application', function() {
-    var ns;
+    var main, newItem, ns;
     ns = todo;
+    main = null;
+    newItem = null;
     Meaning(function() {
-      var backend, main, res;
+      var backend, res;
       res = todo.createMockBackend();
       backend = res.backend;
       main = glu.model({
@@ -14,13 +16,33 @@
       });
       return main.init();
     });
-    ShouldHave('set value to true', function() {
-      return expect(true).toBe(true);
-    });
-    return When('user enters in a new todo', function() {
-      return Meaning(function() {
-        return ShouldHave('trimmed the input', function() {
-          return expect(true).toBe(false);
+    return When('User clicks add button', function() {
+      Meaning(function() {
+        main.set('newItemText', '    Finish Todo spec     ');
+        main.addNewItem();
+        return newItem = main.todoList.getAt(0);
+      });
+      Should('change new item text to empty', function() {
+        return expect(newItem.text).toBe('Finish Todo spec');
+      });
+      Should('add new todo ', function() {
+        return expect(main.todoList.length).toBe(1);
+      });
+      Should('trim new todo text', function() {
+        return expect(newItem.text).toBe('Finish Todo spec');
+      });
+      Should('set items left to 1', function() {
+        return expect(main.activeCount).toBe(1);
+      });
+      return When('User clicks the delete icon', function() {
+        Meaning(function() {
+          return main.remove(newItem);
+        });
+        Should('remove item from todo list', function() {
+          return expect(main.todoList.length).toBe(0);
+        });
+        return Should('set items left to 0', function() {
+          return expect(main.activeCount).toBe(0);
         });
       });
     });

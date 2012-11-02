@@ -32,7 +32,7 @@ Ext.apply(glu.provider.binder, {
         //use the xtype chain
 
         if (xtype != config.xtype) {
-            glu.log.info('No exact binding adaptor for ' + config.xtype + '; using adapter for ' + xtype + ' instead.');
+            glu.log.debug('No exact binding adaptor for ' + config.xtype + '; using adapter for ' + xtype + ' instead.');
         }
 
         //initialize the adapter if it hasn't been. We can do this simply because these are singletons

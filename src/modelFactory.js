@@ -1,13 +1,17 @@
 /*
  * Copyright (C) 2012 by CoNarrative
  */
-glu.model = function (config) {
+glu.model = function (mtype, config) {
     //clean up arguments...
-    if (glu.isString(config)) {
-        config = {
-            mtype : config
-        };
+    if (glu.isObject(mtype)) {
+        config = mtype;
+        mtype = null;
     }
+    if (config==null){
+        config = {};
+    }
+    config.mtype=config.mtype || mtype || 'viewmodel';
+
     if (config.mtype && config.mtype.indexOf('.')>-1){
         var split = glu._splitReference(config.mtype);
         config.ns = split.ns;

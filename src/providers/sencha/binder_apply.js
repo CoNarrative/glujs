@@ -83,6 +83,7 @@ Ext.apply(glu.provider.binder, {
             if (binding.invertValue) {
                 adaptedValue = !adaptedValue;
             }
+            glu.log.info(glu.symbol('USER changed {0}.{1}').format(binding.model.toString(), binding.modelPropName));
             binding.model.set.call(this, binding.modelPropName, adaptedValue);
         }, binding.model);
 
@@ -128,7 +129,16 @@ Ext.apply(glu.provider.binder, {
         var wrapper = function (value, oldValue, options) {
             var control = Ext.getCmp(controlId);
             if (control===undefined) {
-                return 'discard';
+                if (bindingAdapter.findControl) {
+                    control = bindingAdapter.findControl(config);
+                }
+                if (control === undefined) {
+                    return 'discard';
+                }
+            }
+            if (glu.isArray(value)){
+                //make a copy--arrays are handled by equivalence not reference
+                value = value.slice();
             }
             if (binding.invertValue) {
                 value = !value;

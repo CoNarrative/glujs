@@ -222,6 +222,7 @@ glu.Viewmodel = glu.extend(Object, {
     constructor:function (config) {
         glu.log.debug('BEGIN viewmodel construction');
         glu.Viewmodel.superclass.constructor.call(this);
+        this._setRawMessage = glu.symbol('{vmName}.{name}: {oldValue} --> {newValue}');
         glu.deepApply(this, config);
         this._private = this._private || {};
         this._private.setters = {};
@@ -229,9 +230,10 @@ glu.Viewmodel = glu.extend(Object, {
         //TO DO - separate between formulas and reactors proper...
         this._private.reactors = [];
         this._private.data = this._private.data || {};
-        this._private.observable = new glu.GraphObservable({vm:this});
+        new glu.GraphObservable({vm:this});
         this._private.viewmodelName = config.viewmodelName;
         this._private.children = [];
+        this._private.isInitialized=false;
 
         //A view model either always has a parent or is the root. It has a parent even if "disconnected".
         //so need a different way to register disconnection than being null
@@ -239,7 +241,16 @@ glu.Viewmodel = glu.extend(Object, {
 
         delete config.viewmodelName;
 
-        this.init = config.init || function () {
+        //configure lazy initialization so children are not initialized until parent is complete
+        this.init = function () {
+            if (this._private && this._private.isInitialized) {
+                glu.log.warn('attempted to initialize an already initialized view model. Init() is a lifecycle function so please put any code you need to call multiple times elsewhere.');
+                return;
+            }
+            this._private.isInitialized=true;
+            if (config.init) {
+                config.init.apply(this,arguments);
+            }
             this.initChildren();
         };
         this.activate = config.activate || function () {
@@ -256,25 +267,33 @@ glu.Viewmodel = glu.extend(Object, {
         this._walkConfig();
 
         //set all reactors...
+        this.firingInitialReactors = true;
         for (var i = 0; i < this._private.reactors.length; i++) {
             var reactor = this._private.reactors[i];
             if (reactor.init) reactor.init();
         }
+        delete this.firingInitialReactors;
         this._private.isInstantiated = true;
         if (glu.testMode) {
             this.message = jasmine.createSpy('message');
             this.confirm = jasmine.createSpy('confirm');
+            this.prompt = jasmine.createSpy('prompt');
             var me = this;
-            this.confirm.respond = function(btn) {
-                //TODO: Respond to confirmations in order in case they have stacked.
-                var next = me.confirm.mostRecentCall;
-                if (next === undefined || next.args === undefined || next.args.length === 0) {
-                    throw "A confirmation was not requested"
-                }
-                next.args[0].fn.call(me,btn);
-            };
+            this.confirm.respond = function(btn,txt){me._fakeRespond('confirm',btn,txt);};
+            this.message.respond = function(btn,txt){me._fakeRespond('message',btn,txt);};
+            this.prompt.respond = function(btn,txt){me._fakeRespond('prompt',btn,txt);};
         }
         glu.log.debug('END viewmodel construction');
+    },
+
+    _fakeRespond:function(action, btn, txt) {
+        //TODO: Respond to confirmations in order in case they have stacked.
+        var next = this[action].mostRecentCall;
+        if (next === undefined || next.args === undefined || next.args.length === 0) {
+            throw action +  "was never called"
+        }
+        var fn=Ext.isString(next.args[0])?next.args[2]:next.args[0].fn;
+        fn.call(this,btn,txt);
     },
 
     /**
@@ -311,6 +330,12 @@ glu.Viewmodel = glu.extend(Object, {
         }
         setter.call(this, value);
     },
+
+    toString:function(){
+        //default to some common identifiers
+        var label = this.name || this.id || '?';
+        return '[' + this.viewmodelName + ' ' + label + ']'
+    },
     /**
      * Sets the raw value of a property and bypasses any custom setter. This is usually used within
      * the custom setter itself to set the underlying property after any preprocessing.
@@ -326,6 +351,7 @@ glu.Viewmodel = glu.extend(Object, {
         if (glu.equivalent(oldValue, value)) {
             return; //do nothing if it's the same thing.
         }
+        if (!this.firingInitialReactors) glu.log.info(this._setRawMessage.format({vmName:this.toString(),name:propName,newValue:value,oldValue:oldValue}));
         this._private.data[propName] = value;
         if (!glu.isFunction(this[propName])) { //if not in "knockout" mode
             this[propName] = value;
@@ -365,7 +391,7 @@ glu.Viewmodel = glu.extend(Object, {
      */
     on:function (eventName, handler, scope) {
         scope = scope || this;
-        this._private.observable.on(eventName, handler, scope);
+        this._ob.on(eventName, handler, scope);
     },
 
     /**
@@ -375,8 +401,8 @@ glu.Viewmodel = glu.extend(Object, {
      * better just to invoke methods directly for clarity.
      */
     fireEvent:function () {
-        glu.log.info('Viewmodel "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
-        this._private.observable.fireEvent.apply(this._private.observable, arguments);
+        glu.log.debug('Viewmodel "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
+        this._ob.fireEvent.apply(this._ob, arguments);
     },
 
     _walkConfig:function () {
@@ -442,9 +468,9 @@ glu.Viewmodel = glu.extend(Object, {
             //SUBMODEL!
             propValue.referenceName = propName;
             this._private.children.push(propName);
-            var model = this.model(propValue);
+            var model = glu.isInstantiated(propValue)? propValue: this.model(propValue);
             propValue = model;
-            this[propName] = propValue;
+            this[propName] = model;
             //attach (so that it doesn't matter what order the graph was built up in...
             this._ob.attach(propName,model,"parentVM");
             this.makePropertyAccessors(propName,propValue,true);
@@ -553,7 +579,13 @@ glu.Viewmodel = glu.extend(Object, {
         config.ns = this.ns;
         config.parentVM = this;
         config.rootVM = this.rootVM;
-        return glu.model(config);
+        var vm = glu.model(config);
+        //if this model is itself already initialized and the new model is initializable, init it
+        //otherwise, it will be handled through initChildren...
+        if (this._private.isInitialized && vm._private && vm.init && !vm._private.isInitialized) {
+            vm.init();
+        }
+        return vm;
     },
 
     /**
@@ -623,16 +655,33 @@ glu.Viewmodel = glu.extend(Object, {
     },
 
     /**
+     * Shortcut for a quick prompt dialog.
+     * In test mode will be replaced with a jasmine spy.
+     * @param title
+     * @param message
+     * @param fn
+     * @param scope
+     * @return {*}
+     */
+    prompt:function (title, message, fn, scope) {
+        if (glu.isObject(title)) {
+            title.scope = title.scope || this;
+        }
+        scope = scope || this;
+        return glu.prompt(title, message, fn, scope);
+    },
+
+    /**
      * Opens a view model as a popup (usually modal) dialog or pushes a screen on to a mobile navigation stack.
      * @param config
      * A normal config block that you would pass into glu.model, only in this case it also displays the view model in a window.
      * In test mode it instantiates the new view model but does not instantiate the view.
      * @return {*}
      */
-    open:function (config) {
+    open:function (config, viewMode) {
         config.ns = config.ns || this.ns;
         config.parentVM = config.parentVM || this;
-        var win = glu.openWindow(config);
+        var win = glu.openWindow(config, viewMode);
         return win._bindings.viewmodel;
     },
 
@@ -649,8 +698,20 @@ glu.Viewmodel = glu.extend(Object, {
         for (var i =0;i<this._private.children.length;i++){
             var child = this[this._private.children[i]];
             if(!glu.isFunction(child.init))continue;
-            child.init();
+            if (!child._private.isInitialized) {
+                child.init();
+            }
         }
+    },
+
+    commitBulkUpdate : function(){
+        this.fireEvent('bulkupdatecommitted',this);
+    },
+
+    unParent: function(){
+        this._ob.detach('parentVM');
+        delete this.parentVM;
     }
+
 });
 glu.mreg('viewmodel', glu.Viewmodel);

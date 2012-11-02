@@ -10,11 +10,12 @@
  */
 glu.List = glu.extend(Object, {
     constructor:function (config) {
+        config = config || {};
         glu.deepApply(this, config);
         this.length = 0;
         this._private = this._private || {};
         this._private.objs = [];
-        this._private.observable = this._private.observable || new glu.GraphObservable({vm:this});
+        new glu.GraphObservable({vm:this});
         config.items = config.items || config.data || [];
         for (var i = 0; i < config.items.length; i++) {
             var item = config.items[i];
@@ -71,7 +72,9 @@ glu.List = glu.extend(Object, {
      */
     removeAt:function (index) {
         var obj = this.getAt(index);
+        if (obj==null) return; //nothing to do
         this._private.objs.splice(index, 1);
+        this.length--;
         if (obj._ob) {
             //remove from observation graph...since it can only go child-> parent don't worry about other direction
             obj._ob.detach('parentVM');
@@ -81,7 +84,6 @@ glu.List = glu.extend(Object, {
         if (index < this.activeIndex) {
             this.setActiveIndex(this.getActiveIndex() - 1);
         }
-        this.length--;
         this.fireEvent('lengthchanged',this.length,this.length+1);
         return obj;
     },
@@ -165,26 +167,57 @@ glu.List = glu.extend(Object, {
         }
     },
 
-    //TODO: Put in glu observable mixin
     on:function (eventName, handler, scope) {
-        if( Ext.isObject(eventName) ){
-            scope = eventName.scope || this;
-            for( var event in eventName ){
-                this._private.observable.on(event, eventName[event], scope);
-            }
-        }
-        else{
-            scope = scope || this;
-            this._private.observable.on(eventName, handler, scope);
-        }
+        scope = scope || this;
+        this._ob.on(eventName, handler, scope);
+    },
+
+    toArray:function(){
+        return this._private.objs.slice();
     },
     fireEvent:function () {
-        glu.log.info('List "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
-        this._private.observable.fireEvent.apply(this._private.observable, arguments);
+        glu.log.debug('List "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
+        this._ob.fireEvent.apply(this._ob, arguments);
     }
 });
+
 glu.mreg('list', glu.List);
 
+glu.mreg('keytracking',{
+    initMixin:function(){
+        this.keyMap ={};
+        this.idProperty = this.idProperty || 'id';
+        //add initial keys since this is after constructor...
+        for (var i=0;i<this._private.objs.length;i++){
+            this.addKey(this._private.objs[i]);
+        }
+        this.on('added',this.addKey)
+        this.on('removed',this.removeKey)
+    },
+    addKey:function(item, idx){
+        var key=item[this.idProperty];
+        if (key===undefined) return;
+        this.keyMap[key] = item;
+    },
+    removeKey:function(item){
+        var key=item[this.idProperty];
+        if (key===undefined) return;
+        delete this.keyMap[key];
+    },
+    containsKey:function(key){
+        return this.keyMap[key]!==undefined;
+    },
+    getById:function(key){
+        return this.keyMap[key];
+    },
+    removeAtKey:function(key){
+        var item = this.keyMap[key];
+        if (item==null) return;
+        this.remove(item);
+    }
+})
+
+glu.List.prototype.forEach = glu.List.prototype.foreach;
 glu.List.prototype.where = function(filter) {
     var f = [];
     for (var i = 0; i < this.length; i++) {

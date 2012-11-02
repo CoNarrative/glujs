@@ -5,7 +5,7 @@ glu.defModel('todo.main', {
     addNewItem:function () {
         this.todoList.add(this.model({
             mtype:'todoitem',
-            text:this.newItemText
+            text:Ext.String.trim(this.newItemText)
         }));
         this.set('newItemText', '');
     },

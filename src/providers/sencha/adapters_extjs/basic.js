@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2012 by CoNarrative
- */
+* Copyright (C) 2012 by CoNarrative
+*/
 /**
  * @class glu.extjs.adapters.field
  * @extends glu.extjs.adapters.component
@@ -32,53 +32,10 @@
 Ext.ns('glu.provider.adapters');
 glu.regAdapter = glu.provider.regAdapter;
 
-/**
- * class glu.extjs.adapters.menu
- * @extends glu.extjs.adapters.panel
- */
-glu.regAdapter('menu' ,{
-    extend : 'panel',
-    defaultTypes:{
-        items:'menuitem'
-    },
-    itemsBindings:{
-        custom:function (context) {
-            glu.provider.itemsHelper.bindItems(context);
-        }
-    }
-});
-
-/**
- * @class glu.extjs.adapters.menuitem
- * @extends glu.extjs.adapters.component
- */
-glu.regAdapter('menuitem', {
-    extend : 'component',
-
-    applyConventions: function(config, viewmodel) {
-        Ext.applyIf (config, {
-            handler : glu.conventions.expression(config.name,{up:true}),
-            text : glu.conventions.asLocaleKey(config.name)
-        });
-        glu.provider.adapters.Component.prototype.applyConventions.apply(this, arguments);
-    },
-
-    /**
-     * @cfg {Boolean} checked
-     * *Two-way binding*. The checked state of the menu item.
-     */
-    checkedBindings:{
-        eventName:'checkchange',
-        eventConverter:function (item, checked) {
-            return checked;
-        }
-    }
-});
-
 glu.regAdapter('fieldset', {
     extend : 'container',
-    defaultTypes:{
-        items:'textfield'
+    defaultTypes : {
+        items : 'textfield'
     },
     applyConventions : function(config, viewmodel) {
         Ext.applyIf(config, {
@@ -94,19 +51,19 @@ glu.regAdapter('fieldset', {
         glu.provider.adapters.Container.prototype.afterCreate.apply(this, arguments);
         var expandOrCollapseFactory = function(expanded) {
             return function(control) {
-                if( control.supressCollapseEvents )
+                if (control.supressCollapseEvents)
                     return true;
                 control.fireEvent('expandorcollapserequest', control, expanded);
                 return false;
             }
         };
 
-        if( control._bindingMap.collapsed ){
+        if (control._bindingMap.collapsed) {
             control.on('beforecollapse', expandOrCollapseFactory(false));
             control.on('beforeexpand', expandOrCollapseFactory(true));
         }
 
-        if (control._bindingMap && control._bindingMap.activeItem!==undefined) {
+        if (control._bindingMap && control._bindingMap.activeItem !== undefined) {
             control.addActual = control.add;
             control.add = function(index, item) {
                 item.on('render', function() {
@@ -145,3 +102,7 @@ glu.regAdapter('fieldset', {
         }
     },
 });
+
+glu.regAdapter('multiselect', {
+    extend : 'field'
+}); 
