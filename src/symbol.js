@@ -81,6 +81,24 @@ glu.apply(glu.Symbol.prototype, {
         return glu.string(name).toPascalCase();
     },
 
+    flattenArgs: function(argsArray){
+        var temp = [],i,j,subArgs;
+
+        for( i=0; i < argsArray.length; i++ ){
+            if( Object.prototype.toString.call(argsArray[i]) == '[object Array]' ){
+                subArgs = this.flattenArgs(argsArray[i]);
+                for(j=0; j< subArgs.length; j++ ){
+                    temp.push(subArgs[j]);
+                }
+            }
+            else{
+                temp.push(argsArray[i]);
+            }
+        }
+
+        return temp;
+    },
+
     /**
      * Accepts either a set of arguments that represent values to substitute ordinally
      * or one or more config objects in which to search by name key
@@ -89,6 +107,7 @@ glu.apply(glu.Symbol.prototype, {
      */
     format:function (cfg) {
         var args = arguments;
+        args = this.flattenArgs(args);
         if (!glu.isObject(cfg)) {
             return this.str.replace(/{(\d+)}/g, function (token, idx) {
                 var key = Number(token.substring(1, token.length - 1));

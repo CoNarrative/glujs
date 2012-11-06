@@ -126,6 +126,10 @@ glu.regAdapter('grid', {
                 if( col.header && col.header.indexOf(glu.conventions.localizeStart) == 0 && glu.symbol(col.header).endsWith(glu.conventions.localizeEnd)){
                     col.header = glu.localize({ns:viewmodel.ns, viewmodel:config.store, key:col.header});
                 }
+                if( col.editor && typeof(col.editor) == 'object' && col.editor.store && typeof(col.editor.store) == 'string' && col.editor.store.indexOf(glu.conventions.bindingSymbol) == 0){
+                    var bindings = glu.provider.binder.collectBindings(col.editor, viewmodel);
+                    glu.provider.binder.applyBindingsList(bindings);
+                }
             }
         }
 
