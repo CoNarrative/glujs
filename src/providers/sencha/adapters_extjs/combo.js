@@ -19,6 +19,13 @@
 glu.regAdapter('combo', {
     extend : 'field',
 
+    applyConventions: function(config, viewmodel) {
+        Ext.applyIf (config, {
+            store : glu.conventions.expression(config.name + 'Store')
+        });
+        glu.provider.adapters.Field.prototype.applyConventions.apply(this, arguments);
+    },
+    
     /**
      * @cfg {Ext.data.Store} store
      * The store for this grid.

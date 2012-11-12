@@ -266,16 +266,12 @@ glu.regAdapter('panel', {
         storeValueInComponentAs : '_activeIndex',
         setComponentProperty:function (value, oldValue, options, control) {
             if (value===undefined || value===-1) {
-                return; //nothing to do ... can't really "deselect" within ExtJS
+                return; //nothing to do ... can't really "deselect" card/tab within ExtJS
             }
             if (value.mtype) {
-                if (value.parentList === undefined) {
-                    throw "Attempted to set an activeItem to a view model that is not in a list";
-                }
                 control._activeItemValueType = 'viewmodel';
-                control._parentList = value.parentList;
-                //look up index...
-                value = value.parentList.indexOf(value);
+                value = control.items.findIndexBy(function(card){return card._vm == value;});
+                if (value==-1) throw "Could not find a item in card layout bound to the view model passed to activeItem";
             }
             var oldItem = oldValue==-1?null : control.items.getAt(oldValue);
             control._changeOriginatedFromModel = true;

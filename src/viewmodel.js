@@ -359,6 +359,7 @@ glu.Viewmodel = glu.extend(Object, {
         this.fireEvent(propName + 'Changed', value, oldValue, {
             modelPropName:propName
         });
+        this.fireEvent('propertychanged',propName,value,oldValue);
         if (subModel) {
             this._ob.attach(propName);
         }
@@ -575,7 +576,17 @@ glu.Viewmodel = glu.extend(Object, {
      * @param config
      * @return {*}
      */
-    model:function (config) {
+    model:function (mtype, config) {
+        //clean up arguments...
+        if (glu.isObject(mtype)) {
+            config = mtype;
+            mtype = null;
+        }
+        if (config==null){
+            config = {};
+        }
+        config.mtype=config.mtype || mtype || 'viewmodel';
+
         config.ns = this.ns;
         config.parentVM = this;
         config.rootVM = this.rootVM;
