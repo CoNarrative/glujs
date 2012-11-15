@@ -21,7 +21,7 @@ glu.regAdapter('combo', {
 
     applyConventions: function(config, viewmodel) {
         Ext.applyIf (config, {
-            store : glu.conventions.expression(config.name + 'Store')
+            store : glu.conventions.expression(config.name + 'Store', {optional:true})
         });
         glu.provider.adapters.Field.prototype.applyConventions.apply(this, arguments);
     },
