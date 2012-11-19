@@ -15,12 +15,14 @@ glu.test.ajax.originalProvider = (Ext.getVersion().major > 3 || Ext.getProvider(
  *   @param defaultRoot The root url to capture (that is, the root url of your JSON REST services). Often it is something like '/json'. Defaults to '/'
  *   @param fallbackToAjax When true, if an AJAX call is made to a route that is not captured by this back-end, go ahead and let it be handled normally by the AJAX library. When false, throw an exception.
  *   @param autoRespond Automatically fake the response (for "live simulation" mode with an actual user)
+ *   @param defaultMethods HTTP methods to use if not configurend in a route. Defaults to ['GET', 'POST]
  *   @param routes The routes for capture
  * @return {Object}
  *
  * The route format is in the form
  *     'routename' : {
  *        url : 'foo/bar/:id',
+ *        method: ['GET'],
  *        handle : function(req) { return {echoId: req.params.id};}
  *     }
  *
@@ -32,6 +34,7 @@ glu.test.ajax.originalProvider = (Ext.getVersion().major > 3 || Ext.getProvider(
  *          routes: {
  *              'removeAssets': {
  *                  url: 'assets/action/remove',
+ *                  method: ['DELETE'],
  *                  handle: function(req) {
  *                      return assets.remove(req.params.ids);
  *                  }
@@ -74,6 +77,7 @@ glu.test.createBackend = function (config) {
         defaultRoot:config.defaultRoot || '/',
         requests:[],
         routes:{},
+        defaultMethods:config.defaultMethods || ['GET', 'POST'],
 
         /**
          Start intercepting AJAX calls using this backend
@@ -102,7 +106,7 @@ glu.test.createBackend = function (config) {
         ext4Request:function (options) {
             var q = me.captureUrl(options.url);
             var url = q.url;
-            var route = me.matchRoute(url);
+            var route = me.matchRoute(url, options.method);
             if (route === undefined) {
                 if (me.fallbackToAjax) {
                     //perform actual Ajax
@@ -152,22 +156,24 @@ glu.test.createBackend = function (config) {
             }
         },
 
-        matchRoute:function (path) {
+        matchRoute:function (path, method) {
             for (var name in this.routes) {
                 var route = this.routes[name];
-                var captures;
-                if (captures = route.regex.exec(path)) {
-                    var keys = route.keys;
-                    route.params = {};
-                    // params from capture groups
-                    for (var i = 1; i < captures.length; i++) {
-                        var key = keys[i - 1];
-                        var val = Ext.isString(captures[i]) ? decodeURIComponent(captures[i]) : captures[i];
-                        if (key) {
-                            route.params[key.name] = val;
+                if (Ext.Array.contains(route.method||this.defaultMethods, method)) {
+                    var captures;
+                    if (captures = route.regex.exec(path)) {
+                        var keys = route.keys;
+                        route.params = {};
+                        // params from capture groups
+                        for (var i = 1; i < captures.length; i++) {
+                            var key = keys[i - 1];
+                            var val = Ext.isString(captures[i]) ? decodeURIComponent(captures[i]) : captures[i];
+                            if (key) {
+                                route.params[key.name] = val;
+                            }
                         }
+                        return route;
                     }
-                    return route;
                 }
             }
         },
