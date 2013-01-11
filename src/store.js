@@ -115,7 +115,7 @@ glu.mreg('listtreestoreadapter', {
         var attachTo = this.attachTo;
         if (this.parentVM[attachTo]) {
             this.on('update', function(store, record, operation, modifiedFieldNames, eOpts) {
-                var index = store.getRootNode().childNodes.indexOf(record), viewmodel = this[attachTo].getAt(index), i = 0, len = modifiedFieldNames.length;
+                var index = Ext.Array.indexOf(store.getRootNode().childNodes,record), viewmodel = this[attachTo].getAt(index), i = 0, len = modifiedFieldNames.length;
                 for (; i < len; i++) {
                     if (viewmodel[modifiedFieldNames[i]] !== undefined)
                         viewmodel.set(modifiedFieldNames[i], record.get(modifiedFieldNames[i]));
