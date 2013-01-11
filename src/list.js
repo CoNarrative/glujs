@@ -11,6 +11,7 @@
 glu.List = glu.extend(Object, {
     constructor:function (config) {
         config = config || {};
+        this.autoParent = true;
         glu.deepApply(this, config);
         this.length = 0;
         this._private = this._private || {};
@@ -37,19 +38,22 @@ glu.List = glu.extend(Object, {
      * @param obj
      */
     insert:function (index, obj) {
-        if (obj.parentVM && obj.parentVM!==this.parentVM) {
+        if (this.autoParent && obj.parentVM && obj.parentVM!==this.parentVM) {
             throw "View model already has a parent and needs to be removed from there first";
         }
         if (glu.isObject(obj) && obj.mtype ) {
             if (obj._private===undefined) {
                 obj.ns = obj.ns || this.ns;
-                obj.parentVM = this.parentVM;
-                obj.parentList = this;
+                if (this.autoParent) {
+                    obj.parentVM = this.parentVM;
+                    obj.parentList = this;
+                }
                 obj = glu.model(obj);
             }
-            obj.parentList = this;
-            //            obj.referenceName = this.referenceName + '[x]';
-            obj._ob.attach('parentVM');
+            if (this.autoParent) {
+                obj.parentList = this;
+                obj._ob.attach('parentVM');
+            }
             obj._ob.attach('rootVM')
         }
         this._private.objs.splice(index, 0, obj);
@@ -77,7 +81,9 @@ glu.List = glu.extend(Object, {
         this.length--;
         if (obj._ob) {
             //remove from observation graph...since it can only go child-> parent don't worry about other direction
-            obj._ob.detach('parentVM');
+            if (this.autoParent) {
+                obj._ob.detach('parentVM');
+            }
             obj._ob.detach('rootVM');
         }
         this.fireEvent('removed', obj, index);

@@ -241,7 +241,7 @@ Ext.apply(glu.provider.binder, {
                     config[childContainerPropName] = newItems;
                 } else {
                     //otherwise do a simple recursion
-                    this.collectBindings(childContainer, viewmodel, config, childContainerPropName, xtypeAdapter, bindingsList, indents + 1);
+                    config[childContainerPropName] = this.collectBindings(childContainer, viewmodel, config, childContainerPropName, xtypeAdapter, bindingsList, indents + 1).config;
                 }
             }
         }
