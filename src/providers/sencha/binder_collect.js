@@ -312,7 +312,7 @@ Ext.apply(glu.provider.binder, {
 
         //STEP 9: Store the binding in the list and return
         if (config._bindings != null && config._bindings.length > 0) {
-            config.id = config.id || Ext.id();
+            config.id = config.id || Ext.id(null,'glu-' + config.xtype + '-');
             config._bindings.defaultModel = viewmodel;
             config._bindings.adapter = xtypeAdapter;
             bindingsList.push(config);
