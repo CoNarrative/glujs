@@ -105,16 +105,20 @@ glu.provider.itemsHelper = {
         //if not observable, then a static list and stop listening...
         if (list.on === undefined)
             return;
-        //listen to changed event on add/remove
-        list.on('added', function (item, idx) {
-            this.respondToAdd(item, idx, context, needsDoLayout)
-        }, this);
-        list.on('removed', function (item, idx) {
-            //suppress tab selection change events
-            container._changeOriginatedFromModel=true;
-            container.remove(idx);
-            delete container._changeOriginatedFromModel;
-        }, this);
+        if (list._ob) {
+            //its a glu list using the graph observable concept. This will clean up references on remove
+            //listen to changed event on add/remove
+            var attachPath = '_vm.' + context.binding.modelPropName +  '.';
+            container._ob.on(attachPath + 'added', function (item, idx) {
+                this.respondToAdd(item, idx, context, needsDoLayout);
+            }, this);
+            container._ob.on(attachPath + 'removed', function (item, idx) {
+                //suppress tab selection change events
+                container._changeOriginatedFromModel=true;
+                container.remove(idx);
+                delete container._changeOriginatedFromModel;
+            }, this);
+        } else
         //if store, listen that way...
         if (list.data && list.data.on) {
             if (Ext.getVersion().major > 3 || Ext.getProvider().provider == 'touch') {

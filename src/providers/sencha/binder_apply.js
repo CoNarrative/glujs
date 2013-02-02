@@ -37,7 +37,11 @@ Ext.apply(glu.provider.binder, {
         control._private = control._private || {};
         control._private.isBound = true;
 
-
+        new glu.GraphObservable({node:control});
+        control._vm = config._bindings.defaultModel; //the defaultModel is the directly bound model
+        control.on('destroy', function(cntrl){
+            cntrl._ob.detach('_vm'); //informs the view model list to stop sending me events
+        });
         var bindings = config._bindings;
         for (var i = 0; i < bindings.length; i++) {
             var binding = bindings[i];
@@ -164,6 +168,10 @@ Ext.apply(glu.provider.binder, {
         };
 
         glu.log.debug('LISTENING on viewmodel property ' + modelEventName);
+
         viewmodel.on(modelEventName, wrapper, viewmodel);
+
+        //TODO: Switch to this format ASAP so we can start properly detaching views from their view models for when view models switch contexts
+//        theControl._ob.on('_vm.' + modelEventName, wrapper, viewmodel);
     }
 });
