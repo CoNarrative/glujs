@@ -108,16 +108,50 @@ glu.provider.itemsHelper = {
         if (list._ob) {
             //its a glu list using the graph observable concept. This will clean up references on remove
             //listen to changed event on add/remove
+            glu.temp = glu.temp || {};
+            glu.temp.transfers = glu.temp.transfer || {};
             var attachPath = '_vm.' + context.binding.modelPropName +  '.';
-            container._ob.on(attachPath + 'added', function (item, idx) {
+            var transferKey = context.viewmodel.viewmodelName + '-' +context.binding.modelPropName;
+            container._ob.on(attachPath + 'added', function (item, idx, isTransfer) {
+                if (isTransfer) {
+                    //re-use the transferred component
+                    var transferral = glu.temp.transfers[transferKey];
+                    var component = transferral.shift();
+                    if (transferral.length==0) delete glu.temp.transfers[transferKey];
+                    delete component._isTransferring;
+                    container.autoDestroy = container._autoDestroy;
+                    delete container._autoDestroy;
+                    if (component.destroyed) {
+                        //cannot reuse after all
+                        this.respondToAdd(item, idx, context, needsDoLayout);
+                        return;
+                    }
+
+                    if (container.insert) {
+                        container.insert(idx, component);
+                    } else {
+                        container.items.insert(idx, component);
+                    }
+                    return;
+                };
                 this.respondToAdd(item, idx, context, needsDoLayout);
             }, this);
-            container._ob.on(attachPath + 'removed', function (item, idx) {
+            container._ob.on(attachPath + 'removed', function (item, idx, isTransfer) {
+                if (isTransfer) {
+                    var component = container.items.getAt(idx);
+                    component._isTransferring = true;
+                    container._autoDestroy = container.autoDestroy;
+                    container.autoDestroy = false;
+                    //the key makes sure that we only re-use when moving between identical lists
+                    glu.temp.transfers[transferKey] = glu.temp.transfers[transferKey] || [];
+                    glu.temp.transfers[transferKey].push(component);
+                }
                 //suppress tab selection change events
                 container._changeOriginatedFromModel=true;
                 container.remove(idx);
                 delete container._changeOriginatedFromModel;
             }, this);
+
         } else
         //if store, listen that way...
         if (list.data && list.data.on) {
