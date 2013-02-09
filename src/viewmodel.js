@@ -342,7 +342,7 @@ glu.Viewmodel = glu.extend(Object, {
      * @param propName
      * @param value
      */
-    setRaw:function (propName, value) {
+    setRaw:function (propName, value, asSideEffect) {
         var subModel = this._private.meta[propName].isChildModel === true;
         if (subModel) {
             this._ob.detach(propName);
@@ -363,9 +363,10 @@ glu.Viewmodel = glu.extend(Object, {
         if (subModel) {
             this._ob.attach(propName);
         }
-        // this.fireEvent('changed', value, oldValue, {
-        // modelPropName : propName
-        // });
+        if (asSideEffect != true) {
+            //changed only fires once for a whole reactor chain...
+            this.fireEvent('changed', propName, value, oldValue);
+        }
     },
     getRaw:function (propName) {
         if (this._private.data.hasOwnProperty(propName)) {
