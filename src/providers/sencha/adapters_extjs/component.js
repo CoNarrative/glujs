@@ -45,6 +45,33 @@ glu.regAdapter('component', {
             control.addClass(newValue);
         }
     },
+
+    /**
+     * @cfg {String} style
+     * *one-way binding.* Sets a convenience style class. For example:
+     *      style : 'backgroundColor:${statusColor}'
+     * will dynamically change the style by naming convention to match the current statusColor.
+     */
+    styleBindings: {
+        setComponentProperty: function(newValue, oldValue, options, control){
+            control.getEl().setStyle(glu.parseStyles(newValue));
+        }
+    },
+
+    /**
+     * @cfg {String} fieldStyle
+     * *one-way binding.* Sets a convenience style class. For example:
+     *      fieldStyle : 'backgroundColor:${statusColor}'
+     * will dynamically change the style by naming convention to match the current statusColor.
+     */
+    fieldStyleBindings: {
+        setComponentProperty: function(newValue, oldValue, options, control){
+            if(control.setFieldStyle){
+                control.setFieldStyle(glu.parseStyles(newValue));
+            }
+        }
+    },
+    
     /**
      * @cfg {String} itemCls
      * *one-way binding.* Sets a convenience item css class. Since the binding removes the old class before adding the new, this

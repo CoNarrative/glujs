@@ -678,7 +678,22 @@ glu = {
         this.plugins.push(name);
     },
 
-    plugins:[]
+    plugins:[],
+
+    cssRegularExpression: /([a-z0-9\-]+)\s*:\s*([^;\s]+(?:\s*[^;\s]+)*);?/gi,
+    parseStyles: function(styles){
+        var out = {},
+            cssRegularExpression = this.cssRegularExpression,
+            matches;
+
+        if (styles) {
+            cssRegularExpression.lastIndex = 0;
+            while ((matches = cssRegularExpression.exec(styles))) {
+                out[matches[1]] = matches[2];
+            }
+        }
+        return out;
+    }
 };
 
 
