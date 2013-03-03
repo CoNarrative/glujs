@@ -19,6 +19,13 @@
 glu.regAdapter('combo', {
     extend : 'field',
 
+    applyConventions: function(config, viewmodel) {
+        Ext.applyIf (config, {
+            store : glu.conventions.expression(config.name + 'Store', {optional:true})
+        });
+        glu.provider.adapters.Field.prototype.applyConventions.apply(this, arguments);
+    },
+    
     /**
      * @cfg {Ext.data.Store} store
      * The store for this grid.
@@ -57,10 +64,24 @@ glu.regAdapter('combo', {
             }, control);
         }
 
+        if( control.multiSelect ){
+            control.addListener('beforedeselect', function(t, e, o) {
+                control.delayedEvent.delay(control.keyDelay || 100);
+                //give some time for multiple keypresses...
+            }, control);
+        }
+
+
+        control.addListener('change', function(t, e, o) {
+            control.delayedEvent.delay(control.keyDelay || 100);
+            //give some time for multiple keypresses...
+        }, control);
+
         control.addListener('select', function(t, e, o) {
             control.delayedEvent.delay(control.keyDelay || 100);
             //give some time for multiple keypresses...
         }, control);
+        
 
         //Solves a race condition in which the initial value is set before the backing store has been loaded
         //does not attempt to solve later race conditions with stores reloading

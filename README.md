@@ -88,7 +88,7 @@ We currently support the following:
 
 and will shortly target Titanium.
 
-After you build GluJS, uou can run directly from the fileysystem since we leverage GluJS's ability to mock back-end Ajax calls.
+After you build GluJS, you can run directly from the fileysystem since we leverage GluJS's ability to mock back-end Ajax calls.
 For instance, to run the 'agents' example:
 
     file:///Users/mikegai/Projects/gluJS/examples/agents/index.html

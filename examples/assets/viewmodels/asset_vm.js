@@ -1,5 +1,5 @@
 glu.defModel('examples.assets.asset', {
-    model:'asset',
+    modelType:'asset',
 
     isSaving : false,
 

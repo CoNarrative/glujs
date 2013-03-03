@@ -47,7 +47,7 @@ glu.Reactor = {
                 vmOfReactor.makePropertyAccessors(propName);
             }
             reactor.init = function () {
-                vmOfReactor.setRaw(propName, formula.apply(scope)); //set silently
+                vmOfReactor.setRaw(propName, formula.apply(scope), true); //set silently
             }
         }
         var action = isFormula ?
@@ -55,7 +55,7 @@ glu.Reactor = {
                 // calculate formula
                 var value = formula.apply(scope);
                 // TODO: Normalize 'reactor' on an array of things -> action across everything
-                vmOfReactor.setRaw(propName, value);
+                vmOfReactor.setRaw(propName, value, true);
             }
             : reactor.action;
 

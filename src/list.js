@@ -11,6 +11,7 @@
 glu.List = glu.extend(Object, {
     constructor:function (config) {
         config = config || {};
+        this.autoParent = true;
         glu.deepApply(this, config);
         this.length = 0;
         this._private = this._private || {};
@@ -28,59 +29,64 @@ glu.List = glu.extend(Object, {
      * @param obj
      * @param silent
      */
-    add:function (obj, silent) {
-        this.insert(this.length,obj);
+    add:function (obj, silent, isTransfer) {
+        this.insert(this.length,obj, isTransfer);
     },
     /**
      * Inserts an item at an ordinal position
      * @param index
      * @param obj
      */
-    insert:function (index, obj) {
-        if (obj.parentVM && obj.parentVM!==this.parentVM) {
+    insert:function (index, obj, isTransfer) {
+        if (this.autoParent && obj.parentVM && obj.parentVM!==this.parentVM) {
             throw "View model already has a parent and needs to be removed from there first";
         }
         if (glu.isObject(obj) && obj.mtype ) {
             if (obj._private===undefined) {
                 obj.ns = obj.ns || this.ns;
-                obj.parentVM = this.parentVM;
-                obj.parentList = this;
+                if (this.autoParent) {
+                    obj.parentVM = this.parentVM;
+                    obj.parentList = this;
+                }
                 obj = glu.model(obj);
             }
-            obj.parentList = this;
-            //            obj.referenceName = this.referenceName + '[x]';
-            obj._ob.attach('parentVM');
+            if (this.autoParent) {
+                obj.parentList = this;
+                obj._ob.attach('parentVM');
+            }
             obj._ob.attach('rootVM')
         }
         this._private.objs.splice(index, 0, obj);
         this.length++;
         this.fireEvent('lengthchanged',this.length,this.length-1);
-        this.fireEvent('added', obj, index);
+        this.fireEvent('added', obj, index, isTransfer);
     },
     /**
      * Removes an item by reference
      * @param Obj
      * @return {*}
      */
-    remove:function (Obj) {
-        return this.removeAt(this.indexOf(Obj));
+    remove:function (Obj, isTransfer) {
+        return this.removeAt(this.indexOf(Obj), isTransfer);
     },
     /**
      * Removes an item by ordinal position
      * @param index
      * @return {*}
      */
-    removeAt:function (index) {
+    removeAt:function (index, isTransfer) {
         var obj = this.getAt(index);
         if (obj==null) return; //nothing to do
         this._private.objs.splice(index, 1);
         this.length--;
         if (obj._ob) {
             //remove from observation graph...since it can only go child-> parent don't worry about other direction
-            obj._ob.detach('parentVM');
+            if (this.autoParent) {
+                obj._ob.detach('parentVM');
+            }
             obj._ob.detach('rootVM');
         }
-        this.fireEvent('removed', obj, index);
+        this.fireEvent('removed', obj, index, isTransfer);
         if (index < this.activeIndex) {
             this.setActiveIndex(this.getActiveIndex() - 1);
         }
@@ -97,11 +103,27 @@ glu.List = glu.extend(Object, {
     },
 
     /**
+     * Transfers an item from another list to this one.
+     * This establishes a "contract" by which we know the item never really disappears. The binder can use this
+     * to re-use view components where appropriate.
+     *
+     * @param obj
+     * @return {Number}
+     */
+    transferFrom:function(otherList, item, newIndex){
+        if (newIndex==null) newIndex = this.length;
+        otherList.remove(item, true);
+        this.insert(newIndex, item, true);
+        this.fireEvent('transferred', otherList, item, newIndex );
+    },
+
+    /**
      * Returns the ordinal index of an item
      * @param obj
      * @return {Number}
      */
     indexOf:function (obj) {
+        if (this._private.objs.indexOf) return this._private.objs.indexOf(obj); //native indexOf
         for (var i = 0; i < this._private.objs.length; i++) {
             if (obj === this._private.objs[i]) {
                 return i;
