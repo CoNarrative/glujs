@@ -1,22 +1,22 @@
 glu.defView('todo.todoitem', {
     xtype:'container',
     layout:'hbox',
-    isHovered : '@{focused}',
-    height :50,
-    hidden : '@{!isVisible}',
+    isHovered:'@{focused}',
+    height:50,
+    hidden:'@{!isVisible}',
     items:[
         {
-            xtype : 'checkboxfield',
-            checked : '@{completed}',
-            width : 50,
+            xtype:'checkboxfield',
+            checked:'@{completed}',
+            width:50,
             height:40
         },
         {
             xtype:'label',
-            width:300,  //flex isn't working for some reason...
+            width:250, //flex isn't working for some reason...
             height:40,
-            disabledCls : 'todo-item-completed',
-            disabled : '@{completed}',
+            disabledCls:'todo-item-completed',
+            disabled:'@{completed}',
             html:'@{text}'
 //            html : {
 //                html:'@{text}',
@@ -28,15 +28,10 @@ glu.defView('todo.todoitem', {
 //            }
         },
         {
-            xtype:'container',
-            width:'20',
-            height:'30',
-            items:[ {
-                xtype : 'button',
-                iconCls: 'delete',
-                iconMask: true,
-                handler : '@{remove}'
-            }]
+            xtype:'button',
+            iconCls:'delete',
+            iconMask:true,
+            handler:'@{remove}'
         }
     ]
 });

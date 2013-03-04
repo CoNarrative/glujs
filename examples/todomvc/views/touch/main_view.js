@@ -57,24 +57,46 @@ glu.defView('todo.main', {
         {
             xtype:'toolbar',
             height:50,
+//           layout:'fit',
             docked:'bottom',
             items:[
-                {   xtype:'button',
-                    text:'~~all~~',
-                    value:'all'
+                {
+                    xtype:'label',
+                    html:'@{itemsLeftText}'
                 },
                 {
-                    xtype:'button',
-                    text:'~~active~~',
-                    value:'active'
+                    xtype:'spacer',
+                    width:50
                 },
-                {   xtype:'button',
-                    text:'~~completed~~',
-                    value:'completed'
+                {
+                    xtype:'container',
+                    height:50,
+                    items:[
+                        {
+                            xtype:'segmentedbutton',
+                            centered:true,
+                            floating:false,
+                            items:[
+                                {
+                                    xtype:'button',
+                                    text:'~~all~~',
+                                    value:'all'
+                                },
+                                {
+                                    xtype:'button',
+                                    text:'~~active~~',
+                                    value:'active'
+                                },
+                                {
+                                    xtype:'button',
+                                    text:'~~completed~~',
+                                    value:'completed'
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         }
-
-
     ]
 });
