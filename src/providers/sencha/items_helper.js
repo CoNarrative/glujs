@@ -148,7 +148,16 @@ glu.provider.itemsHelper = {
                 }
                 //suppress tab selection change events
                 container._changeOriginatedFromModel=true;
-                container.remove(idx);
+
+                //ExtJS will find the item if a number is passed, and Touch will not.  We should call removeAt if method exists.
+                if(container.removeAt)
+                {
+                    container.removeAt(idx);
+                }
+                else{
+                    container.remove(idx);
+                }
+
                 delete container._changeOriginatedFromModel;
             }, this);
 

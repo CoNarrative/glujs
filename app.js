@@ -75,7 +75,7 @@ app.get('/examples/todomvc/app/touch', function (req, res) {
     res.render('todo.jade', {locals:{extjs_version: 'touch'}});
 });
 app.get('/examples/todomvc/spec/touch', function (req, res) {
-    res.render('todoRunner.jade', {locals:{extjs_version: 4}});
+    res.render('todoRunner.jade', {locals:{extjs_version: 'touch'}});
 });
 
 //startup
