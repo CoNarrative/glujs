@@ -43,10 +43,10 @@ app.get('/examples/assets/extjs4', function (req, res) {
 app.get('/examples/assets/spec', function (req, res) {
     res.render('assetsRunner.jade', {locals:{extjs_version: 4}});
 });
-app.get('/examples/todomvc/extjs4', function (req, res) {
+app.get('/examples/todomvc/app/extjs4', function (req, res) {
     res.render('todo.jade', {locals:{extjs_version: 4}});
 });
-app.get('/examples/todomvc/spec', function (req, res) {
+app.get('/examples/todomvc/spec/extjs4', function (req, res) {
     res.render('todoRunner.jade', {locals:{extjs_version: 4}});
 });
 app.get('/examples/helloworld/extjs3', function (req, res) {
@@ -71,9 +71,13 @@ app.get('/examples/assets-touch',function(req,res){
     res.render('asset-touch.jade',{locals:{extjs_version: 'touch'}});
 });
 
-app.get('/examples/todomvc/touch', function (req, res) {
+app.get('/examples/todomvc/app/touch', function (req, res) {
     res.render('todo.jade', {locals:{extjs_version: 'touch'}});
 });
+app.get('/examples/todomvc/spec/touch', function (req, res) {
+    res.render('todoRunner.jade', {locals:{extjs_version: 4}});
+});
+
 //startup
 var port = process.env.PORT || 8123;
 app.listen(port, function () {
