@@ -69,7 +69,7 @@ glu.Reactor = {
                 //walk association graph
                 thisVm = thisVm[tokens[tidx]];
                 if (thisVm===undefined) {
-                    throw glu.string('Could not find association "{0}" along path {1}').format(tokens[tidx], eventName);
+                    glu.log.warn(glu.string('Could not find association "{0}" along path {1}').format(tokens[tidx], eventName));
                 }
             }
 
