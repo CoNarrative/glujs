@@ -110,7 +110,7 @@ glu.provider.itemsHelper = {
             //listen to changed event on add/remove
             glu.temp = glu.temp || {};
             glu.temp.transfers = glu.temp.transfer || {};
-            var attachPath = '_vm.' + context.binding.modelPropName +  '.';
+            var attachPath = '_vm.' + context.binding.bindExpression +  '.';
             var transferKey = context.viewmodel.viewmodelName + '-' +context.binding.modelPropName;
             container._ob.on(attachPath + 'added', function (item, idx, isTransfer) {
                 if (isTransfer) {
