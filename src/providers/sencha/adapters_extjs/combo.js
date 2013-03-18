@@ -40,8 +40,7 @@ glu.regAdapter('combo', {
         if (config.store.gluTweaked == true)
             return;
         config.store.gluTweaked = true;
-        var evtName = Ext.getVersion().major > 3 ? 'datachanged' : 'load';
-        config.store.on(evtName, function() {
+        config.store.on('load', function() {
             var control = Ext.getCmp(config.id);
             if (!control)
                 return;
@@ -59,7 +58,6 @@ glu.regAdapter('combo', {
 
         if (control.enableKeyEvents) {
             control.addListener('keyup', function(t, e, o) {
-                control.targetValue = t.getValue();
                 control.delayedEvent.delay(control.keyDelay || 100);
                 //give some time for multiple keypresses...
             }, control);
@@ -67,7 +65,6 @@ glu.regAdapter('combo', {
 
         if( control.multiSelect ){
             control.addListener('beforedeselect', function(t, e, o) {
-                control.targetValue = e;
                 control.delayedEvent.delay(control.keyDelay || 100);
                 //give some time for multiple keypresses...
             }, control);
@@ -75,13 +72,11 @@ glu.regAdapter('combo', {
 
 
         control.addListener('change', function(t, e, o) {
-            control.targetValue = e;
             control.delayedEvent.delay(control.keyDelay || 100);
             //give some time for multiple keypresses...
         }, control);
 
         control.addListener('select', function(t, e, o) {
-            control.targetValue = e;
             control.delayedEvent.delay(control.keyDelay || 100);
             //give some time for multiple keypresses...
         }, control);
