@@ -63,25 +63,9 @@ glu.Reactor = {
         for (var i = 0; i < evts.length; i++) {
             var eventName = evts[i];
             var fullEventName = eventName;
-            var thisVm = vmOfReactor;
-            var tokens = eventName.split(/[\$\.]/);
-            for (var tidx = 0; tidx < tokens.length - 1; tidx++) {
-                //walk association graph
-                thisVm = thisVm[tokens[tidx]];
-                if (thisVm===undefined) {
-                    glu.log.warn(glu.string('Could not find association "{0}" along path {1}').format(tokens[tidx], eventName));
-                }
-            }
-
-            eventName = tokens[tokens.length - 1];
-
-            //the actual listening *disregards* the walking going on above and just treats that as a validation...
             if (vmOfReactor.on) {
                 vmOfReactor.on(fullEventName, action, vmOfReactor);
             }
-//            if (thisVm.on) {
-//                thisVm.on(eventName, action, vmOfReactor);
-//            }
         }
         return reactor;
     }
