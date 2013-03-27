@@ -252,6 +252,9 @@ glu.Viewmodel = glu.extend(Object, {
                 config.init.apply(this,arguments);
             }
             this.initChildren();
+            if (config.initComplete) {
+                config.initComplete.apply(this,arguments);
+            }
         };
         this.activate = config.activate || function () {
         };
