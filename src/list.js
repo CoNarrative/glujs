@@ -218,6 +218,7 @@ glu.mreg('keytracking',{
     },
     addKey:function(item, idx){
         var key=item[this.idProperty];
+        if (this.keyMap[key]) throw new Error('Duplicate key "' + key +'" not allowed in a key-tracked list');
         if (key===undefined) return;
         this.keyMap[key] = item;
     },
