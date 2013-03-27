@@ -7,7 +7,7 @@
  * @singleton
  */
 if (window.glu != null) {
-    window.gluProvider = glu.provider;
+    window.existingGlu = glu;
 }
 
 glu = {
@@ -682,13 +682,10 @@ glu = {
 };
 
 
-if (window.gluProvider != null) {
-    glu.provider = gluProvider;
-    try {
-        delete gluProvider;
-    } catch (e) {
-        gluProvider = null;
-    }
+if (window.existingGlu) {
+    glu.provider = existingGlu.provider;
+    glu.apply(glu,existingGlu);
+    delete window.existingGlu;
 }
 
 glu.ns = glu.namespace; //alias
