@@ -64,6 +64,22 @@ glu.provider.itemsHelper = {
         viewItem.model = item;
         glu.log.indentLess();
     },
+
+    deferredLayoutTask: new Ext.util.DelayedTask(function(){
+        glu._suspendingLayout = false;
+        Ext.resumeLayouts(true);
+    }),
+
+
+    deferLayoutsIfNeeded : function(){
+        if (!glu.asyncLayouts || !Ext.suspendLayouts) return;
+        if (!glu._suspendingLayout) {
+            Ext.suspendLayouts();
+            glu._suspendingLayout = true;
+        }
+        this.deferredLayoutTask.delay(1); //go as soon as the thread is done
+    },
+
     /* DOCS DISABLED FOR NOW
      * Initializes a bound item list
      * Does not deal with "activation"
@@ -105,6 +121,7 @@ glu.provider.itemsHelper = {
         //if not observable, then a static list and stop listening...
         if (list.on === undefined)
             return;
+
         if (list._ob) {
             //its a glu list using the graph observable concept. This will clean up references on remove
             //listen to changed event on add/remove
@@ -115,6 +132,7 @@ glu.provider.itemsHelper = {
             container._ob.on(attachPath + 'removedall', function(){
                 //do a batch remove if possible. Later individual remove events will be ignored by the container
                 if (container.removeAll) {
+                    this.deferLayoutsIfNeeded();
                     container.removeAll();
                 }
             }, this);
@@ -129,13 +147,16 @@ glu.provider.itemsHelper = {
                     delete container._autoDestroy;
                     if (component.destroyed) {
                         //cannot reuse after all
+                        this.deferLayoutsIfNeeded();
                         this.respondToAdd(item, idx, context, needsDoLayout);
                         return;
                     }
 
                     if (container.insert) {
+                        this.deferLayoutsIfNeeded();
                         container.insert(idx, component);
                     } else {
+                        this.deferLayoutsIfNeeded();
                         container.items.insert(idx, component);
                     }
                     return;
