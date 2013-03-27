@@ -97,6 +97,7 @@ glu.List = glu.extend(Object, {
      * Removes all items
      */
     removeAll:function () {
+        this.fireEvent('removedall', this);
         while (this.length > 0) {
             this.removeAt(0);
         }

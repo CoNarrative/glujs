@@ -112,6 +112,12 @@ glu.provider.itemsHelper = {
             glu.temp.transfers = glu.temp.transfer || {};
             var attachPath = '_vm.' + context.binding.modelPropName +  '.';
             var transferKey = context.viewmodel.viewmodelName + '-' +context.binding.modelPropName;
+            container._ob.on(attachPath + 'removedall', function(){
+                //do a batch remove if possible. Later individual remove events will be ignored by the container
+                if (container.removeAll) {
+                    container.removeAll();
+                }
+            }, this);
             container._ob.on(attachPath + 'added', function (item, idx, isTransfer) {
                 if (isTransfer) {
                     //re-use the transferred component
