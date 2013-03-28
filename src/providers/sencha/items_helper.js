@@ -8,6 +8,7 @@ glu.provider.itemsHelper = {
      */
     respondToAdd:function (item, idx, context, needsDoLayout) {
         glu.log.indentMore();
+        glu.updatingUI();
         glu.log.debug(glu.log.indent + 'Processing a view item added to collection at index ' + idx);
         var list = context.viewmodel.get(context.binding.modelPropName);
         var container = context.control;
@@ -65,21 +66,6 @@ glu.provider.itemsHelper = {
         glu.log.indentLess();
     },
 
-    deferredLayoutTask: new Ext.util.DelayedTask(function(){
-        glu._suspendingLayout = false;
-        Ext.resumeLayouts(true);
-    }),
-
-
-    deferLayoutsIfNeeded : function(){
-        if (!glu.asyncLayouts || !Ext.suspendLayouts) return;
-        if (!glu._suspendingLayout) {
-            Ext.suspendLayouts();
-            glu._suspendingLayout = true;
-        }
-        this.deferredLayoutTask.delay(1); //go as soon as the thread is done
-    },
-
     /* DOCS DISABLED FOR NOW
      * Initializes a bound item list
      * Does not deal with "activation"
@@ -132,11 +118,12 @@ glu.provider.itemsHelper = {
             container._ob.on(attachPath + 'removedall', function(){
                 //do a batch remove if possible. Later individual remove events will be ignored by the container
                 if (container.removeAll) {
-                    this.deferLayoutsIfNeeded();
+                    glu.updatingUI();
                     container.removeAll();
                 }
             }, this);
             container._ob.on(attachPath + 'added', function (item, idx, isTransfer) {
+                glu.updatingUI();
                 if (isTransfer) {
                     //re-use the transferred component
                     var transferral = glu.temp.transfers[transferKey];
@@ -147,16 +134,13 @@ glu.provider.itemsHelper = {
                     delete container._autoDestroy;
                     if (component.destroyed) {
                         //cannot reuse after all
-                        this.deferLayoutsIfNeeded();
                         this.respondToAdd(item, idx, context, needsDoLayout);
                         return;
                     }
 
                     if (container.insert) {
-                        this.deferLayoutsIfNeeded();
-                        container.insert(idx, component);
+                         container.insert(idx, component);
                     } else {
-                        this.deferLayoutsIfNeeded();
                         container.items.insert(idx, component);
                     }
                     return;
@@ -164,6 +148,7 @@ glu.provider.itemsHelper = {
                 this.respondToAdd(item, idx, context, needsDoLayout);
             }, this);
             container._ob.on(attachPath + 'removed', function (item, idx, isTransfer) {
+                glu.updatingUI();
                 if (isTransfer) {
                     var component = container.items.getAt(idx);
                     component._isTransferring = true;
@@ -185,19 +170,23 @@ glu.provider.itemsHelper = {
             if (Ext.getVersion().major > 3 || Ext.getProvider().provider == 'touch') {
                 //strange that 'add' does not work properly on store in Ext 4∆
                 list.data.on('add', function (idx, item) {
+                    glu.updatingUI();
                     this.respondToAdd(item, idx, context, needsDoLayout)
                 }, this);
                 list.data.on('remove', function (idx, item) {
                     //container._changeOriginatedFromModel=true;
+                    glu.updatingUI();
                     container.remove(idx);
                 }, this);
             } else {
                 list.on('add', function (store, items, idx) {
                     for (var it = 0; it < items.length; it++) {
+                        glu.updatingUI();
                         this.respondToAdd(items[it], idx + it, context, needsDoLayout)
                     }
                 }, this);
                 list.on('remove', function (store, item, idx) {
+                    glu.updatingUI();
                     //suppress tab selection change events
                     container._changeOriginatedFromModel=true;
                     container.remove(idx);

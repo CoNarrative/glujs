@@ -655,6 +655,14 @@ glu = {
         return cls;
     },
 
+    /**
+     * Informs glu that the UI is about to be changed. Used for accumulating UI changes (like
+     * suspending layouts in ExtJS until the thread is done)
+     */
+    updatingUI : function(){
+        glu.provider.updatingUI();
+    },
+
     getDataTypeOf:function (value) {
         if (glu.isString(value)) {
             type = 'string';
