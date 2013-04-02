@@ -135,5 +135,20 @@ Ext.apply(glu.provider, {
         ns[name] = adapter;
         adapter.name = name;
         return adapter;
+    },
+
+    deferredLayoutTask: new Ext.util.DelayedTask(function(){
+        glu._suspendingLayout = false;
+        Ext.resumeLayouts(true);
+    }),
+
+
+    updatingUI : function(){
+        if (!glu.asyncLayouts || !Ext.suspendLayouts) return;
+        if (!glu._suspendingLayout) {
+            Ext.suspendLayouts();
+            glu._suspendingLayout = true;
+        }
+        this.deferredLayoutTask.delay(1); //go as soon as the thread is done
     }
 });

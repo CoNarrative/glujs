@@ -7,7 +7,7 @@
  * @singleton
  */
 if (window.glu != null) {
-    window.gluProvider = glu.provider;
+    window.existingGlu = glu;
 }
 
 glu = {
@@ -655,6 +655,14 @@ glu = {
         return cls;
     },
 
+    /**
+     * Informs glu that the UI is about to be changed. Used for accumulating UI changes (like
+     * suspending layouts in ExtJS until the thread is done)
+     */
+    updatingUI : function(){
+        glu.provider.updatingUI();
+    },
+
     getDataTypeOf:function (value) {
         if (glu.isString(value)) {
             type = 'string';
@@ -697,13 +705,10 @@ glu = {
 };
 
 
-if (window.gluProvider != null) {
-    glu.provider = gluProvider;
-    try {
-        delete gluProvider;
-    } catch (e) {
-        gluProvider = null;
-    }
+if (window.existingGlu) {
+    glu.provider = existingGlu.provider;
+    glu.apply(glu,existingGlu);
+    delete window.existingGlu;
 }
 
 glu.ns = glu.namespace; //alias

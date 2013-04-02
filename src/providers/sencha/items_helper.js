@@ -8,6 +8,7 @@ glu.provider.itemsHelper = {
      */
     respondToAdd:function (item, idx, context, needsDoLayout) {
         glu.log.indentMore();
+        glu.updatingUI();
         glu.log.debug(glu.log.indent + 'Processing a view item added to collection at index ' + idx);
         var list = context.viewmodel.get(context.binding.modelPropName);
         var container = context.control;
@@ -64,6 +65,7 @@ glu.provider.itemsHelper = {
         viewItem.model = item;
         glu.log.indentLess();
     },
+
     /* DOCS DISABLED FOR NOW
      * Initializes a bound item list
      * Does not deal with "activation"
@@ -105,6 +107,7 @@ glu.provider.itemsHelper = {
         //if not observable, then a static list and stop listening...
         if (list.on === undefined)
             return;
+
         if (list._ob) {
             //its a glu list using the graph observable concept. This will clean up references on remove
             //listen to changed event on add/remove
@@ -112,7 +115,15 @@ glu.provider.itemsHelper = {
             glu.temp.transfers = glu.temp.transfer || {};
             var attachPath = '_vm.' + context.binding.bindExpression +  '.';
             var transferKey = context.viewmodel.viewmodelName + '-' +context.binding.modelPropName;
+            container._ob.on(attachPath + 'removedall', function(){
+                //do a batch remove if possible. Later individual remove events will be ignored by the container
+                if (container.removeAll) {
+                    glu.updatingUI();
+                    container.removeAll();
+                }
+            }, this);
             container._ob.on(attachPath + 'added', function (item, idx, isTransfer) {
+                glu.updatingUI();
                 if (isTransfer) {
                     //re-use the transferred component
                     var transferral = glu.temp.transfers[transferKey];
@@ -128,7 +139,7 @@ glu.provider.itemsHelper = {
                     }
 
                     if (container.insert) {
-                        container.insert(idx, component);
+                         container.insert(idx, component);
                     } else {
                         container.items.insert(idx, component);
                     }
@@ -137,6 +148,7 @@ glu.provider.itemsHelper = {
                 this.respondToAdd(item, idx, context, needsDoLayout);
             }, this);
             container._ob.on(attachPath + 'removed', function (item, idx, isTransfer) {
+                glu.updatingUI();
                 if (isTransfer) {
                     var component = container.items.getAt(idx);
                     component._isTransferring = true;
@@ -158,19 +170,23 @@ glu.provider.itemsHelper = {
             if (Ext.getVersion().major > 3 || Ext.getProvider().provider == 'touch') {
                 //strange that 'add' does not work properly on store in Ext 4∆
                 list.data.on('add', function (idx, item) {
+                    glu.updatingUI();
                     this.respondToAdd(item, idx, context, needsDoLayout)
                 }, this);
                 list.data.on('remove', function (idx, item) {
                     //container._changeOriginatedFromModel=true;
+                    glu.updatingUI();
                     container.remove(idx);
                 }, this);
             } else {
                 list.on('add', function (store, items, idx) {
                     for (var it = 0; it < items.length; it++) {
+                        glu.updatingUI();
                         this.respondToAdd(items[it], idx + it, context, needsDoLayout)
                     }
                 }, this);
                 list.on('remove', function (store, item, idx) {
+                    glu.updatingUI();
                     //suppress tab selection change events
                     container._changeOriginatedFromModel=true;
                     container.remove(idx);

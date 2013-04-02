@@ -162,6 +162,7 @@ Ext.apply(glu.provider.binder, {
                 oldValue = binding.prefix + oldValue + binding.suffix;
             }
             glu.log.debug('setting control property "' + binding.controlPropName + '" to "' + value + '"');
+            glu.updatingUI();
             valueSetter(value, oldValue, options, control);
             //set the underlying field as a tracker
             control[storeInControlAs] = value;
