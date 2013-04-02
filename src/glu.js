@@ -530,8 +530,8 @@ glu = {
         }
         return results;
     },
-    openWindow:function (config, viewModel) {
-        return glu.provider.openWindow(config, viewModel);
+    openWindow:function (config, viewModel, animation) {
+        return glu.provider.openWindow(config, viewModel, animation);
     },
     /**
      * Creates a glu ViewPort
