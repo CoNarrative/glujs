@@ -1,21 +1,29 @@
-(function() {
+(function () {
     glu.setTestMode();
+
     var jasmineEnv = jasmine.getEnv();
     jasmineEnv.updateInterval = 1000;
-    var trivialReporter = new jasmine.TrivialReporter();
-    jasmineEnv.addReporter(trivialReporter);
-    jasmineEnv.specFilter = function(spec) {
-        return trivialReporter.specFilter(spec);
+
+    var htmlReporter = new jasmine.HtmlReporter();
+
+    jasmineEnv.addReporter(htmlReporter);
+
+    jasmineEnv.specFilter = function (spec) {
+        return htmlReporter.specFilter(spec);
     };
+
     var currentWindowOnload = window.onload;
-    window.onload = function() {
-        if(currentWindowOnload) {
+
+    window.onload = function () {
+        if (currentWindowOnload) {
             currentWindowOnload();
         }
         execJasmine();
     };
+
     function execJasmine() {
         jasmineEnv.execute();
     }
+
 
 })();

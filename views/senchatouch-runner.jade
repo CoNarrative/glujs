@@ -1,67 +1,12 @@
-extends senchatouch-layout
+extends layout
 block append head
-	title Glu Spec Runner
-	link(href='/lib/jasmine/jasmine.css', rel='stylesheet')
-
-	script(src='/lib/jasmine/jasmine.js')
-	script(src='/lib/jasmine/jasmine-html.js')
-	script(src='/lib/jasmine-jquery/jquery-1.7.1.min.js')
-	script(src='/lib/jasmine-jquery/jasmine-jquery.js')
-	script(src='viewspec.js')
-	<!-- script(src='TestHelpers.js')
-	script(src='pluginSpec.js')
-	script(src='Providers/extjs/InterfaceSpec.js')
-	script(src='Providers/extjs/localizationSpec.js')
-	script(src='Providers/extjs/ButtonSpec.js')
-	script(src='Providers/extjs/comboSpec.js')
-	script(src='Providers/extjs/handlerSpec.js')
-	script(src='Providers/extjs/listenerSpec.js')
-	script(src='Providers/extjs/menuSpec.js')
-	script(src='Providers/extjs/autoFieldSpec.js')
-	script(src='Providers/extjs/changeTrackedSpec.js')
-	script(src='Providers/extjs/BoundPropertySpec.js')
-	script(src='Providers/extjs/transformerSpec.js')
-	script(src='Providers/extjs/traversalSpec.js')
-	script(src='Providers/extjs/itemBindingSpec.js')
-	script(src='Providers/extjs/entrypointSpec.js')
-	script(src='Providers/extjs/validationSpec.js')
-	script(src='Providers/extjs/fieldSpec.js')
-	script(src='Providers/extjs/testSpec.js')
-	script(src='Providers/extjs/gridSpec.js')
-	script(src='stringSpec.js')
-	script(src='bindingConventionSpec.js')
-	script(src='modelSpec.js')
-	script(src='dataModelSpec.js')
-	script(src='targetModelSpec.js')
-	script(src='layoutSpec.js')
-	script(src='mixinSpec.js')
-	script(src='adapterSpec.js')
-	script(src='reactorSpec.js')
-	script(src='activatorSpec.js') -->
-
-	script
-		(function() {
-			glu.setTestMode();
-			var jasmineEnv = jasmine.getEnv();
-			jasmineEnv.updateInterval = 1000;
-
-			var trivialReporter = new jasmine.TrivialReporter();
-
-			jasmineEnv.addReporter(trivialReporter);
-
-			jasmineEnv.specFilter = function(spec) {
-				return trivialReporter.specFilter(spec);
-			};
-			var currentWindowOnload = window.onload;
-
-			window.onload = function() {
-				if(currentWindowOnload) {
-					currentWindowOnload();
-				}
-				execJasmine();
-			};
-			function execJasmine() {
-				jasmineEnv.execute();
-			}
-
-		})();
+    title Glu Spec Runner for ExtJS #{extjs_version}
+    link(href='/lib/jasmine/jasmine.css', rel='stylesheet')
+    script(src='/lib/jasmine/jasmine.js')
+    script(src='/lib/jasmine/jasmine-html.js')
+    script(src='/spec/run.js')
+    script(src='Providers/touch/test_models.js')
+    script(src='Providers/touch/containerSpec.js')
+    script(src='Providers/touch/labelSpec.js')
+    script(src='Providers/touch/textfieldSpec.js')
+    script(src='Providers/touch/checkboxfieldSpec.js')
