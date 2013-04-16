@@ -1,7 +1,7 @@
 var buildDir = 'build';
 
 var path = require('path');
-var UglifyJS = require("uglify-js")
+var UglifyJS = require("uglify-js");
 var fs = require('fs');
 var cli = require('commander');
 var wrench = require('wrench');
