@@ -23,6 +23,7 @@ glu.provider.itemsHelper = {
             container[collectionName].removeAt(idx);
         } else {
             //normal items
+            if (idx>container.items.length - 1) return;
             if (container.remove){
                 container.remove(idx);
             } else {
