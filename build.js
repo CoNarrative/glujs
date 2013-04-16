@@ -1,7 +1,7 @@
 var buildDir = 'build';
 
 var path = require('path');
-var uglify = require('uglify-js');
+var UglifyJS = require("uglify-js")
 var fs = require('fs');
 var cli = require('commander');
 var wrench = require('wrench');
@@ -124,13 +124,12 @@ function concat(combined, files) {
     fs.writeFileSync(combined, final, 'utf8');
 }
 
-function uglify(contents) {
-    var jsp = uglify.parser,
-        pro = uglify.uglify;
-    ast = jsp.parse(contents);
-    ast = pro.ast_mangle(ast);
-    ast = pro.ast_squeeze(ast);
-    return pro.gen_code(ast);
+function uglify(code) {
+    ast = UglifyJS.parse(code);
+    ast.figure_out_scope();
+    compressor = UglifyJS.Compressor({unused:false, warnings:false});
+    ast = ast.transform(compressor);
+    return ast.print_to_string();
 }
 
 FileList = function () {
