@@ -45,7 +45,7 @@ glu.defModel('examples.assets.asset', {
                 this.set('isSaving',false);
                 this.refresh();
                 //how best to notify grid that we've changed? For now just notify direct
-                this.parentVM.notifyAssetChanged();
+                this.rootVM.notifyAssetChanged();
             }
         })
     },
