@@ -11,7 +11,7 @@
 glu.List = glu.extend(Object, {
     constructor:function (config) {
         config = config || {};
-        this.autoParent = true;
+        this.autoParent = false;
         glu.deepApply(this, config);
         this.length = 0;
         this._private = this._private || {};
