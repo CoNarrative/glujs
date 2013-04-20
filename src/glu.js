@@ -35,17 +35,7 @@ glu = {
         if (vm._private && !vm._private.isInitialized) {
             vm.init();
         }
-        if (asWindow) {
-            if (viewSpec.asWindow) {
-                viewSpec = glu.deepApply({
-                    xtype:'window',
-                    layout:'fit',
-                    items:[viewSpec]
-                }, viewSpec.asWindow);
-            } else {
-                viewSpec.xtype = 'window';
-            }
-        }
+
         var view = glu.viewFromSpec(vm, viewSpec);
         return view;
     },

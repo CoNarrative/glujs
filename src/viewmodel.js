@@ -693,11 +693,16 @@ glu.Viewmodel = glu.extend(Object, {
      * In test mode it instantiates the new view model but does not instantiate the view.
      * @return {*}
      */
-    open:function (config, viewMode) {
-        config.ns = config.ns || this.ns;
-        config.parentVM = config.parentVM || this;
-        var win = glu.openWindow(config, viewMode);
-        return win._bindings.viewmodel;
+    open:function (childVM, viewMode) {
+        if (!glu.isInstantiated(childVM)){
+            childVM.ns = childVM.ns || this.ns;
+            childVM.parentVM = childVM.parentVM || this;
+            childVM = this.model(childVM);
+        }
+        if (!glu.testMode) {
+            glu.openWindow(childVM, viewMode);
+        }
+        return childVM;
     },
 
     /**
