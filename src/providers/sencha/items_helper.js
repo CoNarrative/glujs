@@ -24,8 +24,12 @@ glu.provider.itemsHelper = {
         } else {
             //normal items
             if (idx>container.items.length - 1) return;
-            if (container.remove){
-                container.remove(idx);
+            if (container.remove || container.removeAt) {
+                if (container.removeAt) {
+                    container.removeAt(idx);
+                } else {    
+                    container.remove(idx);
+                }
             } else {
                 container.items.removeAt(idx);
             }
