@@ -40,11 +40,25 @@ describe('Named grid bindings spec', function () {
                         items:[
                             {
                                 xtype:'grid',
-                                name:'studentList'
+                                name:'studentList',
+                                columns:[
+                                    {
+                                        header:'First Name',
+                                        dataIndex:'firstName'
+                                    }]
                             },
                             {
                                 xtype:'grid',
-                                name:'classroomList'
+                                name:'classroomList',
+                                columns:[
+                                    {
+                                        header:'Building',
+                                        dataIndex:'building'
+                                    },
+                                    {
+                                        header:'Room Number',
+                                        dataIndex:'roomnumber'
+                                    }]
                             }
                         ]
                     }
