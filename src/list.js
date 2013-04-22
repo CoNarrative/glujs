@@ -97,6 +97,7 @@ glu.List = glu.extend(Object, {
      * Removes all items
      */
     removeAll:function () {
+        this.fireEvent('removedall', this);
         while (this.length > 0) {
             this.removeAt(0);
         }
@@ -218,6 +219,7 @@ glu.mreg('keytracking',{
     },
     addKey:function(item, idx){
         var key=item[this.idProperty];
+        if (this.keyMap[key]) throw new Error('Duplicate key "' + key +'" not allowed in a key-tracked list');
         if (key===undefined) return;
         this.keyMap[key] = item;
     },

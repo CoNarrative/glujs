@@ -252,6 +252,9 @@ glu.Viewmodel = glu.extend(Object, {
                 config.init.apply(this,arguments);
             }
             this.initChildren();
+            if (config.initComplete) {
+                config.initComplete.apply(this,arguments);
+            }
         };
         this.activate = config.activate || function () {
         };
@@ -343,8 +346,8 @@ glu.Viewmodel = glu.extend(Object, {
      * @param value
      */
     setRaw:function (propName, value, asSideEffect) {
-        var subModel = this._private.meta[propName].isChildModel === true;
-        if (subModel) {
+        var subModel = glu.isObject(value) && value._ob; //the value is an observable view model
+        if (this[propName] && this[propName]._ob) {
             this._ob.detach(propName);
         }
         var oldValue = this.get(propName);
@@ -360,7 +363,7 @@ glu.Viewmodel = glu.extend(Object, {
             modelPropName:propName
         });
         this.fireEvent('propertychanged',propName,value,oldValue);
-        if (subModel) {
+        if (this[propName] && this[propName]._ob) {
             this._ob.attach(propName);
         }
         if (asSideEffect != true) {

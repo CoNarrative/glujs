@@ -44,7 +44,7 @@ glu.regAdapter('textfield', {
             control.on('specialkey', function(f,e){
                 if (e.getKey() == e.ENTER) {
                     control.fireEvent('textchanged',control); //force most recent
-                    control.enterKeyHandler();
+                    control.enterKeyHandler(control);
                 }
             },null,{delay:110});
         }
