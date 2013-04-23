@@ -76,6 +76,8 @@ glu.defView('todo.main', {
                             xtype:'segmentedbutton',
                             centered:true,
                             floating:false,
+                            allowMultiple: false,
+                            activeButton:'@{filterMode}',
                             items:[
                                 {
                                     xtype:'button',
