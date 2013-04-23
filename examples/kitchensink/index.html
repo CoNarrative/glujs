@@ -1,0 +1,210 @@
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--<title>CoNarrative GluJS - Kitchen Sink </title>-->
+<!--<script type="text/javascript" src="../../lib/extjs-4.x/ext-all.js"></script>-->
+<!--<link rel="stylesheet" type="text/css" href="../../lib/extjs-4.x/resources/ext-theme-neptune/ext-theme-neptune-all.css">-->
+<!--<script type="text/javascript">glu = {debug:true};</script>-->
+<!--<script type="text/javascript" src="../../build/glu-extjs-4.js"></script>-->
+<!--<script type="text/javascript" src="../../build/glu.js"></script>-->
+<!--<script type="text/javascript" src="../../build/glu-test.js"></script>-->
+<!--<script type="text/javascript" src="locale/locale_en.js"></script>-->
+<!--<script type="text/javascript" src="models/example_model.js"></script>-->
+
+<!--<script type="text/javascript" src="viewmodels/main_vm.js"></script>-->
+<!--<script type="text/javascript" src="viewmodels/login_vm.js"></script>-->
+
+<!--<script type="text/javascript" src="views/extjs/main_view.js"></script>-->
+<!--<script type="text/javascript" src="views/extjs/login_view.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<script type="text/javascript">-->
+<!--Ext.onReady (function(){-->
+<!--glu.viewport('ks.main');-->
+<!--});-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ACE in Action</title>
+    <style type="text/css" media="screen">
+        #toolbar {
+            height: 35px;
+        }
+        #editor1 {
+            position: absolute;
+            top: 40px;
+            right: 50%;
+            bottom: 50%;
+            left: 0;
+        }
+        #editor2 {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            bottom: 50%;
+            left: 50%;
+        }
+        #preview {
+            position: absolute;
+            top: 50%;
+            width:100%;
+            height:100%;
+            /*height: 500px;*/
+        }
+        #preview iframe {
+            width:100%;
+            height:100%;
+        }
+    </style>
+
+</head>
+<body>
+<div id="toolbar">
+    <input id="preview-btn" type="button" value="Preview">
+    <input id="specs-btn" type="button" value="Run Specs">
+</div>
+<div id="editor1">
+    glu.defModel('ks.login', {
+    title: 'Login Form',
+    name: '',
+    user: '',
+    pass: '',
+    remember: '',
+    // isUserNameValid$: function () {
+    // return Ext.isEmpty(this.user)
+    // },
+    login:function(){
+
+    },
+    loginIsDisabled$:function(){
+    return Ext.isEmpty(this.user) //Return true to disable the login button
+    }
+    });
+
+    glu.defView('ks.login', {
+    xtype: 'panel',
+    title: '@{title}',
+    frame: true,
+    width: 320,
+    bodyPadding: 10,
+
+    defaultType: 'textfield',
+    defaults: {
+    anchor: '100%'
+    },
+
+    items: [
+    {
+    allowBlank: false,
+    fieldLabel: 'User ID',
+    name: 'user',
+    emptyText: 'user id'
+    },
+    {
+    allowBlank: false,
+    fieldLabel: 'Password',
+    name: 'pass',
+    emptyText: 'password',
+    inputType: 'password'
+    },
+    {
+    xtype: 'checkbox',
+    fieldLabel: 'Remember me',
+    name: 'remember'
+    }
+    ],
+
+    buttons: [
+    {
+    text: 'Register'
+    },
+    {
+    text: 'Login',
+    disabled: '@{loginIsDisabled}',
+    listeners:{
+    click:'@{login}'
+    }
+    }
+    ]
+    });
+
+</div>
+<div id="editor2">
+    describe("Given the Login Form", function () {
+    /*
+    * Create ViewModel
+    */
+    var vm = glu.model({
+    ns: 'ks',
+    mtype: 'login'
+    });
+
+    vm.init();
+    it("when initialized the [LOGIN] button should be disabled", function () {
+    expect(vm.loginIsDisabled).toBe(true);
+    });
+    it("when username field contains text the [LOGIN] button should be enabled", function () {
+    vm.set('user','Bob')
+    expect(vm.loginIsDisabled).toBe(false);
+    });
+    });
+</div>
+<div id="preview">
+
+</div>
+
+<script type="text/javascript" src="../../lib/extjs-4.x/ext-all.js"></script>
+<link rel="stylesheet" type="text/css" href="../../lib/extjs-4.x/resources/ext-theme-neptune/ext-theme-neptune-all.css">
+<script type="text/javascript">glu = {debug: true};</script>
+<script type="text/javascript" src="../../build/glu-extjs-4.js"></script>
+<script type="text/javascript" src="../../build/glu.js"></script>
+<script type="text/javascript" src="../../build/glu-test.js"></script>
+<script src="http://rawgithub.com/ajaxorg/ace-builds/master/src-noconflict/ace.js" type="text/javascript"
+        charset="utf-8"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="lib/pubsubjs.js"></script>
+<script>
+    $(function () {
+        var editor1 = ace.edit("editor1");
+        editor1.setTheme("ace/theme/monokai");
+        editor1.getSession().setMode("ace/mode/javascript");
+
+        var editor2 = ace.edit("editor2");
+        editor2.setTheme("ace/theme/monokai");
+        editor2.getSession().setMode("ace/mode/javascript");
+
+        $('#preview-btn').on('click', function () {
+
+            eval(editor1.getSession().getValue());
+            $('#preview').empty();
+            var vm = glu.model('ks.login');  //Hard coded for now
+            vm.init()
+
+            var view = glu.view(vm);
+            new Ext.Panel({
+                layout: 'fit',
+                renderTo: 'preview',
+                items: [view]
+            });
+        });
+
+        $('#specs-btn').on('click',function(){
+            var content = editor2.getSession().getValue();
+            $('#preview').empty();
+            $('#preview').append("<iframe id='specs' src='specs/runner.html'></iframe>");
+
+        });
+        pubSub = PubSub;
+        PubSub.subscribe('RunnerLoaded',function(message, doc){
+
+            var content = editor2.getSession().getValue();
+            PubSub.publish('abc',content);
+
+        });
+    });
+</script>
+</body>
+</html>
