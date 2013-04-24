@@ -1,15 +1,13 @@
 glu.defView('ks.login', {
-//    extend: 'Ext.form.Panel',
+    extend: 'Ext.form.Panel',
     xtype: 'panel',
-    title: '@{title}',
+//    title: '@{title}',
+    title:'asdf',
     frame: true,
     width: 320,
     bodyPadding: 10,
-
     defaultType: 'textfield',
-    defaults: {
-        anchor: '100%'
-    },
+
 
     items: [
         {

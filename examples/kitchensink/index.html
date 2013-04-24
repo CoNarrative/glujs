@@ -5,66 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <!--<link href="lib/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">-->
     <style type="text/css" media="screen">
-            /*#toolbar {*/
-            /*height: 35px;*/
-            /*}*/
         #view {
             position: relative;
             height: 800px;
         }
+
         #model {
             position: relative;
             height: 800px;
         }
+
         #specs {
             position: relative;
             height: 800px;
         }
 
-            /*top: 40px;*/
-            /*right: 50%;*/
-            /*bottom: 50%;*/
-            /*left: 0;*/
-            }
+        #preview {
+            /*width: 100%;*/
+            /*height: 100%;*/
+            height: 800px;
+        }
 
-            /*#editor2 {*/
-            /*position: absolute;*/
-            /*top: 40px;*/
-            /*right: 0;*/
-            /*bottom: 50%;*/
-            /*left: 50%;*/
-            /*}*/
-            /*#preview {*/
-            /*position: absolute;*/
-            /*top: 50%;*/
-            /*width:100%;*/
-            /*height:100%;*/
-            /*height: 500px;*/
-            /*}*/
-            /*#preview iframe {*/
-            /*width:100%;*/
-            /*height:100%;*/
-            }
+        #app {
+            width: 100%;
+            height: 100%;
+        }
+
+        #runner {
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
-
-<!--<div id="toolbar">-->
-<!--<input id="preview-btn" type="button" value="Preview">-->
-<!--<input id="specs-btn" type="button" value="Run Specs">-->
-<!--</div>-->
-<!--<div id="editor1">-->
-
-<!--</div>-->
-<!--<div id="editor2">-->
-
-<!--</div>-->
-<!--<div id="preview">-->
-
-<!--</div>-->
-
 <script type="text/javascript" src="../../lib/extjs-4.x/ext-all.js"></script>
 <link rel="stylesheet" type="text/css" href="../../lib/extjs-4.x/resources/ext-theme-neptune/ext-theme-neptune-all.css">
 <script type="text/javascript">glu = {debug: true};</script>
@@ -91,16 +65,16 @@
     $(function () {
 
         var editorvm = glu.model('ks.editor');
+        editorvm.init();
         var editorview = new ks.EditorView({model: editorvm});
-        //control.body.dom.firstChild.firstChild.appendChild(timelineView.el)
-
-//        var editor1 = ace.edit("editor1");
-//        editor1.setTheme("ace/theme/monokai");
-//        editor1.getSession().setMode("ace/mode/javascript");
+//        PubSub.subscribe('appFrameLoaded', function (message, doc) {
+//            console.log('App frame loaded')
 //
-//        var editor2 = ace.edit("editor2");
-//        editor2.setTheme("ace/theme/monokai");
-//        editor2.getSession().setMode("ace/mode/javascript");
+//            PubSub.publish('appUpdated')
+//            //var content = editor2.getSession().getValue();
+//            //PubSub.publish('abc', content);
+//
+//        });
 
 //        $('#preview-btn').on('click', function () {
 //
@@ -228,6 +202,8 @@
                 </div>
                 <!--/********************************** CODE **********************************/-->
                 <div class="span5">
+                    <button type="button" class="preview-btn btn pull-right">Preview</button>
+                    <button type="button" class="runspecs-btn btn pull-right">Run Tests</button>
                     <ul class="nav nav-tabs" id="myTab">
                         <li class="active"><a href="#view">View</a></li>
                         <li><a href="#model">Model</a></li>
@@ -240,8 +216,8 @@
                         <div class="tab-pane" id="specs"></div>
                     </div>
                 </div>
-                <!--/********************************** PREVIEW SPECS **********************************/-->
-                <div class="span5">Fluid 5</div>
+                <!--/********************************** PREVIEW **********************************/-->
+                <div id="preview" class="span5"></div>
 
             </div>
         </div>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>CoNarrative GlusJS - App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css"
+          href="../../lib/extjs-4.x/resources/ext-theme-neptune/ext-theme-neptune-all.css">
+</head>
+<body>
+<script type="text/javascript" src="../../lib/extjs-4.x/ext-all.js"></script>
+
+<script type="text/javascript">glu = {debug: true};</script>
+<script type="text/javascript" src="../../build/glu-extjs-4.js"></script>
+<script type="text/javascript" src="../../build/glu.js"></script>
+<script type="text/javascript" src="../../build/glu-test.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="lib/pubsubjs.js"></script>
+<script type="text/javascript">
+    $(function () {
+
+    });
+    Ext.onReady(function () {
+        PubSub = window.parent.PubSub;
+        var token = PubSub.subscribe('previewApp', function (message, content) {
+
+            eval(content);
+            var vm = glu.model('ks.' + Object.keys(ks.viewmodels));  //Hard coded for now
+            vm.init();
+
+            var view = glu.view(vm);
+            var panel = new Ext.Panel({
+                layout: {
+                    type: 'vbox'
+                },
+                style: {
+                    padding: '10px'
+                },
+                border: false,
+                items: [view]
+            })
+            new Ext.Viewport({
+                layout: 'fit',
+                items: [panel]
+            });
+        });
+        $(window).unload(function () {
+            console.log("unsubscribed previewapp")
+            PubSub.unsubscribe(token);
+        });
+
+        PubSub.publish('appFrameLoaded', this);
+    });
+</script>
+</body>
+</html>

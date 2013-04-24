@@ -66,15 +66,14 @@
 
     $(function () {
         PubSub = window.parent.PubSub;
-        PubSub.subscribe('abc', function (message, content) {
-
+        var token = PubSub.subscribe('runSpecs', function (message, content) {
             eval(content);
             execJasmine();
         });
-        //execJasmine();
+        $(window).unload(function () {
+            PubSub.unsubscribe(token);
+        });
         PubSub.publish('RunnerLoaded', this);
-
-
     });
 </script>
 </body>

@@ -1,9 +1,19 @@
 glu.defModel('ks.editor', {
     mixins: ['backboneish'],
+    init: function () {
+        var me = this;
+        PubSub.subscribe('appFrameLoaded', function (message, doc) {
+            //TODO:  Use uglifyJS to minify the payload
+            PubSub.publish('previewApp', me.viewContent + me.viewmodelContent)
+        });
+        PubSub.subscribe('RunnerLoaded', function (message, doc) {
+            //TODO:  Use uglifyJS to minify the payload
+            PubSub.publish('runSpecs', me.viewContent + me.viewmodelContent + me.specsContent);
+        });
+    },
     viewContent: '',
     viewmodelContent: '',
     specsContent: '',
-    test: 'boo',
     exampleSelected: function (exampleName) {
         var me = this;
         //Async is broke in Chrome.  Check on this issue, https://github.com/caolan/async/pull/269

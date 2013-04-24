@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>CoNarrative GlusJS - App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css"
+          href="../../lib/extjs-4.x/resources/ext-theme-neptune/ext-theme-neptune-all.css">
+</head>
+<body>
+<script type="text/javascript" src="../../lib/extjs-4.x/ext-all.js"></script>
+
+<script type="text/javascript">glu = {debug: true};</script>
+<script type="text/javascript" src="../../build/glu-extjs-4.js"></script>
+<script type="text/javascript" src="../../build/glu.js"></script>
+<script type="text/javascript" src="../../build/glu-test.js"></script>
+
+<script type="text/javascript" src="views/extjs/login_view.js"></script>
+<script type="text/javascript" src="viewmodels/login_vm.js"></script>
+
+<!--<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>-->
+<!--<script type="text/javascript" src="lib/pubsubjs.js"></script>-->
+<script type="text/javascript">
+    Ext.onReady(function () {
+
+        var vm = glu.model('ks.login');
+        vm.init();
+
+        var view = glu.view(vm);
+        var panel = new Ext.Panel({
+            layout: {
+                type: 'vbox'
+            },
+            style: {
+//                padding:'10px',
+//                margin:'10px'
+//                width:'50%'
+            },
+//            width:200,
+//            height:200,
+            border: false,
+            items: [view]
+        })
+        new Ext.Viewport({
+            layout: 'fit',
+            items: [panel]
+        });
+    });
+</script>
+</body>
+</html>
