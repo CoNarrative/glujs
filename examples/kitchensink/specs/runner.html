@@ -52,15 +52,6 @@
         return htmlReporter.specFilter(spec);
     };
 
-    //var currentWindowOnload = window.onload;
-
-    //        window.onload = function () {
-    //            if (currentWindowOnload) {
-    //                currentWindowOnload();
-    //            }
-    //            execJasmine();
-    //        };
-
     function execJasmine() {
         jasmineEnv.execute();
     }
@@ -76,7 +67,7 @@
     $(function () {
         PubSub = window.parent.PubSub;
         PubSub.subscribe('abc', function (message, content) {
-        
+
             eval(content);
             execJasmine();
         });
