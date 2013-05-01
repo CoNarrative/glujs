@@ -51,6 +51,7 @@ describe('given a autoUp-bound named button whose command is further up the mode
                     go:jasmine.createSpy('top level go action'),
                     children:{
                         mtype:'viewmodelactivator',
+                        autoParent:true,
                         items:[
                             {
                                 mtype:'buttonTester'
