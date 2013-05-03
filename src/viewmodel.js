@@ -731,6 +731,23 @@ glu.Viewmodel = glu.extend(Object, {
     unParent: function(){
         this._ob.detach('parentVM');
         delete this.parentVM;
+    },
+
+    /**
+     * Starts listening on any listeners established by '.on', formulas, or reactors
+     * that reference other view models (e.g. parentVM or rootVM, etc.)
+     * Necessary to make the view model "come alive" again if it has been previously detached
+     */
+    attach:function(){
+        this._ob.attachAll();
+    },
+    /*
+     * Removes itself from anything it is listening on
+     * Needed to clean up a view model that is listening to other models using '.on', formulas, or reactors
+     * that reference other view models (e.g. parentVM or rootVM, etc.)
+     */
+    detach:function(){
+        this._ob.detachAll();
     }
 
 });

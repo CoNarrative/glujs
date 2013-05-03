@@ -150,6 +150,12 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
         }
     },
 
+    attachAll:function(){
+        for (var key in this.edges){
+            this.attach(key);
+        }
+    },
+
     detach:function (forwardRefName, backRefName) {
         var other = this.node[forwardRefName];
         this.detachOneWay(forwardRefName);
@@ -157,6 +163,12 @@ glu.GraphObservable = Ext.extend(Ext.emptyFn, {
             other[backRefName] = null;
             if (!other._ob) return;
             other._ob.detachOneWay(backRefName);
+        }
+    },
+
+    detachAll:function(){
+        for (var key in this.edges){
+            this.detach(key);
         }
     },
 
