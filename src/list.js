@@ -238,6 +238,12 @@ glu.mreg('keytracking',{
     getById:function(key){
         return this.keyMap[key];
     },
+    getAtKey:function(key){
+        return this.keyMap[key];
+    },
+    indexOfKey:function(key){
+        return this.indexOf(this.getAtKey(key));
+    },
     removeAtKey:function(key){
         var item = this.keyMap[key];
         if (item==null) return;
