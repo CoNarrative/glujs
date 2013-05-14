@@ -130,6 +130,12 @@ glu.regAdapter('grid', {
                     var bindings = glu.provider.binder.collectBindings(col.editor, viewmodel);
                     glu.provider.binder.applyBindingsList(bindings);
                 }
+				if( col.xtype && col.xtype === 'actioncolumn'){
+                    for( var j = 0, len2=col.items.length; j < len2; j++ ){
+                        var bindings = glu.provider.binder.collectBindings(col.items[j], viewmodel);
+                        glu.provider.binder.applyBindingsList(bindings);
+                    }
+                }
             }
         }
 
