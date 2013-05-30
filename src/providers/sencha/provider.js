@@ -14,6 +14,17 @@ Ext.apply(glu.provider, {
     },
 
     view:function (vm, viewSpec, parent) {
+        if (viewSpec._asWindow && viewSpec.xtype!='menu') {
+            if (viewSpec.asWindow) {
+                viewSpec = glu.deepApply({
+                    xtype:'window',
+                    layout:'fit',
+                    items:[viewSpec]
+                }, viewSpec.asWindow);
+            } else {
+                viewSpec.xtype = 'window';
+            }
+        }
         viewSpec.xtype = viewSpec.xtype || 'panel';
         if (parent && parent.svgParentId) viewSpec.svgParentId = parent.svgParentId; //for svg controls pass down root element
         var bindings = glu.provider.binder.collectBindings(viewSpec, vm, parent).bindings;
@@ -117,9 +128,14 @@ Ext.apply(glu.provider, {
     /*
      * 'windowizes' a panel and pops it up
      */
-    openWindow:function (config, viewMode) {
-        var view = glu.createViewmodelAndView(config, true, viewMode);
-        if (glu.testMode!==true){
+    openWindow:function (viewmodel, viewMode) {
+        var viewmodelName = viewMode ? viewmodel.viewmodelName + '_'+viewMode : viewmodel.viewmodelName;
+        var view = glu.view(viewmodel, viewmodel.ns, viewmodelName, {_asWindow:true});
+        if (view.showAt && view.usePositionAt){
+            var pos = glu.walk(view.usePositionAt);
+            view.showAt(pos.x, pos.y);
+        } else
+        {
             view.show();
         }
         return view;

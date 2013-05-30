@@ -18,6 +18,7 @@ describe('activator tests', function () {
                     tester:{
                         screens:{
                             mtype:'activatorlist',
+                            autoParent:true,
                             items:[
                                 {mtype:'screen'}
                             ],
@@ -117,6 +118,7 @@ describe('activator tests', function () {
                     tester:{
                         screens:{
                             mtype:'activatorlist',
+                            autoParent:true,
                             focusProperty:'activeScreen'
                         },
                         activeScreen:{},

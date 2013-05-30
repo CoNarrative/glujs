@@ -693,11 +693,16 @@ glu.Viewmodel = glu.extend(Object, {
      * In test mode it instantiates the new view model but does not instantiate the view.
      * @return {*}
      */
-    open:function (config, viewMode) {
-        config.ns = config.ns || this.ns;
-        config.parentVM = config.parentVM || this;
-        var win = glu.openWindow(config, viewMode);
-        return win._bindings.viewmodel;
+    open:function (childVM, viewMode) {
+        if (!glu.isInstantiated(childVM)){
+            childVM.ns = childVM.ns || this.ns;
+            childVM.parentVM = childVM.parentVM || this;
+            childVM = this.model(childVM);
+        }
+        if (!glu.testMode) {
+            glu.openWindow(childVM, viewMode);
+        }
+        return childVM;
     },
 
     /**
@@ -726,6 +731,23 @@ glu.Viewmodel = glu.extend(Object, {
     unParent: function(){
         this._ob.detach('parentVM');
         delete this.parentVM;
+    },
+
+    /**
+     * Starts listening on any listeners established by '.on', formulas, or reactors
+     * that reference other view models (e.g. parentVM or rootVM, etc.)
+     * Necessary to make the view model "come alive" again if it has been previously detached
+     */
+    attach:function(){
+        this._ob.attachAll();
+    },
+    /*
+     * Removes itself from anything it is listening on
+     * Needed to clean up a view model that is listening to other models using '.on', formulas, or reactors
+     * that reference other view models (e.g. parentVM or rootVM, etc.)
+     */
+    detach:function(){
+        this._ob.detachAll();
     }
 
 });
