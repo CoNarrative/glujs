@@ -5,7 +5,7 @@
  * @class glu.extjs.adapters.segmentedbutton
  * @author Travis Barajas
  * @extends glu.extjs.adapters.container
- * The segmentedbutton adapter adds support for an activeButton binding.  Only works for when allowMultiple is false.
+ * The segmentedbutton adapter adds support for an activeButton binding.
  *
 *
  */

@@ -1,7 +1,6 @@
 glu.regAdapter('textfield', {
     extend:'field',
     beforeCollect:function (config) {
-        //glu.provider.adapters.Field.prototype.beforeCollect.apply(this, arguments);
         config.enableKeyEvents = true;
     },
     /**

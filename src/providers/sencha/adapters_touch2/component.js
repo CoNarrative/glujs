@@ -6,13 +6,10 @@ glu.regAdapter = glu.provider.regAdapter;
 
 glu.regAdapter('component', {
     applyConventions:function (config, viewmodel) {
-        //glu.deepApplyIf(config, pattern);
     },
-    //is the property an array to walk?
     isChildArray:function (propName, value) {
         propName === 'items';
     },
-//is the property a sub-item to recurse into?
     isChildObject:function () {
         return false;
     },
