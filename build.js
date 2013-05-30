@@ -31,6 +31,7 @@ function build() {
     gluJSTest();
     gluJSExt3();
     gluJSExt4();
+    gluJSTouch2();
     copyToBuild('MIT.LICENSE');
     copyToBuild('readme.txt');
     copyExamples();
@@ -94,6 +95,20 @@ function gluJSExt4() {
         .include('src/providers/sencha/adapters_extjs/*.js')
         .include('src/providers/sencha/adapters_extjs4/*.js')
     concat('build/glu-extjs-4.js', files);
+}
+
+function gluJSTouch2() {
+    console.log('building Sencha Touch 2.x adapter');
+    var files = new FileList()
+        .include('src/providers/sencha/adapters_touch2/setup.js')
+        .include('src/providers/sencha/provider.js')
+        .include('src/providers/sencha/binder_collect.js')
+        .include('src/providers/sencha/binder_apply.js')
+        .include('src/providers/sencha/binder_adapter.js')
+        .include('src/providers/sencha/items_helper.js')
+        .include('src/providers/sencha/adapters_touch2/component.js')
+        .include('src/providers/sencha/adapters_touch2/*.js')
+    concat('build/glu-touch-2.js', files);
 }
 
 //MINI-BUILD LIBRARY
