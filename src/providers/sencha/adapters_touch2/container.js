@@ -44,32 +44,4 @@ glu.regAdapter('container', {
             glu.provider.itemsHelper.bindItems(context);
         }
     }
-//    itemsBindings:{
-//        custom:function (context) {
-//            var activator = context.viewmodel.get(context.binding.modelPropName);
-//            var cardPanel = context.control;
-//
-//            glu.provider.itemsHelper.bindItems(context);
-//            //do the items bindings using the helper
-//
-//            //now Activation stuff if really an activator...
-//            if (activator.getActiveIndex) {
-//                if (cardPanel.rendered == true) {
-//                    cardPanel.getLayout().setActiveItem(activator.getActiveIndex());
-//                } else {
-//                    cardPanel.activeItem = activator.getActiveIndex();
-//                }
-//
-//                //listen (automatically) to change event on activeIndex
-//                activator.on('activeindexchanged', function (newvalue) {
-//                    cardPanel._changeOriginatedFromModel = true;
-//                    if (cardPanel.rendered == true) {
-//                        cardPanel.setActiveItem(activator.getActiveIndex());
-//                    } else {
-//                        cardPanel.activeItem = activator.getActiveIndex();
-//                    }
-//                },context.viewModel);
-//            }
-//        }
-//    }
 });

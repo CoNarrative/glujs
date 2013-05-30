@@ -12,11 +12,11 @@ if (!Ext.getVersion) {
     Ext.getVersion = function () {
         return Ext.version;
     }
-}
+};
 if (!Ext.reg) {
     Ext.reg = function (name, ctor) {
         Ext.ClassManager.setAlias('widgets.' + name, ctor);
     };
 
-}
+};
 

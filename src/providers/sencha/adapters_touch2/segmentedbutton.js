@@ -53,4 +53,4 @@ glu.regAdapter('segmentedbutton', {
             control.setPressedButtons(button);
         }
     }
-})
+});
