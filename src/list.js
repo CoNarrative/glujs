@@ -11,7 +11,8 @@
 glu.List = glu.extend(Object, {
     constructor:function (config) {
         config = config || {};
-        this.autoParent = true;
+        this.autoParent = false;
+        this.autoDetach = false;
         glu.deepApply(this, config);
         this.length = 0;
         this._private = this._private || {};
@@ -54,7 +55,7 @@ glu.List = glu.extend(Object, {
                 obj.parentList = this;
                 obj._ob.attach('parentVM');
             }
-            obj._ob.attach('rootVM')
+            obj._ob.attachAll(); //adding to a list always reattaches an otherwise detached object
         }
         this._private.objs.splice(index, 0, obj);
         this.length++;
@@ -83,8 +84,11 @@ glu.List = glu.extend(Object, {
             //remove from observation graph...since it can only go child-> parent don't worry about other direction
             if (this.autoParent) {
                 obj._ob.detach('parentVM');
+                obj._ob.detach('rootVM');
             }
-            obj._ob.detach('rootVM');
+            if (this.autoDetach) {
+                obj._ob.detachAll()
+            }
         }
         this.fireEvent('removed', obj, index, isTransfer);
         if (index < this.activeIndex) {
@@ -233,6 +237,12 @@ glu.mreg('keytracking',{
     },
     getById:function(key){
         return this.keyMap[key];
+    },
+    getAtKey:function(key){
+        return this.keyMap[key];
+    },
+    indexOfKey:function(key){
+        return this.indexOf(this.getAtKey(key));
     },
     removeAtKey:function(key){
         var item = this.keyMap[key];

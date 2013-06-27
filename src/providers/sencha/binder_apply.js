@@ -47,6 +47,9 @@ Ext.apply(glu.provider.binder, {
             var binding = bindings[i];
             this.applyOneBindingToControl(bindingAdapter, config, control, binding);
         }
+        if (control.fireEvent) {
+            control.fireEvent('glubind', control);
+        }
         glu.log.indentLess();
     },
 

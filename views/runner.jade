@@ -1,12 +1,14 @@
 extends layout
 block append head
     title Glu Spec Runner for ExtJS #{extjs_version}
-    link(href='/lib/jasmine/jasmine.css', rel='stylesheet')
-    script(src='/lib/jasmine/jasmine.js')
-    script(src='/lib/jasmine/jasmine-html.js')
+
+    link(rel='stylesheet', type='text/css', href='../lib/jasmine/jasmine.css')
+    script(src='../lib/jasmine/jasmine.js')
+    script(src='../lib/jasmine/jasmine-html.js')
     script(src='/spec/run.js')
     script(src='TestHelpers.js')
     script(src='pluginSpec.js')
+
     script(src='Providers/extjs/InterfaceSpec.js')
     script(src='Providers/extjs/localizationSpec.js')
     script(src='Providers/extjs/ButtonSpec.js')
@@ -32,7 +34,6 @@ block append head
     script(src='bindContextSpec.js')
     script(src='layoutSpec.js')
     script(src='mixinSpec.js')
-    script(src='adapterSpec.js')
     script(src='reactorSpec.js')
     script(src='activatorSpec.js')
     script(src='basicLocalizationSpec.js')

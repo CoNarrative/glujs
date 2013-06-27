@@ -8,6 +8,7 @@ describe('given an item property explicitly wired to a parent', function () {
                     statusText:'GOOD',
                     children:{
                         mtype:'viewmodelactivator',
+                        autoParent:true,
                         items:[
                             {
                                 mtype:'childModule'
@@ -63,6 +64,7 @@ describe('given an item property with an auto-up wiring', function () {
                     statusText:'GOOD',
                     children:{
                         mtype:'viewmodelactivator',
+                        autoParent:true,
                         items:[
                             {
                                 mtype:'childModule'

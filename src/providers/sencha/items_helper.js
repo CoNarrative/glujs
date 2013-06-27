@@ -2,7 +2,48 @@
  * Copyright (C) 2012 by CoNarrative
  */
 glu.provider.itemsHelper = {
-
+    insertItem:function(context, idx, viewItem){
+        var container = context.control;
+        var collectionName = context.binding.controlPropName;
+        if (collectionName!='items'){
+            container[collectionName].insert(idx,viewItem);
+        } else {
+            //normal items
+            if (container.insert) {
+                container.insert(idx, viewItem);
+            } else {
+                container.items.insert(idx, viewItem);
+            }
+        }
+    },
+    removeItemAt:function(context, idx){
+        var container = context.control;
+        var collectionName = context.binding.controlPropName;
+        if (collectionName!='items'){
+            container[collectionName].removeAt(idx);
+        } else {
+            //normal items
+            if (idx>container.items.length - 1) return;
+            if (container.remove){
+                container.remove(idx);
+            } else {
+                container.items.removeAt(idx);
+            }
+        }
+    },
+    removeAllItems:function(context){
+        var container = context.control;
+        var collectionName = context.binding.controlPropName;
+        if (collectionName!='items'){
+            container[collectionName].removeAll();
+        } else {
+            if (container.removeAll){
+                container.removeAll();
+            } else {
+                container.items.removeAll();
+            }
+        }
+    },
     /*
      * Handles additions to the observable list
      */
@@ -43,15 +84,11 @@ glu.provider.itemsHelper = {
             }
             viewItem = glu.view(item, item.ns, viewModelName, {}, {}, container.initialConfig);
         }
-        // if(viewItem.closable) {
-        // interceptCloseCommand(viewItem);
-        // }
-        viewItem._vm = item; //add view model directly to view (for now)
-        if (container.insert) {
-            container.insert(idx, viewItem);
-        } else {
-            container.items.insert(idx, viewItem);
-        }
+ 
+        viewItem._vm = item; //add view model directly to view 
+
+        this.insertItem(context,idx,viewItem);
+
         //apply as needed...
         if (needsDoLayout) {
             container.doLayout();
@@ -117,10 +154,7 @@ glu.provider.itemsHelper = {
             var transferKey = context.viewmodel.viewmodelName + '-' +context.binding.modelPropName;
             container._ob.on(attachPath + 'removedall', function(){
                 //do a batch remove if possible. Later individual remove events will be ignored by the container
-                if (container.removeAll) {
-                    glu.updatingUI();
-                    container.removeAll();
-                }
+                this.removeAllItems(context);
             }, this);
             container._ob.on(attachPath + 'added', function (item, idx, isTransfer) {
                 glu.updatingUI();
@@ -137,12 +171,7 @@ glu.provider.itemsHelper = {
                         this.respondToAdd(item, idx, context, needsDoLayout);
                         return;
                     }
-
-                    if (container.insert) {
-                         container.insert(idx, component);
-                    } else {
-                        container.items.insert(idx, component);
-                    }
+                    this.insertItem(context,idx,component);
                     return;
                 };
                 this.respondToAdd(item, idx, context, needsDoLayout);
@@ -160,17 +189,8 @@ glu.provider.itemsHelper = {
                 }
                 //suppress tab selection change events
                 container._changeOriginatedFromModel=true;
-
-                //ExtJS will find the item if a number is passed, and Touch will not.  We should call removeAt if method exists.
-                if(container.removeAt)
-                {
-                    container.removeAt(idx);
-                }
-                else{
-                    container.remove(idx);
-                }
-
-                delete container._changeOriginatedFromModel;
+                this.removeItemAt(context,idx);
+               delete container._changeOriginatedFromModel;
             }, this);
 
         } else
@@ -185,7 +205,7 @@ glu.provider.itemsHelper = {
                 list.data.on('remove', function (idx, item) {
                     //container._changeOriginatedFromModel=true;
                     glu.updatingUI();
-                    container.remove(idx);
+                    this.removeItemAt(context,idx);
                 }, this);
             } else {
                 list.on('add', function (store, items, idx) {
@@ -198,7 +218,7 @@ glu.provider.itemsHelper = {
                     glu.updatingUI();
                     //suppress tab selection change events
                     container._changeOriginatedFromModel=true;
-                    container.remove(idx);
+                    this.removeItemAt(context,idx);
                     delete container._changeOriginatedFromModel;
                 }, this);
             }

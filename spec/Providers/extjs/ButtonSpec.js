@@ -46,6 +46,7 @@ describe('button specs', function () {
                         go:jasmine.createSpy('top level go action'),
                         children:{
                             mtype:'viewmodelactivator',
+                            autoParent:true,
                             items:[
                                 {
                                     mtype:'buttonTester'
