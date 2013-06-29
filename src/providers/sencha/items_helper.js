@@ -100,7 +100,7 @@ glu.provider.itemsHelper = {
         //No more doLayout in Touch
         if(Ext.getProvider().provider=='touch')
         {
-            container.setActiveItem(0);
+//            container.setActiveItem(0);
         }
         //make sure the view item has a reference back to the model in case it needs it...
         viewItem.model = item;

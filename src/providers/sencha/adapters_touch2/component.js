@@ -16,6 +16,12 @@ glu.regAdapter('component', {
     processChildPropertyShortcut:function (propName, config) {
         return config;
     },
+    beforeCreate:function(config){
+
+    },
+    beforeCollect:function (config) {
+
+    },
     afterCreate:function (control, viewmodel) {
 
     },
