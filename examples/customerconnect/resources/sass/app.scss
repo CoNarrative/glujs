@@ -1,0 +1,39 @@
+// The following two lines import the default Sencha Touch theme. If you are building
+// a new theme, remove them and the add your own CSS on top of the base CSS (which
+// is already included in your app.json file).
+@import 'sencha-touch/default';
+@import 'sencha-touch/default/all';
+
+// Custom code goes here..
+
+// Examples of using the icon mixin:
+// @include icon('user');
+$homeContainerBackground: white;
+.notification_container {
+  background-color: $homeContainerBackground;
+  @include box-shadow(#003366 0 3px 4px);
+  color:black;
+  padding:5px 10px 5px 10px;
+  margin:5px 10px 5px 10px
+
+}
+.notification {
+  color:gray;
+  padding:0px 0px 10px 0px;
+}
+.notification {
+  color:gray;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  //border-bottom: 1px solid
+  //border-botton:2px;
+  //border-color:gray;
+  //border-line: solid;
+  //padding:2px 50px 0px 0px;
+}
+//.notification:hover {
+//  background:rgba(238, 238, 238, 1);
+//  cursor:pointer;
+//}
+.notification .x-label{
+  margin: 0 0 0 5px;
+}

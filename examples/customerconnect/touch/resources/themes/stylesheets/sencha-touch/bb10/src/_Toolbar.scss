@@ -1,0 +1,39 @@
+/**
+ * @class Ext.Toolbar
+ */
+
+.x-toolbar {
+    min-height: 45px;
+}
+
+.x-toolbar,
+.x-tabbar {
+    border-width: 0 !important;
+    @include box-shadow(0 1px 0 0 #C4C4C4);
+}
+
+.x-toolbar-plain,
+.x-tabbar-plain {
+    background-color: #FFFFFF;
+}
+
+.x-toolbar-light,
+.x-tabbar-light {
+    @include background(linear-gradient(85deg, color-stops(#005F9A, #0AACE5)));
+}
+
+.x-toolbar-neutral,
+.x-tabbar-neutral {
+    @include background(linear-gradient(color-stops(#F1F0F0, #D6D6D6)));
+}
+
+.x-toolbar-dark,
+.x-tabbar-dark {
+    @include background(linear-gradient(color-stops(#323232, #252525)));
+}
+
+.x-title {
+    color: #fafafa;
+    font-size: 18px;
+    font-weight: normal;
+}
