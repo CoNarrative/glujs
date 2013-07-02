@@ -15,17 +15,27 @@ glu.regAdapter('container', {
     beforeCollect:function (control, viewmodel) {
         glu.provider.adapters.Component.prototype.beforeCollect.apply(this, arguments);
     },
-    beforeCreate:function (config) {
+    beforeCreate:function (config, vm) {
+//        debugger;
         glu.provider.adapters.Component.prototype.beforeCreate.apply(this, arguments);
-        config.listeners = config.listeners || {};
-        config.listeners = {
-            render: {
-                fn: function() {
-                  debugger;
-                },
-                element: 'element'
-            }
-        }
+        //TODO:  Find activeItem
+//        config.activeItem = 0;
+//        if (control._activeIndex !== undefined) {
+//            control.on('render', function(panel){
+//                panel._changeOriginatedFromModel = true;
+//                panel.getLayout().setActiveItem(panel._activeIndex);
+//            });
+//        }
+//        config.activeItem =
+//        config.listeners = config.listeners || {};
+//        config.listeners = {
+//            render: {
+//                fn: function() {
+//                  debugger;
+//                },
+//                element: 'element'
+//            }
+//        }
     },
     afterCreate:function (control, viewmodel) {
         glu.provider.adapters.Component.prototype.afterCreate.apply(this, arguments);

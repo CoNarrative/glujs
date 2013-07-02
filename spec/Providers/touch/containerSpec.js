@@ -1,8 +1,9 @@
 describe('Adatpers: Container', function () {
-    Given('a view with container that contains items (more containers)', function () {
+    Given('a view with container that contains has a list of viewmodels bound to the items property', function () {
         var view, vm, itemId;
+        itemId = Ext.id()
         Meaning(function () {
-            testNs = {
+            testNs1 = {
                 models: {
 
                 },
@@ -11,15 +12,17 @@ describe('Adatpers: Container', function () {
                         init: function () {
                             var screen1 = this.model({mtype: 'screen1'});
                             this.screens.add(screen1);
-                            this.set('activeScreen', screen1);
 
+                            var screen2 = this.model({mtype: 'screen2'});
+                            this.screens.add(screen2);
+                            this.set('activeScreen', screen1);
                         },
                         screens: {
                             mtype: 'activatorlist',
                             autoParent: true,
                             focusProperty: 'activeScreen'
                         },
-                        screenActive: {mtype: 'screen1'},
+                        activeScreen: {mtype: 'screen1'},
                     },
                     screen1: {
                         message: 'Screen1 - prop'
@@ -30,11 +33,13 @@ describe('Adatpers: Container', function () {
                 },
                 views: {
                     main: {
+                        id:itemId,
                         xtype: 'container',
                         layout: {
-                            type: 'card'
+                            type: 'vbox'
                         },
                         items: '@{screens}'
+//                        items:[{html:'asdf'}]
                     },
                     screen1: {
                         xtype: 'container',
@@ -56,25 +61,20 @@ describe('Adatpers: Container', function () {
             };
 
             vm = glu.model({
-                ns: 'testNs',
+                ns: 'testNs1',
                 mtype: 'main'
             });
-//            view = glu.view(vm, 'testNs', 'main');
+            vm.init();
 
         });
-        ShouldHave('called: Adapter - setComponentProperty', function () {
-
-            //Set up spy for Container Adapter
+        ShouldHave('two views within the items property that were bound using ItemsBinding', function () {
             var adapter = glu.provider.adapters['container'];
             view = glu.view(vm);
 
-            var activeItem = view.getActiveItem();
-
-            expect(glu.isObject(activeItem)).toBeTruthy();
-
-        })
+            expect(view.items.length).toEqual(2);
+        });
     });
-    Given('a view with container that contains has a list of viewmodels bound to the items property', function () {
+    Given('a view with container that contains items (more containers)', function () {
         var view, vm, itemId;
         Meaning(function () {
             testNs = {
@@ -106,19 +106,19 @@ describe('Adatpers: Container', function () {
 
         });
         ShouldHave('called: beforeCreate, afterCreate, and beforeCollect ', function () {
-            //Set up spy for Container Adapter
-//            var adapter = glu.provider.adapters['container'];
-//
-//            spyOn(adapter,'beforeCollect');
-//            spyOn(adapter,'beforeCreate');
-//            spyOn(adapter,'afterCreate');
-//
-//
-//            view = glu.view(vm);
-//
-//            expect(adapter.beforeCollect).toHaveBeenCalled();
-//            expect(adapter.beforeCreate).toHaveBeenCalled();
-//            expect(adapter.afterCreate).toHaveBeenCalled();
+//            Set up spy for Container Adapter
+            var adapter = glu.provider.adapters['container'];
+
+            spyOn(adapter,'beforeCollect');
+            spyOn(adapter,'beforeCreate');
+            spyOn(adapter,'afterCreate');
+
+
+            view = glu.view(vm);
+
+            expect(adapter.beforeCollect).toHaveBeenCalled();
+            expect(adapter.beforeCreate).toHaveBeenCalled();
+            expect(adapter.afterCreate).toHaveBeenCalled();
         })
     });
 });
