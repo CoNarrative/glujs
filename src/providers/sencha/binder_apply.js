@@ -48,6 +48,9 @@ Ext.apply(glu.provider.binder, {
             this.applyOneBindingToControl(bindingAdapter, config, control, binding);
         }
         if (control.fireEvent) {
+            if (glu.isFunction(bindingAdapter.afterbinding)) {
+                bindingAdapter.afterbinding(control, control._vm);
+            }
             control.fireEvent('glubind', control);
         }
         glu.log.indentLess();
