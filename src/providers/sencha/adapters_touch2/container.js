@@ -16,48 +16,58 @@ glu.regAdapter('container', {
         glu.provider.adapters.Component.prototype.beforeCollect.apply(this, arguments);
     },
     beforeCreate: function (config, vm) {
-///        debugger;
         glu.provider.adapters.Component.prototype.beforeCreate.apply(this, arguments);
         if (config.layout && config.layout.type === 'card') {
-//            debugger;
-            //control._activeIndex !== undefined
             if (config._bindingMap && config._bindingMap.activeItem !== undefined) {
-                config.activeItem = -1;
-                config.listeners = config.listeners || {};
-                config.listeners = {
-                    painted: {
-                        fn: function () {
-                            this.setActiveItem(0)
-                        }
-                    },
-                    activeitemchange: {
-                        fn: function (control) {
-
-                        }
+                config.activeItem = 0;   //TODO:  Hack.  Figure out why this is needed.
+            }
+        }
+    },
+    afterbinding: function (control, vm) {
+        var activeItem;
+        var acitveItemBinding;
+        var config = control.config;
+        if (config.layout && config.layout.type === 'card') {
+            if (config._bindingMap && config._bindingMap.activeItem !== undefined) {
+                for (var i = 0; i < config._bindings.length; i++) {
+                    if (config._bindings[i].controlPropName === 'activeItem') {
+                        acitveItemBinding = config._bindings[i];
+                        break;
                     }
                 }
+
+                activeItem = vm.get(acitveItemBinding.modelPropName);
+                var activeItemIndex = control.items.findIndexBy(function (item) {
+                    return item._vm == activeItem;
+                });
+                control.setActiveItem(-1);
+                control.setActiveItem(activeItemIndex);
             }
         }
 
     },
     afterCreate: function (control, vm) {
         glu.provider.adapters.Component.prototype.afterCreate.apply(this, arguments);
-        var config = control.config;
-        if (config.layout && config.layout.type === 'card') {
-            if (config._bindingMap && config._bindingMap.activeItem !== undefined) {
-//                control.setActiveItem(1)
-            }
-        }
-
     },
     activeItemBindings: {
+        eventName: 'activeitemchangerequest',
+        eventConverter: function (control, newItem, idx) {
+            return control._activeItemValueType === 'viewmodel' ? panel._vm : idx;
+        },
+        storeValueInComponentAs: '_activeIndex',
         setComponentProperty: function (value, oldValue, options, control) {
-            debugger;
-            //TODO: added this check due to headless access.  if fails because layout is not rendered
-            if (!control.getLayout() || !control.getLayout().setActiveItem) {
-                return;
+            if (value === undefined || value === -1) {
+                return; //nothing to do ... can't really "deselect" within ExtJS
             }
-            control.getLayout().setActiveItem(value);
+            if (value.mtype) {
+                control._activeItemValueType = 'viewmodel';
+                value = control.items.findIndexBy(function (card) {
+                    return card._vm == value;
+                });
+                if (value == -1) throw "Could not find a item in card layout bound to the view model passed to activeItem";
+            }
+            control._changeOriginatedFromModel = true;
+            control.setActiveItem(value);
         }
     },
     itemsBindings: {
