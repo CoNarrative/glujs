@@ -2,14 +2,12 @@ glu.defModel('ps.main', {
     name: 'Customer Connect',
     init: function () {
         var home = this.model({mtype: 'home'});
-//        home.init();
         this.screens.add(home);
-//        this.set('activeScreen', home);
 
         var notification = this.model({mtype: 'notification'});
-//        notification.init();
         this.screens.add(notification);
-        this.set('activeScreen', notification);
+
+        this.setRaw('activeScreen', home);
 
     },
 
@@ -18,11 +16,15 @@ glu.defModel('ps.main', {
         autoParent: true,
         focusProperty: 'activeScreen'
     },
-    activeScreen: {mtype: 'home'}
+    activeScreen: {mtype: 'home'},
+    updateActiveScreen: function () {
+
+        this.screens.setActiveItem(this.screens.getAt(1));
+    }
 });
 
-glu.defModel('ps.home',{
-    init:function(){
+glu.defModel('ps.home', {
+    init: function () {
         this.notificationSummaryList.add(this.model({
             mtype: 'notificationSummary',
             id: 1, type: 'email', count: 3, message: 'Unread messages'}));
@@ -32,8 +34,12 @@ glu.defModel('ps.home',{
     },
     notificationSummaryList: {
         mtype: 'list'
-    }
+    },
+//    updateActiveScreen: function () {
+//        this.screens.setActiveItem(this.screes.getAt(1));
+//    }
 });
-glu.defModel('ps.notification',{
+
+glu.defModel('ps.notification', {
 
 });

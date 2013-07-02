@@ -60,7 +60,14 @@ glu.defView('ps.home', {
                 pack: 'middle',
             },
             items: '@{notificationSummaryList}'
-        }
+        },
+//        {
+//            xtype: 'button',
+//            listeners: {
+//                event: 'tap',
+//                fn: '@{updateActiveScreen}'
+//            }
+//        }
     ]
 });
 glu.defView('ps.notification', {
@@ -72,5 +79,6 @@ glu.defView('ps.notification', {
     weight: 500,
     items: [
         {html: 'Notification details'}
+
     ]
 });
