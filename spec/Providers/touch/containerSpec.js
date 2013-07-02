@@ -13,7 +13,7 @@ describe('Adatpers: Container', function () {
                             screen1 = this.model({mtype: 'screen1'});
                             this.screens.add(screen1);
 
-                             screen2 = this.model({mtype: 'screen2'});
+                            screen2 = this.model({mtype: 'screen2'});
                             this.screens.add(screen2);
                         },
                         screens: {
@@ -21,8 +21,8 @@ describe('Adatpers: Container', function () {
                             autoParent: true,
                             focusProperty: 'activeScreen'
                         },
-                        setScreen2Active:function(){
-                           this.screens.setActiveItem(screen2);
+                        setScreen2Active: function () {
+                            this.screens.setActiveItem(screen2);
                         },
                         activeScreen: {mtype: 'screen1'},
                     },
@@ -35,13 +35,13 @@ describe('Adatpers: Container', function () {
                 },
                 views: {
                     main: {
-                        id:itemId,
+                        id: itemId,
                         xtype: 'container',
                         layout: {
                             type: 'card'
                         },
                         items: '@{screens}',
-                        activeItem:'@{activeScreen}'
+                        activeItem: '@{activeScreen}'
                     },
                     screen1: {
                         xtype: 'container',
@@ -66,7 +66,7 @@ describe('Adatpers: Container', function () {
                 ns: 'testNs1',
                 mtype: 'main'
             });
-           vm.init();
+            vm.init();
 
         });
         ShouldHave('two views within the items property that were bound using ItemsBinding', function () {
@@ -74,7 +74,9 @@ describe('Adatpers: Container', function () {
 
             view = glu.view(vm);
             var views = _.chain(view.items.items)
-                .filter(function(item){return glu.isObject(item._vm)});
+                .filter(function (item) {
+                    return glu.isObject(item._vm)
+                });
 
             expect(views.value().length).toEqual(2);
 
@@ -84,11 +86,11 @@ describe('Adatpers: Container', function () {
             var activeViewModel = activeItem._vm.viewmodelName;
             expect(activeViewModel).toEqual('screen1')
         });
-        Given('the screen is changed to Screen 2',function(){
-            Meaning(function(){
+        Given('the screen is changed to Screen 2', function () {
+            Meaning(function () {
                 vm.setScreen2Active();
             });
-            ShouldHave("have an ActiveItem set to Screen2",function(){
+            ShouldHave("have an ActiveItem set to Screen2", function () {
                 var activeItem = view.getActiveItem();
                 var activeViewModel = activeItem._vm.viewmodelName;
                 expect(activeViewModel).toEqual('screen2')
@@ -130,9 +132,9 @@ describe('Adatpers: Container', function () {
 //            Set up spy for Container Adapter
             var adapter = glu.provider.adapters['container'];
 
-            spyOn(adapter,'beforeCollect');
-            spyOn(adapter,'beforeCreate');
-            spyOn(adapter,'afterCreate');
+            spyOn(adapter, 'beforeCollect');
+            spyOn(adapter, 'beforeCreate');
+            spyOn(adapter, 'afterCreate');
 
 
             view = glu.view(vm);
@@ -140,6 +142,38 @@ describe('Adatpers: Container', function () {
             expect(adapter.beforeCollect).toHaveBeenCalled();
             expect(adapter.beforeCreate).toHaveBeenCalled();
             expect(adapter.afterCreate).toHaveBeenCalled();
+        })
+    });
+    Given('a viewmodel that contains fields', function () {
+        var view, vm, itemId;
+        Meaning(function () {
+            testNs = {
+                models: {
+
+                },
+                viewmodels: {
+                    tester: {
+                        fields: ['id', 'prop1', 'prop2',{name:'prop3',type:'string',defaultValue:'threeprop'}],
+                        id: '1234',
+                        prop1: 'oneProp'
+                    }
+                }
+            };
+
+            vm = glu.model({
+                ns: 'testNs',
+                mtype: 'tester'
+            });
+
+
+        });
+        ShouldHave('two properties set to thier initial values and one blank', function () {
+            expect(vm.id).toEqual('1234');
+            expect(vm.prop1).toEqual('oneProp');
+            expect(vm.prop2).toBeFalsy();
+            expect(vm.prop3).toEqual('threeprop');
+
+
         })
     });
 });

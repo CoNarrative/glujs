@@ -38,41 +38,50 @@ glu.DataModel = glu.extend(glu.Viewmodel, {
         }
 
         //load in initial values into record
-        if (Ext.getVersion().major > 3 || Ext.getProvider().provider == 'touch') {
-            //TODO: Make sure we only create the models once ... fix the "rectype" system so that
-            //it more closely mimics Ext 4.0 models
-            var modelId = Ext.id();
-            Ext.define(modelId, {
+        if (Ext.getProvider().provider == 'touch'){
+            //using a model with Sencha Touch
+            this._private.modelId = Ext.id();
+            Ext.define(this._private.modelId, {
+                extend : 'Ext.data.Model',
+                config: {
+                    fields : this._private.model.fields
+                }
+            });
+            var initialRecord = Ext.create(this._private.modelId, config);
+        } else if (Ext.getVersion().major > 3) {
+            //Using a model with ExtJS 4+
+            this._private.modelId = Ext.id();
+            Ext.define(this._private.modelId, {
                 extend : 'Ext.data.Model',
                 fields : this._private.model.fields
             });
-            this.reader = new Ext.data.reader.Json({
-                model : modelId
-            });
+            var initialRecord = Ext.create(this._private.modelId, config);
         } else {
+            //old-school using a reader
             this.reader = new Ext.data.JsonReader({}, this._private.model.fields);
+            var idProp = 'id';
+            if (config[idProp] === undefined) {
+                config[idProp] = '';
+            }
+            var initialRecord = this.reader.readRecords([
+                config
+            ]).records[0];
         }
-        //TODO: clean this up by calling loadData instead
-        //workaround for new Ext 4.1 behavior...
-        var idProp = 'id';
-        if (config[idProp] === undefined) {
-            config[idProp] = '';
-        }
-        var initialRecord = this.reader.readRecords([
-        config
-        ]).records[0];
+
         this._private.record = initialRecord;
+
         glu.apply(this, initialRecord.data);
         this._private.data = this._private.data || {};
         glu.apply(this._private.data, initialRecord.data);
         //create isDirty formulas
 
-        this._private.record.fields.each(function(rec) {
-            var name = rec.name + 'IsDirty';
-            config[name] = {
-                on : [rec.name + 'Changed'],
+        this._private.record.fields.each(function(field) {
+            var name = (field.name || field.config.name);
+            var dirtyName = name + 'IsDirty';
+            config[dirtyName] = {
+                on : [name + 'Changed'],
                 formula : function() {
-                    return this.isModified(rec.name);
+                    return this.isModified(name);
                 }
             }
         }, this);
@@ -213,16 +222,32 @@ glu.DataModel = glu.extend(glu.Viewmodel, {
         return data;
     },
     loadData : function(rawData) {
+        if (Ext.getVersion().major > 3 || Ext.getProvider().provider == 'touch') {
+            //create a model a la through newer style
+            this.loadDataThroughModel(rawData);
+        } else {
+            //older style
+            this.loadDataThroughReader(rawData);
+        }
+    },
+    loadDataThroughReader:function(rawData){
         //workaround for new Ext 4.1 behavior...
         var idProp = 'id';
         if (rawData[idProp] === undefined) {
             rawData[idProp] = '';
         }
         var data = this.reader.readRecords([
-        rawData
+            rawData
         ]).records[0].data;
         for (var k in data) {
             this.setRaw(k, data[k]);
+        }
+        this.commit();
+    },
+    loadDataThroughModel:function(rawData){
+        var model = Ext.create(this._private.modelId,rawData);
+        for (var k in model.data) {
+            this.setRaw(k, model.data[k]);
         }
         this.commit();
     },
