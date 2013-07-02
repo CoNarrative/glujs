@@ -22,6 +22,9 @@ describe('Adatpers: Container', function () {
                             autoParent: true,
                             focusProperty: 'activeScreen'
                         },
+                        setScreen2Active:function(){
+
+                        },
                         activeScreen: {mtype: 'screen1'},
                     },
                     screen1: {
@@ -77,11 +80,21 @@ describe('Adatpers: Container', function () {
             expect(views.value().length).toEqual(2);
 
         });
-        ShouldHave('ActiveItem', function () {
+        ShouldHave('have an ActiveItem set to Screen1', function () {
             var activeItem = view.getActiveItem();
             var activeViewModel = activeItem._vm.viewmodelName;
             expect(activeViewModel).toEqual('screen1')
         });
+        Given('the screen is changed to Screen 2',function(){
+            Meaning(function(){
+                vm.setScreen2Active();
+            });
+            ShouldHave("have an ActiveItem set to Screen2",function(){
+                var activeItem = view.getActiveItem();
+                var activeViewModel = activeItem._vm.viewmodelName;
+                expect(activeViewModel).toEqual('screen2')
+            })
+        })
     });
     Given('a view with container that contains items (more containers)', function () {
         var view, vm, itemId;
