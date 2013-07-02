@@ -30,7 +30,10 @@ glu.defView('ps.main', {
                     layout: {
                         type: 'card'
                     },
+                    height: 500,
+                    weight: 500,
                     /**Notification Container**/
+//                    items:[{html:'Hello'}]
                     items: '@{screens}',
                     activeItem: '@{activeScreen}'
                 }
@@ -44,6 +47,8 @@ glu.defView('ps.home', {
     layout: {
         type: 'vbox'
     },
+    height: 500,
+    weight: 500,
     items: [
         {
             html: '<h2>Notifications</h2>'
@@ -58,6 +63,14 @@ glu.defView('ps.home', {
         }
     ]
 });
-glu.defView('ps.notification',{
-   html:'Notification details '
+glu.defView('ps.notification', {
+    xtype: 'container',
+    layout: {
+        type: 'vbox'
+    },
+    height: 500,
+    weight: 500,
+    items: [
+        {html: 'Notification details'}
+    ]
 });

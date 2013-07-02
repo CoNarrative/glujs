@@ -1,5 +1,5 @@
 describe('Adatpers: Container', function () {
-    Given('a view with container that contains has a list of viewmodels bound to the items property', function () {
+    Given('a view with container with a list of viewmodels bound to the items property', function () {
         var view, vm, itemId;
         itemId = Ext.id()
         Meaning(function () {
@@ -12,10 +12,10 @@ describe('Adatpers: Container', function () {
                         init: function () {
                             var screen1 = this.model({mtype: 'screen1'});
                             this.screens.add(screen1);
-
+//
                             var screen2 = this.model({mtype: 'screen2'});
                             this.screens.add(screen2);
-                            this.set('activeScreen', screen1);
+//                            this.set('activeScreen', screen1);
                         },
                         screens: {
                             mtype: 'activatorlist',
@@ -36,10 +36,10 @@ describe('Adatpers: Container', function () {
                         id:itemId,
                         xtype: 'container',
                         layout: {
-                            type: 'vbox'
+                            type: 'card'
                         },
-                        items: '@{screens}'
-//                        items:[{html:'asdf'}]
+                        items: '@{screens}',
+                        activeItem:'@{activeScreen}'
                     },
                     screen1: {
                         xtype: 'container',
@@ -64,14 +64,23 @@ describe('Adatpers: Container', function () {
                 ns: 'testNs1',
                 mtype: 'main'
             });
-            vm.init();
+           vm.init();
 
         });
         ShouldHave('two views within the items property that were bound using ItemsBinding', function () {
             var adapter = glu.provider.adapters['container'];
-            view = glu.view(vm);
 
-            expect(view.items.length).toEqual(2);
+            view = glu.view(vm);
+            var views = _.chain(view.items.items)
+                .filter(function(item){return glu.isObject(item._vm)});
+
+            expect(views.value().length).toEqual(2);
+
+        });
+        ShouldHave('ActiveItem', function () {
+            var activeItem = view.getActiveItem();
+            var activeViewModel = activeItem.config.viewmodelName;
+            expect(activeViewModel).toEqual('screen1')
         });
     });
     Given('a view with container that contains items (more containers)', function () {

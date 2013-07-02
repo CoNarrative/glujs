@@ -5,3 +5,7 @@ glu.defModel('ps.notificationSummary',{
     count:'',
     type:''
 })
+
+glu.defModel('ps.notification',{
+
+})

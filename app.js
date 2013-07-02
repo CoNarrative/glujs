@@ -77,6 +77,9 @@ app.get('/examples/todomvc/app/touch', function (req, res) {
 app.get('/examples/todomvc/spec/touch', function (req, res) {
     res.render('todoRunner.jade', {locals:{extjs_version: 'touch'}});
 });
+app.get('/examples/customerconnect/app', function (req, res) {
+    res.render('senchatouch-customerconnect.jade', {locals:{extjs_version: 'touch'}});
+});
 
 //startup
 var port = process.env.PORT || 8123;

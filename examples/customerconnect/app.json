@@ -39,25 +39,25 @@
 //     *      }
 //     */
     "js": [
-        {
-            "path": "touch/sencha-touch-all.js",
-            "x-bootstrap": true
-        },
-
-        {
-            "path": "../../build/glu-touch-2.js",
-            "bundle": true,
-            "update": "full"
-        },
-        {
-            "path": "../../build/glu.js",
-            "bundle": true,
-            "update": "full"
-        },
-        {
-            "path": "../../build/glu-test.js",
-            "x-bootstrap": true
-        },
+//        {
+//            "path": "touch/sencha-touch-all.js",
+//            "x-bootstrap": true
+//        },
+//
+//        {
+//            "path": "../../build/glu-touch-2.js",
+//            "bundle": true,
+//            "update": "full"
+//        },
+//        {
+//            "path": "../../build/glu.js",
+//            "bundle": true,
+//            "update": "full"
+//        },
+//        {
+//            "path": "../../build/glu-test.js",
+//            "x-bootstrap": true
+//        },
         {
             "path": "app.js",
             "bundle": true,

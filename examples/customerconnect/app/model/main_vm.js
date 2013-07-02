@@ -4,11 +4,13 @@ glu.defModel('ps.main', {
         var home = this.model({mtype: 'home'});
 //        home.init();
         this.screens.add(home);
-        this.set('activeScreen', home);
+//        this.set('activeScreen', home);
+
         var notification = this.model({mtype: 'notification'});
 //        notification.init();
         this.screens.add(notification);
         this.set('activeScreen', notification);
+
     },
 
     screens: {
