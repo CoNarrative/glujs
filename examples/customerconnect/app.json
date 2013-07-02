@@ -75,6 +75,16 @@
             "update": "delta"
         },
         {
+            "path": "app/view/home_view.js",
+            "bundle": false,
+            "update": "delta"
+        },
+        {
+            "path": "app/model/home_vm.js",
+            "bundle": false,
+            "update": "delta"
+        },
+        {
             "path": "app/view/notificationsummary_view.js",
             "bundle": false,
             "update": "delta"
@@ -83,7 +93,18 @@
             "path": "app/model/notificationsummary_vm.js",
             "bundle": false,
             "update": "delta"
+        },
+        {
+            "path": "app/view/notification_view.js",
+            "bundle": false,
+            "update": "delta"
+        },
+        {
+            "path": "app/model/notification_vm.js",
+            "bundle": false,
+            "update": "delta"
         }
+
     ],
 //
 //    /**

@@ -27,3 +27,20 @@ glu.defView('ps.notificationSummary', {
         }
     ]
 });
+
+glu.defView('ps.notificationSummaryDetail', {
+    xtype: 'container',
+    layout: {
+        type: 'vbox'
+    },
+    height: 500,
+    weight: 500,
+    items: [
+        {
+            html: '<h2>Summary Detail</h2>'
+        },
+        {
+            html: '@{message}'
+        }
+    ]
+});

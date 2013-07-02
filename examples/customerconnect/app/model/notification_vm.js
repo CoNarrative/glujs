@@ -1,0 +1,3 @@
+glu.defModel('ps.notification', {
+
+});

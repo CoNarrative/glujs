@@ -41,44 +41,4 @@ glu.defView('ps.main', {
         }
     ]
 });
-glu.defView('ps.home', {
-    xtype: 'container',
-    cls: 'notification_container',
-    layout: {
-        type: 'vbox'
-    },
-    height: 500,
-    weight: 500,
-    items: [
-        {
-            html: '<h2>Notifications</h2>'
-        },
-        {
-            xtype: 'container',
-            layout: {
-                type: 'vbox',
-                pack: 'middle',
-            },
-            items: '@{notificationSummaryList}'
-        },
-//        {
-//            xtype: 'button',
-//            listeners: {
-//                event: 'tap',
-//                fn: '@{updateActiveScreen}'
-//            }
-//        }
-    ]
-});
-glu.defView('ps.notification', {
-    xtype: 'container',
-    layout: {
-        type: 'vbox'
-    },
-    height: 500,
-    weight: 500,
-    items: [
-        {html: 'Notification details'}
 
-    ]
-});
