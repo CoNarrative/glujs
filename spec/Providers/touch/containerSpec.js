@@ -1,6 +1,6 @@
 describe('Adatpers: Container', function () {
     Given('a view with container with a list of viewmodels bound to the items property', function () {
-        var view, vm, itemId;
+        var view, vm, itemId, screen1, screen2;
         itemId = Ext.id()
         Meaning(function () {
             testNs1 = {
@@ -10,12 +10,11 @@ describe('Adatpers: Container', function () {
                 viewmodels: {
                     main: {
                         init: function () {
-                            var screen1 = this.model({mtype: 'screen1'});
+                            screen1 = this.model({mtype: 'screen1'});
                             this.screens.add(screen1);
-//
-                            var screen2 = this.model({mtype: 'screen2'});
+
+                             screen2 = this.model({mtype: 'screen2'});
                             this.screens.add(screen2);
-//                            this.set('activeScreen', screen1);
                         },
                         screens: {
                             mtype: 'activatorlist',
@@ -23,7 +22,7 @@ describe('Adatpers: Container', function () {
                             focusProperty: 'activeScreen'
                         },
                         setScreen2Active:function(){
-
+                           this.screens.setActiveItem(screen2);
                         },
                         activeScreen: {mtype: 'screen1'},
                     },
