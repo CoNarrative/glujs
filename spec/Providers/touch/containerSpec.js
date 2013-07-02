@@ -79,7 +79,7 @@ describe('Adatpers: Container', function () {
         });
         ShouldHave('ActiveItem', function () {
             var activeItem = view.getActiveItem();
-            var activeViewModel = activeItem.config.viewmodelName;
+            var activeViewModel = activeItem._vm.viewmodelName;
             expect(activeViewModel).toEqual('screen1')
         });
     });
