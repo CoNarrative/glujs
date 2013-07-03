@@ -4,8 +4,8 @@ glu.defView('ps.home', {
     layout: {
         type: 'vbox'
     },
-    height: 500,
-    weight: 500,
+//    height: 500,
+//    weight: 500,
     items: [
         {
             html: '<h2>Notifications</h2>'

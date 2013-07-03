@@ -59,9 +59,24 @@
 //            "x-bootstrap": true
 //        },
         {
+            "path": "app/lib/underscore.js",
+            "bundle": false,
+            "update": "delta"
+        },
+        {
+            "path": "app/lib/ListUpdaterMixin.js",
+            "bundle": false,
+            "update": "delta"
+        },
+        {
             "path": "app.js",
             "bundle": true,
             /* Indicates that all class dependencies are concatenated into this file when build */
+            "update": "delta"
+        },
+        {
+            "path": "app/model/notification_model.js",
+            "bundle": false,
             "update": "delta"
         },
         {
@@ -103,7 +118,8 @@
             "path": "app/model/notification_vm.js",
             "bundle": false,
             "update": "delta"
-        }
+        },
+
 
     ],
 //

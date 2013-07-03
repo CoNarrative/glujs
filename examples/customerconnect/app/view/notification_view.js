@@ -3,11 +3,14 @@ glu.defView('ps.notification', {
     layout: {
         type: 'vbox'
     },
-    height: 500,
-    weight: 500,
+
     items: [
         {
-           html:'details '
+            html:'Notification '
+        },
+        {
+            xtype: 'label',
+            html:'@{type}'
         }
     ]
 });

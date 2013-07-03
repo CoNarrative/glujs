@@ -2,3 +2,6 @@ extends layout
 block append head
     title Customer Connect
     script(src='touch/microloader/development.js')
+    script(src='spec/backend.js')
+    script
+        ps.notification.createMockBackend(true)
