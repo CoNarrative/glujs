@@ -8,11 +8,11 @@ glu.defView('ps.notificationSummary', {
         {
             event: 'tap',
             element: 'element',
-//            fn: '@{updateActiveScreen}'
+            fn: '@{openScreen}'
 //           TODO:  Replace this with declarative syntax on fn
-            fn: function () {
-                this._vm.updateActiveScreen();
-            }
+//            fn: function () {
+//                this._vm.updateActiveScreen('notificationSummaryDetail');
+//            }
         }
     ],
     items: [

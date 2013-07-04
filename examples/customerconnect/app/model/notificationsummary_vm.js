@@ -3,10 +3,10 @@ glu.defModel('ps.notificationSummary', {
     message: '',
     count: '',
     type: '',
-    updateActiveScreen: function () {
-
+    openScreen: function () {
+        //Call methods on Main ViewModel.
         this.parentVM.parentVM.set('selectedNotificationSummary', this);
-        this.parentVM.parentVM.updateActiveScreen();
+        this.parentVM.parentVM.openScreen('notificationSummaryDetail');
     }
 })
 glu.defModel('ps.notificationSummaryDetail', {

@@ -16,7 +16,22 @@ glu.defView('ps.main', {
                     hidden: false,
                     cls: 'icon-cog',
                     align: 'right'
+                },
+                {
+                    xtype: 'button',
+                    hidden: false,
+//                    cls: 'back',
+                    align: 'left',
+                    text: 'Back',
+                    hidden:'@{navigateBackIsHidden}',
+                    listeners: [
+                        {
+                            event: 'tap',
+                            fn: '@{navigateBack}'
+                        }
+                    ]
                 }
+
             ]
         },
         {

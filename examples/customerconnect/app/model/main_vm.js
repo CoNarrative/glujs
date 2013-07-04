@@ -17,8 +17,37 @@ glu.defModel('ps.main', {
         focusProperty: 'activeScreen'
     },
     activeScreen: {mtype: 'home'},
-    updateActiveScreen: function (screen) {
-        this.screens.setActiveItem(this.screens.getAt(1));
+    navigateBackIsEnabled$:function(){
+      return this.screenStack.length >0;
+    },
+    navigateBackIsHidden$:function(){
+        debugger;
+        return this.screenStack.length <= 0;
+    },
+    navigateBack:function(){
+        var screen = this.screenStack.getAt(this.screenStack.length-1);
+        this.screenStack.removeAt(this.screenStack.length-1);
+        this.switchScreen(screen);
+    },
+    screenStack: {
+      mtype:'list'
+    },
+    switchScreen:function(screenName){
+        var screen = this.screens.where(function (s) {
+            return s.viewmodelName === screenName
+        });
+        var newActiveScreen = screen[0];
+        this.screens.setActiveItem(newActiveScreen);
+    },
+    openScreen:function(screenName){
+        var screen = this.screens.where(function (s) {
+            return s.viewmodelName === screenName
+        });
+
+        //TODO:  If screen is not found, then created it.
+        var newActiveScreen = screen[0];
+        this.screenStack.add(this.activeScreen.viewmodelName);
+        this.screens.setActiveItem(newActiveScreen);
     },
     selectedNotificationSummary: {
         mtype: 'notificationSummary'
