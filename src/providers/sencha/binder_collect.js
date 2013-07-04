@@ -181,9 +181,22 @@ Ext.apply(glu.provider.binder, {
                 config._bindingMap = config._bindingMap || {};
                 config._bindingMap.listeners = config._bindingMap.listeners || {};
                 var listeners = value;
-                for (var propName in listeners) {
-                    config._bindingMap.listeners[propName] = config.listeners[propName];
-                    this.collectPropertyBinding(propName, config.listeners, viewmodel, true);
+                //Touch
+                if (glu.isArray(listeners)) {
+                    for(var i; i<listeners.length; i++){
+                        var listener = listeners[i];
+                        config._bindingMap.listeners[listener.event] = listener.fn;
+                        var listernConfig = {};
+                        listernConfig[listener.event] = listener.fn;
+                        listernConfig.listener = listener;
+                        this.collectPropertyBinding(listener.event, listernConfig, viewmodel, true);
+                    }
+
+                } else {
+                    for (var propName in listeners) {
+                        config._bindingMap.listeners[propName] = config.listeners[propName];
+                        this.collectPropertyBinding(propName, config.listeners, viewmodel, true);
+                    }
                 }
                 continue;
             }
@@ -372,7 +385,11 @@ Ext.apply(glu.provider.binder, {
                 glu.log.info(glu.symbol('USER triggered {0}.{1}').format(binding.model.toString(), binding.modelPropName));
                 binding.model[binding.modelPropName].apply(binding.model, args);
             };
-            config[binding.controlPropName] = binding.initialValue;
+            if (config.listener) {
+                config.listener.fn = binding.initialValue;
+            } else {
+                config[binding.controlPropName] = binding.initialValue;
+            }
             return;
         }
 
