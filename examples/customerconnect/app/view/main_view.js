@@ -1,8 +1,8 @@
+/** Entry point **/
 glu.defView('ps.main', {
     fullscreen: true,
     layout: {
-        type: 'vbox',
-//        pack: 'center'
+        type: 'vbox'
     },
     items: [
     /** TitleBar **/
@@ -20,7 +20,6 @@ glu.defView('ps.main', {
                 {
                     xtype: 'button',
                     hidden: false,
-//                    cls: 'back',
                     align: 'left',
                     text: 'Back',
                     hidden:'@{navigateBackIsHidden}',

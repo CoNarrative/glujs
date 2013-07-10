@@ -75,50 +75,80 @@
             "update": "delta"
         },
         {
-            "path": "app/model/notification_model.js",
+            "path": "app/model/Notification_Model.js",
             "bundle": false,
             "update": "delta"
         },
         {
-            "path": "app/view/main_view.js",
+            "path": "app/view/Main_view.js",
             "bundle": false,
             "update": "delta"
         },
         {
-            "path": "app/model/main_vm.js",
+            "path": "app/model/Main_vm.js",
             "bundle": false,
             "update": "delta"
         },
         {
-            "path": "app/view/home_view.js",
+            "path": "app/view/Home_view.js",
             "bundle": false,
             "update": "delta"
         },
         {
-            "path": "app/model/home_vm.js",
+            "path": "app/model/Home_vm.js",
             "bundle": false,
             "update": "delta"
         },
         {
-            "path": "app/view/notificationsummary_view.js",
+            "path": "app/view/NotificationSummary_view.js",
             "bundle": false,
             "update": "delta"
         },
         {
-            "path": "app/model/notificationsummary_vm.js",
+            "path": "app/model/NotificationSummary_vm.js",
             "bundle": false,
             "update": "delta"
         },
         {
-            "path": "app/view/notification_view.js",
+            "path": "app/view/Notification_view.js",
             "bundle": false,
             "update": "delta"
         },
         {
-            "path": "app/model/notification_vm.js",
+            "path": "app/model/Notification_vm.js",
             "bundle": false,
             "update": "delta"
         },
+        {
+            "path": "app/view/NotificationSummaryDetail_view.js",
+            "bundle": false,
+            "update": "delta"
+        },
+        {
+            "path": "app/model/NotificationSummaryDetail_vm.js",
+            "bundle": false,
+            "update": "delta"
+        },
+        {
+            "path": "app/view/ReminderSummary_view.js",
+            "bundle": false,
+            "update": "delta"
+        },
+        {
+            "path": "app/model/ReminderSummary_vm.js",
+            "bundle": false,
+            "update": "delta"
+        },
+        {
+            "path": "app/view/ReminderSummaryDetail_view.js",
+            "bundle": false,
+            "update": "delta"
+        },
+        {
+            "path": "app/model/ReminderSummaryDetail_vm.js",
+            "bundle": false,
+            "update": "delta"
+        }
 
 
     ],

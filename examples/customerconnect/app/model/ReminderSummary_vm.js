@@ -1,12 +1,12 @@
-glu.defModel('ps.notificationSummary', {
+glu.defModel('ps.reminderSummary', {
     id: '',
     message: '',
     count: '',
     type: '',
     openScreen: function () {
         //Set the selected NotificationSummary on the Home view model
-        this.parentVM.set('selectedNotificationSummary', this);
+        this.parentVM.set('selectedReminderSummary', this);
         //Call OpenScreen on the Main view model
-        this.parentVM.parentVM.openScreen('notificationSummaryDetail');
+        this.parentVM.parentVM.openScreen('reminderSummaryDetail');
     }
-})
+});
