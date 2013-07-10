@@ -1,8 +1,5 @@
 (glu.ns 'ps.notification').createMockBackend = (auto, recordNum)->
-  notifications = glu.test.createTable ps.models.notification, 30
-#  assets.create({id:'7777', name:'aardvark',status:'active'});
-#  assets.create({id:'8888', name:'aare',status:'active'});
-#  assets.create({id:'9999', name:'aarf',status:'active'});
+  notifications = glu.test.createTable ps.models.notification, 10
   backend = glu.test.createBackend
     defaultRoot: '/json/',
     fallbackToAjax: auto,
@@ -11,10 +8,6 @@
       'removeNotification':
         url: 'notifications/action/remove',
         handle: (req) -> notifications.remove req.params.ids
-      ,
-      'notificatioSave':
-        url: 'notifications/:id/action/save',
-        handle: (req) -> notifications.replace req.params.id , req.jsonData
       ,
       'notifications':
         url: 'notifications',
@@ -26,5 +19,18 @@
       'notification':
         url: 'notifications/:id',
         handle: (req) -> notifications.get req.params.id
+      ,
+      'notificationsummary':
+        url:'notificationsummary',
+        handle: (req) ->
+          notificationsList = notifications.list ''
+          typeCount = _.countBy(notificationsList.rows, (row)-> row.type);
+          notificationSummary = {rows: [
+            {id: glu.guid('e'), type: 'email', message: 'Priority e-mails received', count: typeCount['email']}
+            {id: glu.guid('r'), type: 'response', message: 'Unread responses', count: typeCount['response']}
+            {id: glu.guid('m'), type: 'message', message: 'New message', count: typeCount['message']}
+            ], totalCount: 3, success: true}
+
+
   backend.capture()
   return {backend: backend, notifications: notifications}

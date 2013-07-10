@@ -7,6 +7,6 @@ glu.defModel('ps.reminderSummary', {
         //Set the selected NotificationSummary on the Home view model
         this.parentVM.set('selectedReminderSummary', this);
         //Call OpenScreen on the Main view model
-        this.parentVM.parentVM.openScreen('reminderSummaryDetail');
+        this.rootVM.openScreen('reminderSummaryDetail');
     }
 });

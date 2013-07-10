@@ -3,7 +3,7 @@
 
   (glu.ns('ps.notification')).createMockBackend = function(auto, recordNum) {
     var backend, notifications;
-    notifications = glu.test.createTable(ps.models.notification, 30);
+    notifications = glu.test.createTable(ps.models.notification, 10);
     backend = glu.test.createBackend({
       defaultRoot: '/json/',
       fallbackToAjax: auto,
@@ -13,12 +13,6 @@
           url: 'notifications/action/remove',
           handle: function(req) {
             return notifications.remove(req.params.ids);
-          }
-        },
-        'notificatioSave': {
-          url: 'notifications/:id/action/save',
-          handle: function(req) {
-            return notifications.replace(req.params.id, req.jsonData);
           }
         },
         'notifications': {
@@ -34,6 +28,38 @@
           url: 'notifications/:id',
           handle: function(req) {
             return notifications.get(req.params.id);
+          }
+        },
+        'notificationsummary': {
+          url: 'notificationsummary',
+          handle: function(req) {
+            var notificationSummary, notificationsList, typeCount;
+            notificationsList = notifications.list('');
+            typeCount = _.countBy(notificationsList.rows, function(row) {
+              return row.type;
+            });
+            return notificationSummary = {
+              rows: [
+                {
+                  id: glu.guid('e'),
+                  type: 'email',
+                  message: 'Priority e-mails received',
+                  count: typeCount['email']
+                }, {
+                  id: glu.guid('r'),
+                  type: 'response',
+                  message: 'Unread responses',
+                  count: typeCount['response']
+                }, {
+                  id: glu.guid('m'),
+                  type: 'message',
+                  message: 'New message',
+                  count: typeCount['message']
+                }
+              ],
+              totalCount: 3,
+              success: true
+            };
           }
         }
       }

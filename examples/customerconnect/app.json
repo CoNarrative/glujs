@@ -148,6 +148,16 @@
             "path": "app/model/ReminderSummaryDetail_vm.js",
             "bundle": false,
             "update": "delta"
+        },
+        {
+            "path": "app/model/Notification_Data.js",
+            "bundle": false,
+            "update": "delta"
+        },
+        {
+            "path": "app/model/NotificationSummary_Data.js",
+            "bundle": false,
+            "update": "delta"
         }
 
 

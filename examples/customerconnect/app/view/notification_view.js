@@ -6,11 +6,18 @@ glu.defView('ps.notification', {
 
     items: [
         {
-            html:'Notification '
+            xtype: 'label',
+            html: '@{type}'
         },
         {
             xtype: 'label',
-            html:'@{type}'
+            html: '@{message}'
+        },
+        {
+            xtype: 'label',
+            html: '@{name}'
         }
     ]
-});
+
+})
+;

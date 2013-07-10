@@ -4,9 +4,10 @@ glu.defModel('ps.notificationSummary', {
     count: '',
     type: '',
     openScreen: function () {
+        debugger;
         //Set the selected NotificationSummary on the Home view model
         this.parentVM.set('selectedNotificationSummary', this);
         //Call OpenScreen on the Main view model
-        this.parentVM.parentVM.openScreen('notificationSummaryDetail');
+        this.rootVM.openScreen('notificationSummaryDetail','home');
     }
 })
