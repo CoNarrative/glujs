@@ -526,8 +526,8 @@ glu = {
     /**
      * Creates a glu ViewPort
      */
-    viewport : function(config){
-        return glu.provider.viewport(config);
+    viewport : function(config, viewMode){
+        return glu.provider.viewport(config, viewMode);
     },
     panel:function () {
         return glu.provider.panel.apply(glu.provider, arguments);
