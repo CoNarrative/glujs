@@ -18,7 +18,6 @@ glu.defModel('ps.notificationSummaryData', {
                         var newModel = this.model('notificationSummary', responseObj.rows[i]);
                         //TODO:  Check to make sure the silent paramter is being used.
                         this.notificationSummaryList.add(newModel, true);
-                        debugger;
                     }
                 } else {
 

@@ -5,13 +5,22 @@ glu.defView('ps.notificationSummaryDetail', {
     },
     items: [
         {
-            html: '@{message}'
+            xtype: 'fieldset',
+            title: 'Select',
+            items: [
+                {
+                    xtype: 'selectfield',
+                    label: 'Type',
+                    options: '@{notificationTypes}',
+                    value:'@{selectedNotificationTypeFilter}'
+                }
+            ]
         },
         {
             xtype: 'container',
-            scrollable:true,
-            cls:'notification_container',
-            flex:1,
+            scrollable: true,
+            cls: 'notification_container',
+            flex: 1,
             items: '@{notifications}'
         }
     ]
