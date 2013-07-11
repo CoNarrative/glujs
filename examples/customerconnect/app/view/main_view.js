@@ -33,26 +33,25 @@ glu.defView('ps.main', {
 
             ]
         },
-        {
-            xtype: 'panel',
-            layout: {
-                type: 'vbox'
-            },
-            items: [
+//        {
+//            xtype: 'panel',
+//            layout: {
+//                type: 'fit'
+//            },
+//            items: [
                 {
                     xtype: 'container',
                     layout: {
                         type: 'card'
                     },
-                    height: 500,
-                    weight: 500,
+                    flex:1,
                     /**Notification Container**/
 //                    items:[{html:'Hello'}]
                     items: '@{screens}',
                     activeItem: '@{activeScreen}'
                 }
-            ]
-        }
+//            ]
+//        }
     ]
 });
 

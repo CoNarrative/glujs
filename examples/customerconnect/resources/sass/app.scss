@@ -77,26 +77,7 @@ $homeContainerBackground: white;
 }
 
 
-
-//.reminder_container {
-//  background-color: $homeContainerBackground;
-//  @include box-shadow(#003366 0 3px 4px);
-//  color: black;
-//  padding: 5px 10px 5px 10px;
-//  margin: 5px 10px 5px 10px
-//
-//}
-//
-//.reminder_summary {
-//  color: gray;
-//  padding: 0px 0px 10px 0px;
-//}
-//
-//.reminder_summary {
-//  color: gray;
-//  border-top: 1px solid rgba(0, 0, 0, 0.15);
-//}
-//
-//.reminder_summary .x-label {
-//  margin: 0 0 0 5px;
-//}
+.notification_icon {
+  color:black;
+  font-size:1em;
+}
