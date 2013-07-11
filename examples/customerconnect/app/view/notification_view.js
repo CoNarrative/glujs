@@ -1,9 +1,9 @@
 glu.defView('ps.notification', {
     xtype: 'container',
+    cls:'notification_detail',
     layout: {
-        type: 'vbox'
+        type: 'hbox'
     },
-
     items: [
         {
             xtype: 'label',

@@ -1,6 +1,6 @@
 glu.defView('ps.notificationSummary', {
     xtype: 'container',
-//    cls: 'notification',
+    cls: 'notification_summary',
     layout: {
         type: 'hbox'
     },

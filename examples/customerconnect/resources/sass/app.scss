@@ -9,60 +9,94 @@
 // Examples of using the icon mixin:
 // @include icon('user');
 $homeContainerBackground: white;
+.home_container {
+
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 4px;
+  font-size: 11.844px;
+  font-weight: bold;
+  line-height: 14px;
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+  vertical-align: baseline;
+  background-color: #999999;
+}
+
+.badge {
+  padding-right: 9px;
+  padding-left: 9px;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+}
+.reminder_container,
 .notification_container {
   background-color: $homeContainerBackground;
   @include box-shadow(#003366 0 3px 4px);
-  color:black;
-  padding:5px 10px 5px 10px;
-  margin:5px 10px 5px 10px
+  color: black;
+  padding: 5px 10px 5px 10px;
+  margin: 5px 10px 5px 10px
+//top right botton left
+}
 
+.reminder_header,
+.notification_header {
+  padding:5px;
+  margin:5px 15px 0px 5px;
 }
-.notification {
-  color:gray;
-  padding:0px 0px 10px 0px;
+
+.reminder_header,
+.notification_header .x-label {
+  margin-left:20px;
 }
-.notification {
-  color:gray;
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
-  //border-bottom: 1px solid
-  //border-botton:2px;
-  //border-color:gray;
-  //border-line: solid;
-  //padding:2px 50px 0px 0px;
+
+.reminder_header,
+.notification_header .notification_badge {
+  margin-top:-1px;
 }
-//.notification:hover {
-//  background:rgba(238, 238, 238, 1);
-//  cursor:pointer;
-//}
-.notification .x-label{
+
+
+
+.reminder_summary,
+.notification_detail,
+.notification_summary {
+  height:35px;
+  color: gray;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+
+.reminder_summary .x-label,
+.notification_detail .x-label,
+.notification_summary .x-label {
   margin: 0 0 0 5px;
 }
 
-.reminder-container {
-  background-color: $homeContainerBackground;
-  @include box-shadow(#003366 0 3px 4px);
-  color:black;
-  padding:5px 10px 5px 10px;
-  margin:5px 10px 5px 10px
 
-}
-.reminder {
-  color:gray;
-  padding:0px 0px 10px 0px;
-}
-.reminder {
-  color:gray;
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
-  //border-bottom: 1px solid
-  //border-botton:2px;
-  //border-color:gray;
-  //border-line: solid;
-  //padding:2px 50px 0px 0px;
-}
-//.notification:hover {
-//  background:rgba(238, 238, 238, 1);
-//  cursor:pointer;
+
+//.reminder_container {
+//  background-color: $homeContainerBackground;
+//  @include box-shadow(#003366 0 3px 4px);
+//  color: black;
+//  padding: 5px 10px 5px 10px;
+//  margin: 5px 10px 5px 10px
+//
 //}
-.reminder .x-label{
-  margin: 0 0 0 5px;
-}
+//
+//.reminder_summary {
+//  color: gray;
+//  padding: 0px 0px 10px 0px;
+//}
+//
+//.reminder_summary {
+//  color: gray;
+//  border-top: 1px solid rgba(0, 0, 0, 0.15);
+//}
+//
+//.reminder_summary .x-label {
+//  margin: 0 0 0 5px;
+//}

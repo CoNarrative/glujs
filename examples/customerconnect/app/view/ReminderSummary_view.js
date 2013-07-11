@@ -1,6 +1,6 @@
 glu.defView('ps.reminderSummary', {
     xtype: 'container',
-//    cls: 'reminder',
+    cls: 'reminder_summary',
     layout: {
         type: 'hbox'
     },

@@ -7,6 +7,9 @@ glu.defModel('ps.notificationData', {
             return notification.priority;
         }
     },
+    notificationCount$:function(){
+      return this.notificationList.length;
+    },
     loadNotificationList: function () {
         this.ajax({
             url: 'notifications',

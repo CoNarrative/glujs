@@ -5,16 +5,13 @@ glu.defView('ps.notificationSummaryDetail', {
     },
     items: [
         {
-            html: '<h2>Notifications</h2>'
-        },
-        {
             html: '@{message}'
         },
         {
             xtype: 'container',
-            layout: {
-                type: 'vbox'
-            },
+            scrollable:true,
+            cls:'notification_container',
+            flex:1,
             items: '@{notifications}'
         }
     ]
