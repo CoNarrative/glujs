@@ -13,6 +13,10 @@ glu.namespace('ps.models').notification = {
             type: 'string'
         },
         {
+            name:'subject',
+            type:'string'
+        },
+        {
             name: 'created',
             type: 'date'
         },

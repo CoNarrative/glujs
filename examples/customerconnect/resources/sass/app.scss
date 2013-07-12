@@ -81,3 +81,10 @@ $homeContainerBackground: white;
   color:black;
   font-size:1em;
 }
+
+.truncate .x-innerhtml {
+  //width:300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

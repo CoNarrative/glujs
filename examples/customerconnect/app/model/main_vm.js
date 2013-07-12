@@ -1,8 +1,11 @@
 glu.defModel('ps.main', {
     name: 'Customer Connect',
-    mixins:['notificationData'],
+    mixins: ['notificationData'],
+    deviceType: '',
     init: function () {
         /**At this point you could change the "mode" of ViewModel and load a specific vieq. i.e. small vs large form factor **/
+        this.set('deviceType',Ext.os.deviceType);
+        console.log('Device Type: ' + this.deviceType);
         var home = this.model({mtype: 'home'});
         this.screens.add(home);
 
@@ -55,7 +58,7 @@ glu.defModel('ps.main', {
         if (screen.length > 0) {
             newActiveScreen = screen[0]
         } else {
-            newActiveScreen = this.model({mtype: screenName,parentScreenVM:parentScreenVM});
+            newActiveScreen = this.model({mtype: screenName, parentScreenVM: parentScreenVM});
             this.screens.add(newActiveScreen);
         }
 
