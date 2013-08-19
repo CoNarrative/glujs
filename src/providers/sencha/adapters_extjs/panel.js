@@ -1,6 +1,6 @@
 /*
-* Copyright (C) 2012 by CoNarrative
-*/
+ * Copyright (C) 2012 by CoNarrative
+ */
 /**
  * @class glu.extjs.adapters.panel
  * @author Mike Gai, Nick Tackes, Travis Barajas
@@ -10,86 +10,92 @@
  *
  */
 glu.regAdapter('panel', {
-    extend : 'container',
-    applyConventions : function(config, viewmodel) {
+    extend: 'container',
+    applyConventions: function(config, viewmodel) {
         Ext.applyIf(config, {
-            collapsed : glu.conventions.expression(config.name + 'IsExpanded', {
-                optional : true,
-                not : true
+            collapsed: glu.conventions.expression(config.name + 'IsExpanded', {
+                optional: true,
+                not: true
             })
         });
         glu.provider.adapters.Container.prototype.applyConventions.apply(this, arguments);
     },
 
-    isChildArray : function(propName, value) {
-        return propName=='editors' || propName === 'items' || propName === 'dockedItems';
+    isChildArray: function(propName, value) {
+        return propName == 'editors' || propName === 'items' || propName === 'dockedItems';
     },
 
-    isChildObject : function(propName) {
+    isChildObject: function(propName) {
         return propName === 'tbar' || propName === 'bbar' || propName === 'buttons' || propName === 'fbar' || propName === 'lbar' || propName === 'rbar';
     },
 
-    tbarShortcut : function(value) {
+    tbarShortcut: function(value) {
         return {
-            xtype : 'toolbar',
-            defaultType : 'button',
-            items : value,
-            dock : 'top'
+            xtype: 'toolbar',
+            defaultType: 'button',
+            items: value,
+            dock: 'top'
         }
     },
 
-    bbarShortcut : function(value) {
+    bbarShortcut: function(value) {
         return {
-            xtype : 'toolbar',
-            defaultType : 'button',
-            items : value,
-            dock : 'bottom'
+            xtype: 'toolbar',
+            defaultType: 'button',
+            items: value,
+            dock: 'bottom'
         }
     },
 
-    buttonsShortcut : function(value, config) {
+    buttonsShortcut: function(value, config) {
         return {
-            xtype : 'toolbar',
-            defaultType : 'button',
-            items : value,
-            dock : 'bottom',
-            layout : {
+            xtype: 'toolbar',
+            defaultType: 'button',
+            items: value,
+            dock: 'bottom',
+            layout: {
                 // default to 'end' (right-aligned)
-                pack : { left:'start', center:'center' }[config.buttonAlign] || 'end'
+                pack: {
+                    left: 'start',
+                    center: 'center'
+                }[config.buttonAlign] || 'end'
             }
         }
     },
 
-    fbarShortcut : function(value, config) {
+    fbarShortcut: function(value, config) {
         return {
-            xtype : 'toolbar',
-            defaultType : 'button',
-            items : value,
-            dock : 'bottom',
-            layout : {
+            xtype: 'toolbar',
+            defaultType: 'button',
+            items: value,
+            dock: 'bottom',
+            layout: {
                 // default to 'end' (right-aligned)
-                pack : { left:'start', center:'center' }[config.buttonAlign] || 'end'
+                pack: {
+                    left: 'start',
+                    center: 'center'
+                }[config.buttonAlign] || 'end'
             }
         }
     },
 
-    lbarShortcut : function(value) {
+    lbarShortcut: function(value) {
         return {
-            xtype : 'toolbar',
-            defaultType : 'button',
-            items : value,
-            vertical : true,
-            dock : 'left'
+            xtype: 'toolbar',
+            defaultType: 'button',
+            items: value,
+            vertical: true,
+            dock: 'left'
         }
     },
 
-    rbarShortcut : function(value) {
+    rbarShortcut: function(value) {
         return {
-            xtype : 'toolbar',
-            defaultType : 'button',
-            items : value,
-            vertical : true,
-            dock : 'right'
+            xtype: 'toolbar',
+            defaultType: 'button',
+            items: value,
+            vertical: true,
+            dock: 'right'
         }
     },
     /**
@@ -107,30 +113,34 @@ glu.regAdapter('panel', {
      *      }
      * Default: '{@close}'
      */
-    beforeCollect : function(config) {
+    beforeCollect: function(config) {
         glu.provider.adapters.Container.prototype.beforeCollect.apply(this, arguments);
-        this.checkForEditors(config, {title: function(control){return control.header.titleCmp.textEl;}});
+        this.checkForEditors(config, {
+            title: function(control) {
+                return control.header ? control.header.titleCmp.textEl : null;
+            }
+        });
         //auto-add the close listener
         config.closeHandler = config.closeHandler || '@{close}';
     },
-    beforeCreate : function(config, vm) {
+    beforeCreate: function(config, vm) {
         config.listeners = config.listeners || {};
         //The ExtJS close cycle is too strange and must be normalized
         //Now it will simply create a close request instead of anything funny...
         config.listeners.beforeclose = config.listeners.beforeclose ||
-        function(panel) {
-            // config.closeTask = config.closeTask || new Ext.util.DelayedTask();
-            // config.closeTask.delay(1,function(){
-            // panel.fireEvent('closerequest', this);
-            // });
-            if (config.closeHandler) {
-                config.closeHandler.apply(vm);
-            }
-            return false;
+            function(panel) {
+                // config.closeTask = config.closeTask || new Ext.util.DelayedTask();
+                // config.closeTask.delay(1,function(){
+                // panel.fireEvent('closerequest', this);
+                // });
+                if (config.closeHandler) {
+                    config.closeHandler.apply(vm);
+                }
+                return false;
         };
 
     },
-    afterCreate : function(control, viewmodel) {
+    afterCreate: function(control, viewmodel) {
         glu.provider.adapters.Container.prototype.afterCreate.apply(this, arguments);
         //make sure windows close themselves when their matching view model closes...
         if (control.isWindow && Ext.isFunction(control.close)) {
@@ -145,19 +155,19 @@ glu.regAdapter('panel', {
         }
         var expandOrCollapseFactory = function(expanded) {
             return function(control) {
-                if( control.supressCollapseEvents )
+                if (control.supressCollapseEvents)
                     return true;
                 control.fireEvent('expandorcollapserequest', control, expanded);
                 return false;
             }
         };
 
-        if( control._bindingMap.collapsed ){
+        if (control._bindingMap.collapsed) {
             control.on('beforecollapse', expandOrCollapseFactory(false));
             control.on('beforeexpand', expandOrCollapseFactory(true));
         }
 
-        if (control._bindingMap && control._bindingMap.activeItem!==undefined && control.getLayout().type != 'card') {
+        if (control._bindingMap && control._bindingMap.activeItem !== undefined && control.getLayout().type != 'card') {
             control.addActual = control.add;
             control.add = function(index, item) {
                 item.on('render', function() {
@@ -170,7 +180,7 @@ glu.regAdapter('panel', {
         }
 
         if (control._activeIndex !== undefined) {
-            control.on('render', function(panel){
+            control.on('render', function(panel) {
                 panel._changeOriginatedFromModel = true;
                 panel.getLayout().setActiveItem(panel._activeIndex);
             });
@@ -180,14 +190,14 @@ glu.regAdapter('panel', {
      * @cfg {String} html
      * *one-way binding.* The inner html to place in the body
      */
-    htmlBindings : {
-        setComponentProperty : function(value, oldValue, options, control) {
+    htmlBindings: {
+        setComponentProperty: function(value, oldValue, options, control) {
             // if the value is an object
             control.update(value);
         }
     },
-    dataBindings : {
-        setComponentProperty : function(value, oldValue, options, control) {//TODO: should really be the html property
+    dataBindings: {
+        setComponentProperty: function(value, oldValue, options, control) { //TODO: should really be the html property
             // if the value is an object
             control.update(value);
         }
@@ -200,13 +210,13 @@ glu.regAdapter('panel', {
      *
      * **Convention:** @{*foo*IsCollapsed}
      */
-    collapsedBindings : {
-        eventName : 'expandorcollapserequest',
-        eventConverter : function(control, expanded) {
+    collapsedBindings: {
+        eventName: 'expandorcollapserequest',
+        eventConverter: function(control, expanded) {
             return !expanded;
         },
-        storeValueInComponentAs : 'collapsedActual',
-        setComponentProperty : function(value, oldValue, options, control) {
+        storeValueInComponentAs: 'collapsedActual',
+        setComponentProperty: function(value, oldValue, options, control) {
             control.supressCollapseEvents = true;
             if (value == true) {
                 if (control.rendered) {
@@ -230,8 +240,8 @@ glu.regAdapter('panel', {
      * @cfg closable
      * *one-time binding ExtJS 3.x, one-way binding ExtJS 4.x*
      */
-    closableBindings : {
-        setComponentProperty : function(value, oldValue, options, control) {
+    closableBindings: {
+        setComponentProperty: function(value, oldValue, options, control) {
             if (!(Ext.getVersion().major > 3)) return;
             if (control.tab) {
                 //for a panel in a tab panel
@@ -239,7 +249,7 @@ glu.regAdapter('panel', {
                 return;
             }
             if (control.header) {
-                for (var i =0;i<control.header.items.getCount();i++){
+                for (var i = 0; i < control.header.items.getCount(); i++) {
                     var tool = control.header.items.getAt(i);
                     if (tool.type === 'close') {
                         tool.setVisible(value);
@@ -247,7 +257,7 @@ glu.regAdapter('panel', {
                     }
                 }
                 //couldn't find it so add if true
-                if (value===true) {
+                if (value === true) {
                     control.addClsWithUI('closable');
                     control.addTool({
                         type: 'close',
@@ -258,29 +268,31 @@ glu.regAdapter('panel', {
         }
     },
 
-    activeItemBindings : {
-        eventName:'activeitemchangerequest',
-        eventConverter:function (control, idx, item) {
-            return control._activeItemValueType==='viewmodel'?item._vm:idx;
+    activeItemBindings: {
+        eventName: 'activeitemchangerequest',
+        eventConverter: function(control, idx, item) {
+            return control._activeItemValueType === 'viewmodel' ? item._vm : idx;
         },
-        storeValueInComponentAs : '_activeIndex',
-        setComponentProperty:function (value, oldValue, options, control) {
-            if (value===undefined || value===-1) {
+        storeValueInComponentAs: '_activeIndex',
+        setComponentProperty: function(value, oldValue, options, control) {
+            if (value === undefined || value === -1) {
                 return; //nothing to do ... can't really "deselect" card/tab within ExtJS
             }
             if (value.mtype) {
                 control._activeItemValueType = 'viewmodel';
-                value = control.items.findIndexBy(function(card){return card._vm == value;});
-                if (value==-1) throw "Could not find a item in card layout bound to the view model passed to activeItem";
+                value = control.items.findIndexBy(function(card) {
+                    return card._vm == value;
+                });
+                if (value == -1) throw "Could not find a item in card layout bound to the view model passed to activeItem";
             }
-            var oldItem = oldValue==-1?null : control.items.getAt(oldValue);
+            var oldItem = oldValue == -1 ? null : control.items.getAt(oldValue);
             control._changeOriginatedFromModel = true;
-            if( control.getLayout().type == 'card')
+            if (control.getLayout().type == 'card')
                 control.getLayout().setActiveItem(value);
             else
                 control.fireEvent('activeitemchanged', control, control.items.getAt(value), oldItem);
         },
-        transformInitialValue : function (value, config, viewmodel){
+        transformInitialValue: function(value, config, viewmodel) {
             if (value.mtype) {
                 if (value.parentList === undefined) {
                     throw "Attempted to set an activeTab to a view model that is not in a list.  You should always set the activeItem in the init()";
@@ -296,8 +308,8 @@ glu.regAdapter('panel', {
     },
 
     //TODO: Move into change tracked panel!!! BUt right now transformers don't supply bindings...
-    enableTrackingBindings : {
-        setComponentProperty : function(value, oldValue, options, control) {
+    enableTrackingBindings: {
+        setComponentProperty: function(value, oldValue, options, control) {
             var idx = value ? 0 : 1;
             var active = control.items.get(idx);
             if (control.rendered) {
@@ -307,8 +319,8 @@ glu.regAdapter('panel', {
             }
         }
     },
-    itemsBindings : {
-        custom : function(context) {
+    itemsBindings: {
+        custom: function(context) {
             if (context.control.layout != 'card') {
                 //do regular bindings
                 glu.provider.itemsHelper.bindItems(context, true);
