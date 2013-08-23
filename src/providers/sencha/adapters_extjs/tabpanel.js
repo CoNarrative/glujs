@@ -24,7 +24,7 @@ glu.regAdapter('tabpanel', {
             if (value.mtype) {
                 control._activeItemValueType = 'viewmodel';
                 value = control.items.findIndexBy(function(card){return card._vm == value;});
-                if (value==-1) throw "Could not find a item in card layout bound to the view model passed to activeItem";
+                if (value==-1) throw new Error("Could not find a item in card layout bound to the view model passed to activeItem");
             }
             control._changeOriginatedFromModel = true;
             control.setActiveTab(value);
@@ -32,7 +32,7 @@ glu.regAdapter('tabpanel', {
         transformInitialValue : function (value, config, viewmodel){
             if (value.mtype) {
                 if (value.parentList === undefined) {
-                    throw "Attempted to set an activeTab to a view model that is not in a list.  You should always set an activeTab in the init().";
+                    throw new Error("Attempted to set an activeTab to a view model that is not in a list.  You should always set an activeTab in the init().");
                 }
                 config._activeItemValueType = 'viewmodel';
                 config._activeIndex = value.parentList.indexOf(value);

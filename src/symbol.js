@@ -112,7 +112,7 @@ glu.apply(glu.Symbol.prototype, {
             return this.str.replace(/{(\d+)}/g, function (token, idx) {
                 var key = Number(token.substring(1, token.length - 1));
                 if (args[key] === undefined) {
-                    throw "Positional parameter " + token + " is out of range for this string substitution.";
+                    throw new Error("Positional parameter " + token + " is out of range for this string substitution.");
                 }
                 return args[idx];
             });
@@ -128,7 +128,7 @@ glu.apply(glu.Symbol.prototype, {
                 }
             }
             if (value === undefined) {
-                throw "Need to supply value for named parameter " + key + " for this string substitution.";
+                throw new Error("Need to supply value for named parameter " + key + " for this string substitution.");
             }
             return value;
         });

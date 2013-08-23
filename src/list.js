@@ -40,7 +40,7 @@ glu.List = glu.extend(Object, {
      */
     insert:function (index, obj, isTransfer) {
         if (this.autoParent && obj.parentVM && obj.parentVM!==this.parentVM) {
-            throw "View model already has a parent and needs to be removed from there first";
+            throw new Error("View model already has a parent and needs to be removed from there first");
         }
         if (glu.isObject(obj) && obj.mtype ) {
             if (obj._private===undefined) {

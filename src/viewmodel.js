@@ -327,7 +327,7 @@ glu.Viewmodel = glu.extend(Object, {
     set:function (propName, value) {
         var setter = this._private.setters[propName];
         if (setter === undefined) {
-            throw 'Cannot set: This view model has no property named ' + propName;
+            throw new Error('Cannot set: This view model has no property named ' + propName);
             // this.makePropertyAccessors(propName);
             // customSetter = this[customSetterName];
         }

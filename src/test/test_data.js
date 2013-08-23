@@ -67,8 +67,8 @@ glu.test.createTable = function (fields, data) {
      */
         create : function (newData) {
             var id = newData.id;
-            if (id === undefined) throw "An id property is required";
-            if (keyIndex[id]) throw "Duplicate key of " + id;
+            if (id === undefined) throw new Error("An id property is required");
+            if (keyIndex[id]) throw new Error("Duplicate key of " + id);
             data.push(newData);
             keyIndex[id] = newData;
         },

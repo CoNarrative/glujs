@@ -54,7 +54,7 @@ glu.provider.itemsHelper = {
         var list = context.viewmodel.get(context.binding.modelPropName);
         var container = context.control;
         if (!container.itemTemplate && !(item.mtype == 'viewmodel' || item.mtype == 'datamodel')) {
-            throw "Cannot render an item within a bound items list because there is neither an itemTemplate defined nor is the item a viewmodel";
+            throw new Error("Cannot render an item within a bound items list because there is neither an itemTemplate defined nor is the item a viewmodel");
         }
         var viewItem = null;
 

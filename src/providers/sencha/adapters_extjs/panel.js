@@ -271,7 +271,7 @@ glu.regAdapter('panel', {
             if (value.mtype) {
                 control._activeItemValueType = 'viewmodel';
                 value = control.items.findIndexBy(function(card){return card._vm == value;});
-                if (value==-1) throw "Could not find a item in card layout bound to the view model passed to activeItem";
+                if (value==-1) throw new Error("Could not find a item in card layout bound to the view model passed to activeItem");
             }
             var oldItem = oldValue==-1?null : control.items.getAt(oldValue);
             control._changeOriginatedFromModel = true;
@@ -283,7 +283,7 @@ glu.regAdapter('panel', {
         transformInitialValue : function (value, config, viewmodel){
             if (value.mtype) {
                 if (value.parentList === undefined) {
-                    throw "Attempted to set an activeTab to a view model that is not in a list.  You should always set the activeItem in the init()";
+                    throw new Error("Attempted to set an activeTab to a view model that is not in a list.  You should always set the activeItem in the init()");
                 }
                 config._activeItemValueType = 'viewmodel';
                 config._activeIndex = value.parentList.indexOf(value);

@@ -346,7 +346,7 @@ glu = {
     mixinSingleTrait:function (target, traitName) {
         glu.log.info('asked to mixin trait ' + traitName);
         if (!glu.isString(traitName)) {
-            throw "You must pass in the short string name of the trait, not the trait itself";
+            throw new Error("You must pass in the short string name of the trait, not the trait itself");
         }
         if (target.traits === undefined) {
             target.traits = {};
@@ -357,7 +357,7 @@ glu = {
 
         var trait = new this.traitReg[traitName];
         if (trait === undefined) {
-            throw "no such trait '" + traitName + "' exists";
+            throw new Error("no such trait '" + traitName + "' exists");
         }
 
         if (trait.requiresTrait != null) {
@@ -387,7 +387,7 @@ glu = {
 
     localizer:function (config) { //logic is not exposed for now
         var nsGlobal = glu.namespace(config.ns + '.' + glu.conventions.localeNs);
-        if (nsGlobal === undefined) throw 'Could not find locale for namespace ' + config.ns;
+        if (nsGlobal === undefined) throw new Error('Could not find locale for namespace ' + config.ns);
         var viewSpecific = config.viewmodel ? (nsGlobal[config.viewmodel.viewmodelName] || nsGlobal[config.viewmodel.recType] || {}) : {};
         var key = config.key;
         var value = viewSpecific[key] ||
@@ -581,7 +581,7 @@ glu = {
     _splitReference:function (fqname) {
         var splitAt = fqname.lastIndexOf('\.');
         if (splitAt === -1) {
-            throw "Reference '" + fqname + "' requires a namespace";
+            throw new Error("Reference '" + fqname + "' requires a namespace");
         }
         return {
             ns:fqname.substring(0, splitAt),

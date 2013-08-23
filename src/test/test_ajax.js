@@ -109,7 +109,7 @@ glu.test.createBackend = function (config) {
                     glu.test.ajax.originalProvider.call(this, options);
                     return;
                 } else {
-                    throw 'There is no matching back-end route for ' + url;
+                    throw new Error('There is no matching back-end route for ' + url);
                 }
             }
             var scope = options.scope || window;
@@ -182,7 +182,7 @@ glu.test.createBackend = function (config) {
                     glu.test.ajax.originalProvider.call(this, verb, actualUrl, cb, p, o);
                     return;
                 } else {
-                    throw 'There is no matching back-end route for ' + url;
+                    throw new Error('There is no matching back-end route for ' + url);
                 }
             }
             var jsonParams = Ext.isString(o.params) ? Ext.decode(o.params) : o.params;
@@ -289,10 +289,10 @@ glu.test.createBackend = function (config) {
         respondTo:function (serviceName, ajaxResponse) {
             var route = this.routes[serviceName];
             if (!route) {
-                throw "Unable to find a simulated route with the name '" + serviceName + "'";
+                throw new Error("Unable to find a simulated route with the name '" + serviceName + "'");
             }
             if (route.requests.length == 0) {
-                throw "Route '" + serviceName + "' does not have any pending requests to which we can respond."
+                throw new Error("Route '" + serviceName + "' does not have any pending requests to which we can respond.");
             }
             this.respond(route.requests[0], ajaxResponse)
         },

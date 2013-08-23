@@ -199,7 +199,7 @@ Ext.apply(glu.provider.binder, {
                         config[propName] = value;
                     }
                     if (glu.isString(value) || glu.isArray(value)) {
-                        throw "Failed to convert " + propName + " into a child object";
+                        throw new Error("Failed to convert " + propName + " into a child object");
                     }
                 }
 
@@ -341,22 +341,22 @@ Ext.apply(glu.provider.binder, {
         binding.controlPropName = propName;
         if (!binding.valid) {
             if (binding.reason.indexOf('Syntax ') > -1) {
-                throw 'Binding Exception - ' + binding.reason;
+                throw new Error('Binding Exception - ' + binding.reason);
             }
             if (binding.optional) {
                 delete config[propName];
                 return;
             }
             if (binding.reason == 'Missing bind target') {
-                throw 'Binding Exception - The control config property "' + propName +
+                throw new Error('Binding Exception - The control config property "' + propName +
                     '" is non-optionally bound to view model property "' +
-                    propValue + '" but that target does not exist.';
+                    propValue + '" but that target does not exist.');
             }
             if (binding.reason == 'Illegal function binding') {
-                throw "Binding Exception: " + 'Attempted to bind config property "' + propName + '" to a function when "'
-                    + propName + '" is not a handler or listener.';
+                throw new Error("Binding Exception: " + 'Attempted to bind config property "' + propName + '" to a function when "'
+                    + propName + '" is not a handler or listener.');
             }
-            throw 'Binding Exception: ' + binding.reason
+            throw new Error('Binding Exception: ' + binding.reason);
         }
         if (isEventListener) {
             //simply provides the signature of the event minus
@@ -485,7 +485,7 @@ Ext.apply(glu.provider.binder, {
             var token = tokens[i];
             var child = actualModel.get ? actualModel.get(token) : actualModel[token];
             if (child === undefined) {
-                throw "Unable to find child '" + token + "' within expression '" + expression + "'";
+                throw new Error("Unable to find child '" + token + "' within expression '" + expression + "'");
             }
             actualModel = child;
         }
