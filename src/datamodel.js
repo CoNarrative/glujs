@@ -116,12 +116,12 @@ glu.DataModel = glu.extend(glu.Viewmodel, {
     },
 
     load : function(id) {
-        var url = this.url;
+        var url = this.url, config = {};
         if (this.appendId) {
             url = url + (glu.string(url).endsWith('/') ? '' : '/') + id;
         }
         if (this.paramGenerator) {
-            var config = {
+            config = {
                 params : {}
             };
             config.params = glu.apply(config.params, this._serialize(Ext.createDelegate(this._private.paramGenerator, this)()));

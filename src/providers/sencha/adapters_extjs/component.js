@@ -9,23 +9,29 @@
  * property for organizing your views.
  */
 glu.regAdapter('component', {
-    applyConventions:function (config, viewmodel) {
+    applyConventions: function(config, viewmodel) {
         var g = glu.conventions;
         var pattern = {
-            disabled:g.expression(config.name + 'IsEnabled', {optional:true, not:true}),
-            hidden:g.expression(config.name + 'IsVisible', {optional:true, not:true})
+            disabled: g.expression(config.name + 'IsEnabled', {
+                optional: true,
+                not: true
+            }),
+            hidden: g.expression(config.name + 'IsVisible', {
+                optional: true,
+                not: true
+            })
         };
         glu.deepApplyIf(config, pattern);
     },
     //is the property an array to walk?
-    isChildArray:function (name) {
+    isChildArray: function(name) {
         return name === 'editors';
     },
     //is the property a sub-item to recurse into?
-    isChildObject:function () {
+    isChildObject: function() {
         return false;
     },
-    processChildPropertyShortcut:function (propName, config) {
+    processChildPropertyShortcut: function(propName, config) {
         return config;
     },
     /**
@@ -35,8 +41,8 @@ glu.regAdapter('component', {
      *      cls : 'my-widget-status-@{status}'
      * will dynamically change the class by naming convention to match the current status.
      */
-    clsBindings:{
-        setComponentProperty:function (newValue, oldValue, options, control) {
+    clsBindings: {
+        setComponentProperty: function(newValue, oldValue, options, control) {
             if (control.removeCls) {
                 control.removeCls(oldValue);
             } else {
@@ -45,6 +51,33 @@ glu.regAdapter('component', {
             control.addClass(newValue);
         }
     },
+
+    /**
+     * @cfg {String} style
+     * *one-way binding.* Sets a convenience style class. For example:
+     *      style : 'backgroundColor:${statusColor}'
+     * will dynamically change the style by naming convention to match the current statusColor.
+     */
+    styleBindings: {
+        setComponentProperty: function(newValue, oldValue, options, control) {
+            if (control.getEl()) control.getEl().setStyle(glu.parseStyles(newValue));
+        }
+    },
+
+    /**
+     * @cfg {String} fieldStyle
+     * *one-way binding.* Sets a convenience style class. For example:
+     *      fieldStyle : 'backgroundColor:${statusColor}'
+     * will dynamically change the style by naming convention to match the current statusColor.
+     */
+    fieldStyleBindings: {
+        setComponentProperty: function(newValue, oldValue, options, control) {
+            if (control.setFieldStyle) {
+                control.setFieldStyle(glu.parseStyles(newValue));
+            }
+        }
+    },
+
     /**
      * @cfg {String} itemCls
      * *one-way binding.* Sets a convenience item css class. Since the binding removes the old class before adding the new, this
@@ -52,8 +85,8 @@ glu.regAdapter('component', {
      *      itemCls : 'my-widget-status-@{status}'
      * will dynamically change the class by naming convention to match the current status.
      */
-    itemClsBindings:{
-        setComponentProperty:function (newValue, oldValue, options, control) {
+    itemClsBindings: {
+        setComponentProperty: function(newValue, oldValue, options, control) {
             if (control.el && control.el.parent) {
                 var p = control.el.parent('.x-form-item');
                 if (p === undefined) return;
@@ -72,20 +105,19 @@ glu.regAdapter('component', {
      *
      * **Convention:** @{*foo*IsHidden}
      */
-    hiddenBindings:{
-        setComponentProperty:function (newValue, oldValue, options, control) {
+    hiddenBindings: {
+        setComponentProperty: function(newValue, oldValue, options, control) {
             if (control.xtype == 'radiogroup' && control.items && control.items.length > 0) {
                 for (var i = 0; i < control.items.length; i++) {
                     if (Ext.isArray(control.items)) {
                         // do nothing.  this is due to the case where control is run in headless mode
-//                        control.items[i].setVisible(!newValue);
-                    }
-                    else {
+                        //                        control.items[i].setVisible(!newValue);
+                    } else {
                         control.items.items[i].setVisible(!newValue);
                     }
                 }
             }
-            if( control.tab )control.tab.setVisible(!newValue);
+            if (control.tab) control.tab.setVisible(!newValue);
             else control.setVisible(!newValue);
             if (control.ownerCt) {
                 control.ownerCt.doLayout();
@@ -93,9 +125,9 @@ glu.regAdapter('component', {
         }
     },
 
-    isHoveredBindings:{
-        eventName : 'hoverchange',
-        eventConverter:function(ctrl){
+    isHoveredBindings: {
+        eventName: 'hoverchange',
+        eventConverter: function(ctrl) {
             return ctrl.isHovered;
         }
     },
@@ -103,7 +135,7 @@ glu.regAdapter('component', {
     //helper function to be called within the beforecollect of child adapters that want to add editors...
     //the config argument is an object whose keys are editable component properties
     //and whose values are either the name of the element or a function to find it
-    checkForEditors:function (config, propConfigs) {
+    checkForEditors: function(config, propConfigs) {
         for (var name in propConfigs) {
             var editor = config[name];
             if (!Ext.isObject(editor)) continue;
@@ -119,52 +151,52 @@ glu.regAdapter('component', {
             config.editors.push(editor);
         }
     },
-    beforeCollect:function (config) {
+    beforeCollect: function(config) {
         //debugger;
     },
-    afterCreate:function (control, viewmodel) {
+    afterCreate: function(control, viewmodel) {
         var config = control;
         if (config.editors) {
             for (var i = 0; i < config.editors.length; i++) {
                 var editorCfg = config.editors[i];
                 var editor = Ext.widget('editor', editorCfg);
-                control.on('afterrender', function (control) {
-                    setTimeout(function () {
+                control.on('afterrender', function(control) {
+                    setTimeout(function() {
                         var el = Ext.isString(editor.target) ? control[editor.target] : editor.target(control);
-                        if( el )
-                        el.on(editor.trigger, function () {
-                            editor.startEdit(el, control[control.propName]);//control.getValue()
-                        });
+                        if (el)
+                            el.on(editor.trigger, function() {
+                                editor.startEdit(el, control[control.propName]); //control.getValue()
+                            });
                     }, 1);
                 });
             }
         }
         if (control.isHovered != null) {
-            control.on('afterrender', function () {
+            control.on('afterrender', function() {
                 var el = control.el;
                 control.isHovered = false;
-                el.on('mouseenter', function () {
+                el.on('mouseenter', function() {
                     control.isHovered = true;
                     control.fireEvent('hoverchange', control, true);
                 });
-                el.on('mouseleave', function () {
+                el.on('mouseleave', function() {
                     control.isHovered = false;
                     control.fireEvent('hoverchange', control, false);
                 });
             });
         }
-        if (control.tpl){
-            //VERY SPECIAL BINDINGS!
-            var task = new Ext.util.DelayedTask(
-                function(){
-                    control.update(viewmodel);
-                    control.fireEvent('updated',control);
-                });
-            control.on('render',function(){control.fireEvent('updated',control)});
-            control.data = viewmodel; //use viewmodel as initialtemplate source
-            //TODO: FInd all the bound guys and LISTEN ON THEM!
-            viewmodel.on('bulkupdatecommitted', function(){task.delay(10);});
-        }
+        // if (control.tpl){
+        //     //VERY SPECIAL BINDINGS!
+        //     var task = new Ext.util.DelayedTask(
+        //         function(){
+        //             control.update(viewmodel);
+        //             control.fireEvent('updated',control);
+        //         });
+        //     control.on('render',function(){control.fireEvent('updated',control)});
+        //     control.data = viewmodel; //use viewmodel as initialtemplate source
+        //     //TODO: FInd all the bound guys and LISTEN ON THEM!
+        //     viewmodel.on('bulkupdatecommitted', function(){task.delay(10);});
+        // }
     }
 
     /**

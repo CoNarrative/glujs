@@ -520,14 +520,14 @@ glu = {
         }
         return results;
     },
-    openWindow:function (config, viewModel) {
-        return glu.provider.openWindow(config, viewModel);
+    openWindow:function (config, viewModel, animation) {
+        return glu.provider.openWindow(config, viewModel, animation);
     },
     /**
      * Creates a glu ViewPort
      */
-    viewport : function(config){
-        return glu.provider.viewport(config);
+    viewport : function(config, viewMode){
+        return glu.provider.viewport(config, viewMode);
     },
     panel:function () {
         return glu.provider.panel.apply(glu.provider, arguments);
@@ -676,7 +676,22 @@ glu = {
         this.plugins.push(name);
     },
 
-    plugins:[]
+    plugins:[],
+
+    cssRegularExpression: /([a-z0-9\-]+)\s*:\s*([^;\s]+(?:\s*[^;\s]+)*);?/gi,
+    parseStyles: function(styles){
+        var out = {},
+            cssRegularExpression = this.cssRegularExpression,
+            matches;
+
+        if (styles) {
+            cssRegularExpression.lastIndex = 0;
+            while ((matches = cssRegularExpression.exec(styles))) {
+                out[matches[1]] = matches[2];
+            }
+        }
+        return out;
+    }
 };
 
 

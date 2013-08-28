@@ -295,7 +295,7 @@ glu.Viewmodel = glu.extend(Object, {
         if (next === undefined || next.args === undefined || next.args.length === 0) {
             throw action +  "was never called"
         }
-        var fn=Ext.isString(next.args[0])?next.args[2]:next.args[0].fn;
+        var fn=Ext.isString(next.args[0])?next.args[2]:next.args[0].fn||next.args[0].callback;
         fn.call(this,btn,txt);
     },
 

@@ -150,7 +150,7 @@ glu.provider.itemsHelper = {
             //listen to changed event on add/remove
             glu.temp = glu.temp || {};
             glu.temp.transfers = glu.temp.transfer || {};
-            var attachPath = '_vm.' + context.binding.modelPropName +  '.';
+            var attachPath = '_vm.' + context.binding.bindExpression +  '.';
             var transferKey = context.viewmodel.viewmodelName + '-' +context.binding.modelPropName;
             container._ob.on(attachPath + 'removedall', function(){
                 //do a batch remove if possible. Later individual remove events will be ignored by the container
@@ -190,7 +190,7 @@ glu.provider.itemsHelper = {
                 //suppress tab selection change events
                 container._changeOriginatedFromModel=true;
                 this.removeItemAt(context,idx);
-                delete container._changeOriginatedFromModel;
+               delete container._changeOriginatedFromModel;
             }, this);
 
         } else

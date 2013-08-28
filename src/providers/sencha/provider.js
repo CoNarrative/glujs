@@ -38,8 +38,8 @@ Ext.apply(glu.provider, {
     apply:function (obj, config, defaults) {
         return Ext.apply(obj, config, defaults);
     },
-    viewport:function (config) {
-        var view = glu.createViewmodelAndView(config);
+    viewport:function (config, viewMode) {
+        var view = glu.createViewmodelAndView(config, false, viewMode);
         if (Ext.getProvider().provider == 'touch') {
             var viewport = Ext.Viewport.add(view);
         }

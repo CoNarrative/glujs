@@ -1,4 +1,7 @@
 extends todoLayout
 block append head
-    title GluJS • TodoMVC
-    script(src='app.js')
+    title 'GluJS • TodoMVC' - extjs_version
+    - if (extjs_version == 'touch')
+        script(src='../app-touch.js')
+    - else
+        script(src='../app.js')
