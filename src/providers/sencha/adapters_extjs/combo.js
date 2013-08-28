@@ -1,6 +1,6 @@
 /*
-* Copyright (C) 2012 by CoNarrative
-*/
+ * Copyright (C) 2012 by CoNarrative
+ */
 /**
  * @class glu.extjs.adapters.combo
  * @author Mike Gai
@@ -17,15 +17,17 @@
 /*
  */
 glu.regAdapter('combo', {
-    extend : 'field',
+    extend: 'field',
 
     applyConventions: function(config, viewmodel) {
-        Ext.applyIf (config, {
-            store : glu.conventions.expression(config.name + 'Store', {optional:true})
+        Ext.applyIf(config, {
+            store: glu.conventions.expression(config.name + 'Store', {
+                optional: true
+            })
         });
         glu.provider.adapters.Field.prototype.applyConventions.apply(this, arguments);
     },
-    
+
     /**
      * @cfg {Ext.data.Store} store
      * The store for this grid.
@@ -34,7 +36,7 @@ glu.regAdapter('combo', {
      *
      * **Convention**: @{*itemList*}
      */
-    beforeCreate : function(config, viewmodel) {
+    beforeCreate: function(config, viewmodel) {
         if (!config.store)
             return;
         if (config.store.gluTweaked == true)
@@ -47,7 +49,7 @@ glu.regAdapter('combo', {
             control.setValue(control.targetValue);
         });
     },
-    afterCreate : function(control, viewmodel) {
+    afterCreate: function(control, viewmodel) {
         glu.provider.adapters.Field.prototype.afterCreate.apply(this, arguments);
 
         if (!control.delayedEvent) {
@@ -63,7 +65,7 @@ glu.regAdapter('combo', {
             }, control);
         }
 
-        if( control.multiSelect ){
+        if (control.multiSelect) {
             control.addListener('beforedeselect', function(t, e, o) {
                 control.delayedEvent.delay(control.keyDelay || 100);
                 //give some time for multiple keypresses...
@@ -80,7 +82,7 @@ glu.regAdapter('combo', {
             control.delayedEvent.delay(control.keyDelay || 100);
             //give some time for multiple keypresses...
         }, control);
-        
+
 
         //Solves a race condition in which the initial value is set before the backing store has been loaded
         //does not attempt to solve later race conditions with stores reloading
@@ -95,7 +97,8 @@ glu.regAdapter('combo', {
         control.setValueActual = control.setValue;
         control.setValue = function(value) {
             this.targetValue = value;
-            this.setValueActual(value);
+            if (this.getValue() != value)
+                this.setValueActual(value);
         };
         control.setValue(control.value);
         //there is no record, so wait until load
@@ -104,19 +107,19 @@ glu.regAdapter('combo', {
         // //control.store.un('load'); //stop listening for load event
         // });
     },
-    beforeCollect : function(config) {
+    beforeCollect: function(config) {
         glu.provider.adapters.Field.prototype.beforeCollect.apply(this, arguments);
         if (config.editable)
             config.enableKeyEvents = true;
     },
-    initAdapter : function() {
+    initAdapter: function() {
         //this.valueBindings = glu.deepApplyIf({eventName : 'select'},this.valueBindings);
         this.valueBindings = glu.deepApplyIf({
-            eventName : 'valuechanged'
+            eventName: 'valuechanged'
         }, this.valueBindings);
     }
 });
 
 glu.regAdapter('combobox', {
-    extend : 'combo'
-}); 
+    extend: 'combo'
+});
