@@ -533,7 +533,7 @@ glu = {
         return glu.provider.panel.apply(glu.provider, arguments);
     },
     equivalent:function (oldVal, newVal) {
-        if ((oldVal === null && newVal != null) || (oldVal != null && newVal == null)) return false
+        if ((oldVal == null && newVal != null) || (oldVal != null && newVal == null)) return false
         if (glu.isArray(newVal)){
             //array equivalency is if all the members are equivalent...
             if (oldVal==newVal){
