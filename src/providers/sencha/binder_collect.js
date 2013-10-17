@@ -31,7 +31,7 @@ Ext.apply(glu.provider.binder, {
      * @param {Object} viewmodel The view model
      * @return {Array} The bindings array
      */
-    collectBindings:function (config, viewmodel, parentConfig, parentPropName, parentAdapter, bindingsList, indents) {
+    collectBindings: function(config, viewmodel, parentConfig, parentPropName, parentAdapter, bindingsList, indents) {
         //STEP 1: apply parentage and things that only make sense when it is a child item
         if (parentConfig) {
             //preprocess
@@ -39,13 +39,13 @@ Ext.apply(glu.provider.binder, {
                 if (config == '->' || config == '-' || config == '|') {
                     //skip - it's some other sort of shortcut string like for a menu item or button padding that can't be bound...
                     return {
-                        config:config,
-                        bindings:bindingsList
+                        config: config,
+                        bindings: bindingsList
                     }
                 }
                 //otherwise, assume it's a name-bound field with the default type
                 config = {
-                    name:config
+                    name: config
                 };
             }
             //use cached adatper if available...
@@ -74,8 +74,8 @@ Ext.apply(glu.provider.binder, {
                     var expr = origXtype.substring(2, origXtype.length - 1);
                     var split = this.traverseExpression(viewmodel, expr);
                     var target = split.model[split.prop];
-                    var viewname = target.viewmodelName + (config.viewMode?'_'+config.viewMode:'');
-                    var spec = glu.getViewSpec(target, viewmodel.ns, viewname, config);
+                    var viewname = target.viewmodelName + (config.viewMode ? '_' + config.viewMode : '');
+                    var spec = glu.getViewSpec(target, target.ns, viewname, config);
                     if (Ext.isString(spec))
                         throw spec;
                     //just inline the view and prepare for binding...
@@ -87,7 +87,7 @@ Ext.apply(glu.provider.binder, {
                 } else {
                     //see if it is a 'local type' and if so inline it
                     var spec = glu.getViewSpec(viewmodel, viewmodel.ns, origXtype, config);
-                    if (!Ext.isString(spec)) {//getViewSpec returns error strings when it can't process the request. I wrote it but do not necessarily approve.
+                    if (!Ext.isString(spec)) { //getViewSpec returns error strings when it can't process the request. I wrote it but do not necessarily approve.
                         config = spec;
                         config.xtype = config.xtype || defaultTypeForItems || adapterSpecificDefaultXtype || 'panel';
                     } else {
@@ -112,14 +112,14 @@ Ext.apply(glu.provider.binder, {
             //transform additional adapters...
             for (var i = 0; i < config.transforms.length; i++) {
                 transformAdapters.push(this.getAdapter({
-                    xtype:config.transforms[i]
+                    xtype: config.transforms[i]
                 }));
             }
         }
         //global adapters...
         for (var i = 0; i < glu.plugins.length; i++) {
             transformAdapters.push(this.getAdapter({
-                xtype:glu.plugins[i]
+                xtype: glu.plugins[i]
             }));
         }
 
@@ -167,9 +167,7 @@ Ext.apply(glu.provider.binder, {
 
         for (var propName in config) {
 
-            if (propName === 'xtype' || propName === 'ptype' || propName === '_defaultVm'
-                || propName === 'id' || propName === '_bindings' || propName === '_bindingMap'
-                || (propName ==='name' && !xtypeAdapter.suppressNameBindings) || propName === 'rootVM') {
+            if (propName === 'xtype' || propName === 'ptype' || propName === '_defaultVm' || propName === 'id' || propName === '_bindings' || propName === '_bindingMap' || (propName === 'name' && !xtypeAdapter.suppressNameBindings) || propName === 'rootVM') {
                 //skip unbindable properties
                 continue;
             }
@@ -227,6 +225,7 @@ Ext.apply(glu.provider.binder, {
         }
 
         //STEP 6: Walk child objects
+
         function bindChildren() {
             for (var idx = 0; idx < childContainerPropNames.length; idx++) {
                 var childContainerPropName = childContainerPropNames[idx];
@@ -272,10 +271,10 @@ Ext.apply(glu.provider.binder, {
                 config.plugins = config.plugins || [];
                 config.plugins.addedBinderPlugin = true;
                 Ext.define('Ext.plugin.' + xtypeAdapter.name + 'Plugin', {
-                    isBinderPlugin:true,
-                    alias:'plugin.' + xtypeAdapter.name + 'Plugin',
+                    isBinderPlugin: true,
+                    alias: 'plugin.' + xtypeAdapter.name + 'Plugin',
                     //xtype:'Ext.plugin.adapterPlugin',
-                    init:function (control) {
+                    init: function(control) {
                         if (glu.isFunction(xtypeAdapter.afterCreate)) {
                             xtypeAdapter.afterCreate(control, viewmodel);
                         }
@@ -289,13 +288,12 @@ Ext.apply(glu.provider.binder, {
                 });
                 config.plugins.push(xtypeAdapter.name + 'Plugin');
 
-            }
-            else {
+            } else {
                 config.plugins = config.plugins || [];
                 config.plugins.addedBinderPlugin = true;
                 config.plugins.push({
-                    isBinderPlugin:true,
-                    init:function (control) {
+                    isBinderPlugin: true,
+                    init: function(control) {
                         if (glu.isFunction(xtypeAdapter.afterCreate)) {
                             xtypeAdapter.afterCreate(control, viewmodel);
                         }
@@ -312,22 +310,22 @@ Ext.apply(glu.provider.binder, {
 
         //STEP 9: Store the binding in the list and return
         if (config._bindings != null && config._bindings.length > 0) {
-            config.id = config.id || Ext.id(null,'glu-' + config.xtype + '-');
+            config.id = config.id || Ext.id(null, 'glu-' + config.xtype + '-');
             config._bindings.defaultModel = viewmodel;
             config._bindings.adapter = xtypeAdapter;
             bindingsList.push(config);
         }
         glu.log.indentLess();
         return {
-            config:config,
-            bindings:bindingsList
+            config: config,
+            bindings: bindingsList
         }
     },
 
     /*
      * Collect and activate property binding on the config
      */
-    collectPropertyBinding:function (propName, config, viewmodel, isEventListener, isChildArray, xtypeAdapter) {
+    collectPropertyBinding: function(propName, config, viewmodel, isEventListener, isChildArray, xtypeAdapter) {
         var propValue = config[propName];
         var binding = this.readPropertyBinding(propValue, viewmodel, isEventListener);
         if (binding == null) {
@@ -353,15 +351,14 @@ Ext.apply(glu.provider.binder, {
                     propValue + '" but that target does not exist.';
             }
             if (binding.reason == 'Illegal function binding') {
-                throw "Binding Exception: " + 'Attempted to bind config property "' + propName + '" to a function when "'
-                    + propName + '" is not a handler or listener.';
+                throw "Binding Exception: " + 'Attempted to bind config property "' + propName + '" to a function when "' + propName + '" is not a handler or listener.';
             }
             throw 'Binding Exception: ' + binding.reason
         }
         if (isEventListener) {
             //simply provides the signature of the event minus
             //the first argument (which is always the control itself)
-            binding.initialValue = function () {
+            binding.initialValue = function() {
                 var args = Array.prototype.slice.call(arguments);
                 args.shift();
                 //remove the first element
@@ -408,22 +405,22 @@ Ext.apply(glu.provider.binder, {
     /* DOCS DISABLED FOR NOW
      * Simply collect a binding without actually activating it on the configuration
      */
-    readPropertyBinding:function (propValue, viewmodel, isEventListener) {
+    readPropertyBinding: function(propValue, viewmodel, isEventListener) {
         var binding = glu.parseBindingSyntax(propValue);
         if (binding == null || !binding.valid) {
             return binding;
         }
         binding = Ext.apply(binding, {
-            model:viewmodel,
-            invertValue:false,
-            initialValue:null
+            model: viewmodel,
+            invertValue: false,
+            initialValue: null
         });
         //DETECT IF the whole expression is a locale key. Assume it begins and ends with those delimiters.
         if (binding.localizationKey) {
             binding.initialValue = glu.localize({
-                viewmodel:binding.model,
-                ns:viewmodel.ns,
-                key:binding.localizationKey
+                viewmodel: binding.model,
+                ns: viewmodel.ns,
+                key: binding.localizationKey
             });
             return binding;
         }
@@ -478,7 +475,7 @@ Ext.apply(glu.provider.binder, {
         return binding;
     },
 
-    traverseExpression:function (model, expression) {
+    traverseExpression: function(model, expression) {
         var tokens = expression.split('\.');
         var actualModel = model;
         for (var i = 0; i < tokens.length - 1; i++) {
@@ -490,12 +487,12 @@ Ext.apply(glu.provider.binder, {
             actualModel = child;
         }
         return {
-            model:actualModel,
-            prop:tokens[tokens.length - 1]
+            model: actualModel,
+            prop: tokens[tokens.length - 1]
         }
     },
 
-    traverseUpExpression:function (model, expression) {
+    traverseUpExpression: function(model, expression) {
         var foundModel = model;
         do {
             var hasProp = foundModel.hasOwnProperty(expression);

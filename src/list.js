@@ -9,7 +9,7 @@
  *
  */
 glu.List = glu.extend(Object, {
-    constructor:function (config) {
+    constructor: function(config) {
         config = config || {};
         this.autoParent = false;
         this.autoDetach = false;
@@ -17,7 +17,9 @@ glu.List = glu.extend(Object, {
         this.length = 0;
         this._private = this._private || {};
         this._private.objs = [];
-        new glu.GraphObservable({vm:this});
+        new glu.GraphObservable({
+            vm: this
+        });
         config.items = config.items || config.data || [];
         for (var i = 0; i < config.items.length; i++) {
             var item = config.items[i];
@@ -30,20 +32,20 @@ glu.List = glu.extend(Object, {
      * @param obj
      * @param silent
      */
-    add:function (obj, silent, isTransfer) {
-        this.insert(this.length,obj, isTransfer);
+    add: function(obj, silent, isTransfer) {
+        this.insert(this.length, obj, isTransfer);
     },
     /**
      * Inserts an item at an ordinal position
      * @param index
      * @param obj
      */
-    insert:function (index, obj, isTransfer) {
-        if (this.autoParent && obj.parentVM && obj.parentVM!==this.parentVM) {
+    insert: function(index, obj, isTransfer) {
+        if (this.autoParent && obj.parentVM && obj.parentVM !== this.parentVM) {
             throw "View model already has a parent and needs to be removed from there first";
         }
-        if (glu.isObject(obj) && obj.mtype ) {
-            if (obj._private===undefined) {
+        if (glu.isObject(obj) && obj.mtype) {
+            if (obj._private === undefined) {
                 obj.ns = obj.ns || this.ns;
                 if (this.autoParent) {
                     obj.parentVM = this.parentVM;
@@ -59,7 +61,7 @@ glu.List = glu.extend(Object, {
         }
         this._private.objs.splice(index, 0, obj);
         this.length++;
-        this.fireEvent('lengthchanged',this.length,this.length-1);
+        this.fireEvent('lengthchanged', this.length, this.length - 1);
         this.fireEvent('added', obj, index, isTransfer);
     },
     /**
@@ -67,7 +69,7 @@ glu.List = glu.extend(Object, {
      * @param Obj
      * @return {*}
      */
-    remove:function (Obj, isTransfer) {
+    remove: function(Obj, isTransfer) {
         return this.removeAt(this.indexOf(Obj), isTransfer);
     },
     /**
@@ -75,9 +77,9 @@ glu.List = glu.extend(Object, {
      * @param index
      * @return {*}
      */
-    removeAt:function (index, isTransfer) {
+    removeAt: function(index, isTransfer) {
         var obj = this.getAt(index);
-        if (obj==null) return; //nothing to do
+        if (obj == null) return; //nothing to do
         this._private.objs.splice(index, 1);
         this.length--;
         if (obj._ob) {
@@ -94,17 +96,17 @@ glu.List = glu.extend(Object, {
         if (index < this.activeIndex) {
             this.setActiveIndex(this.getActiveIndex() - 1);
         }
-        this.fireEvent('lengthchanged',this.length,this.length+1);
+        this.fireEvent('lengthchanged', this.length, this.length + 1);
         return obj;
     },
     /**
      * Removes all items
      */
-    removeAll:function () {
-        this.fireEvent('removedall', this);
+    removeAll: function() {
         while (this.length > 0) {
             this.removeAt(0);
         }
+        this.fireEvent('removedall', this);
     },
 
     /**
@@ -115,11 +117,11 @@ glu.List = glu.extend(Object, {
      * @param obj
      * @return {Number}
      */
-    transferFrom:function(otherList, item, newIndex){
-        if (newIndex==null) newIndex = this.length;
+    transferFrom: function(otherList, item, newIndex) {
+        if (newIndex == null) newIndex = this.length;
         otherList.remove(item, true);
         this.insert(newIndex, item, true);
-        this.fireEvent('transferred', otherList, item, newIndex );
+        this.fireEvent('transferred', otherList, item, newIndex);
     },
 
     /**
@@ -127,7 +129,7 @@ glu.List = glu.extend(Object, {
      * @param obj
      * @return {Number}
      */
-    indexOf:function (obj) {
+    indexOf: function(obj) {
         if (this._private.objs.indexOf) return this._private.objs.indexOf(obj); //native indexOf
         for (var i = 0; i < this._private.objs.length; i++) {
             if (obj === this._private.objs[i]) {
@@ -142,7 +144,7 @@ glu.List = glu.extend(Object, {
      * @param Obj
      * @return {Boolean}
      */
-    contains:function (Obj) {
+    contains: function(Obj) {
         return this.indexOf(Obj) > -1;
     },
     /**
@@ -150,19 +152,19 @@ glu.List = glu.extend(Object, {
      * @param index
      * @return {*}
      */
-    getAt:function (index) {
+    getAt: function(index) {
         return this._private.objs[index];
     },
     /**
      * The total number of items in the container
      * @property {Number}
      */
-    length : 0,
+    length: 0,
     /**
      * An alias for length()
      * @return {Number}
      */
-    getCount:function () {
+    getCount: function() {
         return this._private.objs.length;
     },
     /**
@@ -170,7 +172,7 @@ glu.List = glu.extend(Object, {
      * @param operation
      * @param scope
      */
-    foreach:function (operation, scope) {
+    foreach: function(operation, scope) {
         for (var i = 0; i < this.length; i++) {
             var item = this.getAt(i);
             var myScope = scope || item;
@@ -184,7 +186,7 @@ glu.List = glu.extend(Object, {
      * @param scope
      * @return {*}
      */
-    find:function (fn, scope) {
+    find: function(fn, scope) {
         for (var i = 0; i < this.length; i++) {
             var item = this.getAt(i);
             var myScope = scope || item;
@@ -194,15 +196,15 @@ glu.List = glu.extend(Object, {
         }
     },
 
-    on:function (eventName, handler, scope) {
+    on: function(eventName, handler, scope) {
         scope = scope || this;
         this._ob.on(eventName, handler, scope);
     },
 
-    toArray:function(){
+    toArray: function() {
         return this._private.objs.slice();
     },
-    fireEvent:function () {
+    fireEvent: function() {
         glu.log.debug('List "' + this.referenceName + '" is firing event "' + arguments[0] + '""');
         this._ob.fireEvent.apply(this._ob, arguments);
     }
@@ -210,43 +212,43 @@ glu.List = glu.extend(Object, {
 
 glu.mreg('list', glu.List);
 
-glu.mreg('keytracking',{
-    initMixin:function(){
-        this.keyMap ={};
+glu.mreg('keytracking', {
+    initMixin: function() {
+        this.keyMap = {};
         this.idProperty = this.idProperty || 'id';
         //add initial keys since this is after constructor...
-        for (var i=0;i<this._private.objs.length;i++){
+        for (var i = 0; i < this._private.objs.length; i++) {
             this.addKey(this._private.objs[i]);
         }
-        this.on('added',this.addKey)
-        this.on('removed',this.removeKey)
+        this.on('added', this.addKey)
+        this.on('removed', this.removeKey)
     },
-    addKey:function(item, idx){
-        var key=item[this.idProperty];
-        if (this.keyMap[key]) throw new Error('Duplicate key "' + key +'" not allowed in a key-tracked list');
-        if (key===undefined) return;
+    addKey: function(item, idx) {
+        var key = item[this.idProperty];
+        if (this.keyMap[key]) throw new Error('Duplicate key "' + key + '" not allowed in a key-tracked list');
+        if (key === undefined) return;
         this.keyMap[key] = item;
     },
-    removeKey:function(item){
-        var key=item[this.idProperty];
-        if (key===undefined) return;
+    removeKey: function(item) {
+        var key = item[this.idProperty];
+        if (key === undefined) return;
         delete this.keyMap[key];
     },
-    containsKey:function(key){
-        return this.keyMap[key]!==undefined;
+    containsKey: function(key) {
+        return this.keyMap[key] !== undefined;
     },
-    getById:function(key){
+    getById: function(key) {
         return this.keyMap[key];
     },
-    getAtKey:function(key){
+    getAtKey: function(key) {
         return this.keyMap[key];
     },
-    indexOfKey:function(key){
+    indexOfKey: function(key) {
         return this.indexOf(this.getAtKey(key));
     },
-    removeAtKey:function(key){
+    removeAtKey: function(key) {
         var item = this.keyMap[key];
-        if (item==null) return;
+        if (item == null) return;
         this.remove(item);
     }
 })

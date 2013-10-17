@@ -19,14 +19,14 @@ glu.ViewmodelActivator = glu.extend(glu.List, {
      * @cfg {String} focusProperty A property on the containing view model that will hold the currently "activated" or focused item.
      */
 
-    constructor:function (config) {
+    constructor: function(config) {
         glu.ViewmodelActivator.superclass.constructor.call(this, config);
         this.activeIndex = this.activeIndex || 0;
         this.activeItem = this.getActiveItem();
         this.focusProperty = config.focusProperty || glu.symbol(config.referenceName).until('List') + 'WithFocus';
         this.focusPropertyType = config.focusPropertyType || 'viewmodel';
         var me = this;
-        this.parentVM.on(this.focusProperty + 'Changed', function (value) {
+        this.parentVM.on(this.focusProperty + 'Changed', function(value) {
             if (glu.isNumber(value)) {
                 me.setActiveIndex(value);
             } else {
@@ -35,17 +35,17 @@ glu.ViewmodelActivator = glu.extend(glu.List, {
         });
     },
 
-    init:function () {
-        this.foreach(function (submodel) {
+    init: function() {
+        this.foreach(function(submodel) {
             submodel.init();
         }, this)
     },
 
-    getActiveItem:function () {
+    getActiveItem: function() {
         return this.getAt(this.getActiveIndex());
     },
 
-    removeAt:function (toRemove) {
+    removeAt: function(toRemove) {
         if (toRemove === this.activeIndex) {
             if (toRemove === this.length - 1) { //it's the last one
                 this.setActiveIndex(toRemove - 1);
@@ -61,11 +61,11 @@ glu.ViewmodelActivator = glu.extend(glu.List, {
         return obj;
     },
 
-    getActiveIndex:function () {
+    getActiveIndex: function() {
         return this.activeIndex;
     },
 
-    setActiveIndex:function (idx) {
+    setActiveIndex: function(idx) {
         if (this.activeItem && this.activeItem.exit) {
             this.activeItem.exit();
         }
@@ -85,7 +85,7 @@ glu.ViewmodelActivator = glu.extend(glu.List, {
         }
     },
 
-    setActiveItem:function (item) {
+    setActiveItem: function(item) {
         var idx = this.indexOf(item);
         if (idx == -1 && item != null)
             throw ("You are attempting to pass in a view model that is not contained by the activator.");

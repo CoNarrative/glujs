@@ -52,6 +52,17 @@ glu.regAdapter('component', {
         }
     },
 
+    bodyClsBindings: {
+        setComponentProperty: function(newValue, oldValue, options, control) {
+            if (control.removeBodyCls) {
+                control.removeBodyCls(oldValue);
+            } else {
+                control.removeBodyClass(oldValue);
+            }
+            control.addBodyCls(newValue);
+        }
+    },
+
     /**
      * @cfg {String} style
      * *one-way binding.* Sets a convenience style class. For example:
