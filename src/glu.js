@@ -14,22 +14,22 @@ glu = {
     /*
      * * @cfg {Function} handler
      */
-    testMode:false,
-    mtypeRegistry:{},
-    bindingDirectiveRegistry:{},
+    testMode: false,
+    mtypeRegistry: {},
+    bindingDirectiveRegistry: {},
     /**
      * Creates a view model and the associated view
      * @param {Object} view model config
      * @return {Object} the created view
      */
-    createViewmodelAndView:function (config, asWindow, viewMode) {
+    createViewmodelAndView: function(config, asWindow, viewMode) {
         var vm;
         if (config._private && config._private.isInstantiated) {
             vm = config;
         } else {
             vm = glu.model(config);
         }
-        var viewName = viewMode? vm.viewmodelName+'_'+viewMode : vm.viewmodelName;
+        var viewName = viewMode ? vm.viewmodelName + '_' + viewMode : vm.viewmodelName;
         var viewSpec = this.getViewSpec(vm, null, viewName);
         if (glu.isString(viewSpec)) throw viewSpec;
         if (vm._private && !vm._private.isInitialized) {
@@ -40,11 +40,11 @@ glu = {
         return view;
     },
 
-    splitNs:function (vmName) {
+    splitNs: function(vmName) {
         var parts = vmName.split('.');
         return {
-            className:parts[parts.length - 1],
-            namespace:parts.slice(0, parts.length - 1).join('.')
+            className: parts[parts.length - 1],
+            namespace: parts.slice(0, parts.length - 1).join('.')
         };
     },
 
@@ -52,7 +52,7 @@ glu = {
      * Fetches a fully configured view from a name specification readied for binding and view creation
      * Returns an error string if could not process it.
      */
-    getViewSpec:function (vm, ns, viewmodelName, configOverlay, defaults) {
+    getViewSpec: function(vm, ns, viewmodelName, configOverlay, defaults) {
         ns = ns || vm.ns;
         viewmodelName = viewmodelName || vm.viewmodelName;
         configOverlay = configOverlay || {};
@@ -96,7 +96,7 @@ glu = {
      * @param {glu.ViewModel} viewmodel
      * @return {glu.view} The created view
      */
-    view:function (vm, ns, className, configOverlay, defaults, parent) {
+    view: function(vm, ns, className, configOverlay, defaults, parent) {
         var viewSpec = this.getViewSpec(vm, ns, className, configOverlay, defaults, parent);
         if (glu.isString(viewSpec)) throw viewSpec;
         var view = glu.viewFromSpec(vm, viewSpec, parent);
@@ -110,7 +110,7 @@ glu = {
      * @param {Object} viewSpec The configuration for the view
      * @return {Object}
      */
-    viewFromSpec:function (vm, viewSpecBase, parent) {
+    viewFromSpec: function(vm, viewSpecBase, parent) {
         var viewSpec = viewSpecBase;
         //WARNING: Does not make copy, assume viewspec is writable (should have already been cloned if from template)
         //glu.deepApply(viewSpec, viewSpecBase); //always pass in a copy...
@@ -125,10 +125,10 @@ glu = {
      * @param {String} id The id of the component to locate
      * @return {Object}
      */
-    getCmp:function (id) {
+    getCmp: function(id) {
         return glu.provider.getCmp(id);
     },
-    S4:function () {
+    S4: function() {
         return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
     },
     /**
@@ -136,7 +136,7 @@ glu = {
      * @param {String} prefix An optional prefix to start the guid with.
      * @return {String}
      */
-    guid:function (prefix) {
+    guid: function(prefix) {
         return ((prefix ? prefix : 'a') + this.S4() + this.S4() + this.S4() + this.S4() + this.S4() + this.S4() + this.S4() + this.S4());
     },
     /**
@@ -144,7 +144,7 @@ glu = {
      * @param {Mixed} value The value to test
      * @return {Boolean}
      */
-    isArray:function (value) {
+    isArray: function(value) {
         return Object.prototype.toString.apply(value) === '[object Array]';
     },
     /**
@@ -152,7 +152,7 @@ glu = {
      * @param {Mixed} value The value to test
      * @return {Boolean}
      */
-    isObject:function (target) {
+    isObject: function(target) {
         //return typeof(target)=='object';
         return !!target && Object.prototype.toString.call(target) === '[object Object]';
     },
@@ -161,7 +161,7 @@ glu = {
      * @param {Object} object The object to test
      * @return {Boolean}
      */
-    isDate:function (value) {
+    isDate: function(value) {
         return Object.prototype.toString.apply(value) === '[object Date]';
     },
     /**
@@ -169,7 +169,7 @@ glu = {
      * @param {Mixed} value The value to test
      * @return {Boolean}
      */
-    isFunction:function (target) {
+    isFunction: function(target) {
         return typeof(target) == 'function';
     },
     /**
@@ -177,22 +177,22 @@ glu = {
      * @param {Mixed} value The value to test
      * @return {Boolean}
      */
-    isString:function (target) {
+    isString: function(target) {
         return typeof(target) == 'string';
     },
 
-    isNumber:function (target) {
+    isNumber: function(target) {
         return typeof(target) == 'number';
     },
 
     /**
      * Returns true if this is an actual instantiated view model
      */
-    isInstantiated:function(target){
+    isInstantiated: function(target) {
         return target._private;
     },
 
-    namespaces:{},
+    namespaces: {},
     /**
      * Creates namespace to be used for scoping variables and classes so that they are not global.
      * Specifying the last node of a namespace implicitly creates all other nodes. Usage:
@@ -203,7 +203,7 @@ glu = {
      * @param {String} namespace
      * @return {Object} The namespace object.
      */
-    namespace:function (str) {
+    namespace: function(str) {
         //if (this.namespaces[str]) return this.namespaces[str];
 
         var tokens = str.split('\.');
@@ -226,8 +226,8 @@ glu = {
      *  Unlike namespace will not create the path if it does not exist
      *  @return {Object} the path, or null if it doesn't exist
      */
-    walk:function (str, root) {
-        if (str==null) return null;
+    walk: function(str, root) {
+        if (str == null) return null;
         var tokens = str.split('\.');
         root = root || window;
         for (var i = 0; i < tokens.length; i++) {
@@ -248,7 +248,7 @@ glu = {
      * @param {Object} defaults A different object that will also be applied for default values
      * @return {Object} returns target
      */
-    apply:function (obj, config, defaults) {
+    apply: function(obj, config, defaults) {
         return glu.provider.apply(obj, config, defaults);
     },
 
@@ -259,7 +259,7 @@ glu = {
      * @param {Object} defaults A different object that will also be applied for default values
      * @return {Object} returns target
      */
-    applyIf:function (obj, config, defaults) {
+    applyIf: function(obj, config, defaults) {
         return Ext.applyIf(obj, config, defaults);
     },
 
@@ -270,7 +270,7 @@ glu = {
      * @param noOverwrite
      * @return {Object} the target
      */
-    deepApply:function (target, config, noOverwrite) {
+    deepApply: function(target, config, noOverwrite) {
         for (var propName in config) {
             var propValue = config[propName];
             if (glu.isObject(propValue) &&
@@ -278,14 +278,12 @@ glu = {
                 propName !== 'rootVM' && //root view model
                 propName !== 'parentList' && //parent list
                 propName !== 'meta' && //don't remember
-                propName !== 'ownerCt' &&
-                !glu.isInstantiated(propValue) //make sure this isn't a glu object
-                )
-            {
-//                if (propValue.constructor!==Object.prototype.constructor) {
-//                    debugger;
-//                    throw 'Please only use raw objects to configure a view or view model, not other glu objects';
-//                }
+                propName !== 'ownerCt' && !glu.isInstantiated(propValue) //make sure this isn't a glu object
+            ) {
+                //                if (propValue.constructor!==Object.prototype.constructor) {
+                //                    debugger;
+                //                    throw 'Please only use raw objects to configure a view or view model, not other glu objects';
+                //                }
                 target[propName] = target[propName] || {};
                 glu.deepApply(target[propName], propValue, noOverwrite);
                 continue;
@@ -319,7 +317,7 @@ glu = {
      * @param noOverwrite
      * @return {Object} the target
      */
-    deepApplyIf:function (obj, config) {
+    deepApplyIf: function(obj, config) {
         return glu.deepApply(obj, config, true)
     },
     /*
@@ -330,20 +328,20 @@ glu = {
      * While still giving the same basic feel
      * Mixins are the preferred way to go when you can do it as it makes things very simple...
      */
-    traitReg:{},
+    traitReg: {},
 
-    regTrait:function (name, trait) {
+    regTrait: function(name, trait) {
         this.traitReg[name] = trait;
     },
 
-    mixin:function () {
+    mixin: function() {
         var target = arguments[0];
         for (var i = 1; i < arguments.length; i++) {
             this.mixinSingleTrait(target, arguments[i]);
         }
     },
 
-    mixinSingleTrait:function (target, traitName) {
+    mixinSingleTrait: function(target, traitName) {
         glu.log.info('asked to mixin trait ' + traitName);
         if (!glu.isString(traitName)) {
             throw "You must pass in the short string name of the trait, not the trait itself";
@@ -381,11 +379,11 @@ glu = {
         }
         target.traits[trait] = true;
     },
-    mreg:function (mtype, constructor) {
+    mreg: function(mtype, constructor) {
         this.mtypeRegistry[mtype] = constructor;
     },
 
-    localizer:function (config) { //logic is not exposed for now
+    localizer: function(config) { //logic is not exposed for now
         var nsGlobal = glu.namespace(config.ns + '.' + glu.conventions.localeNs);
         if (nsGlobal === undefined) throw 'Could not find locale for namespace ' + config.ns;
         var viewSpecific = config.viewmodel ? (nsGlobal[config.viewmodel.viewmodelName] || nsGlobal[config.viewmodel.recType] || {}) : {};
@@ -407,13 +405,13 @@ glu = {
      *  @param params
      * @return {*}
      */
-    localize:function (key, cfg) {
+    localize: function(key, cfg) {
         if (glu.isObject(key)) {
             cfg = key;
         } else {
             cfg.key = key;
         }
-        if( cfg.key.indexOf(glu.conventions.localizeStart) == 0 && glu.symbol(cfg.key).endsWith(glu.conventions.localizeEnd) ){
+        if (cfg.key.indexOf(glu.conventions.localizeStart) == 0 && glu.symbol(cfg.key).endsWith(glu.conventions.localizeEnd)) {
             cfg.key = cfg.key.substring(glu.conventions.localizeStart.length, cfg.key.length - glu.conventions.localizeEnd.length);
         }
         cfg.ns = cfg.ns || cfg.viewmodel.ns;
@@ -425,16 +423,16 @@ glu = {
      * Sets the default localizer
      * @param fn The localize function (see localize for its signature)
      */
-    setLocalizer:function (fn) {
+    setLocalizer: function(fn) {
         this.localizer = fn;
     },
-    confirm:function (title, message, fn, scope) {
+    confirm: function(title, message, fn, scope) {
         return glu.provider.confirm(title, message, fn, scope);
     },
-    message:function (title, message, fn, scope) {
+    message: function(title, message, fn, scope) {
         return glu.provider.message(title, message, fn, scope);
     },
-    prompt:function (title, message, fn, scope) {
+    prompt: function(title, message, fn, scope) {
         return glu.provider.prompt(title, message, fn, scope);
     },
 
@@ -443,10 +441,10 @@ glu = {
      * @param name {String} the name of the adapter (the xtype if a component adapter)
      * @param adatper {Object} the adapter definition
      */
-    regAdapter:function (name, adapter) {
+    regAdapter: function(name, adapter) {
         return glu.provider.regAdapter(name, adapter);
     },
-    regBindingDirective:function (name, bindingDirective) {
+    regBindingDirective: function(name, bindingDirective) {
         this.bindingDirectiveRegistry[name] = bindingDirective;
     },
 
@@ -458,7 +456,7 @@ glu = {
      *         @>{foo} //oneway binding from model to view, do not track view back to model
      *         @1{foo} //bind one-time but do not track changes to foo
      */
-    parseBindingSyntax:function (bindingString) {
+    parseBindingSyntax: function(bindingString) {
         if (!glu.isString(bindingString)) {
             return null; //not a binding
         }
@@ -467,18 +465,18 @@ glu = {
         }
         if ((bindingString.indexOf(glu.conventions.endDelimiter) == -1 && bindingString.indexOf(glu.conventions.localizeEnd) == -1)) {
             return {
-                valid:false,
-                bindExpression:bindingString,
-                reason:'Syntax Error: Missing closing delimiter'
+                valid: false,
+                bindExpression: bindingString,
+                reason: 'Syntax Error: Missing closing delimiter'
             };
         }
         var results = null;
 
         if (bindingString.indexOf(glu.conventions.localizeStart) == 0) {
             return {
-                valid:true,
-                bindExpression:bindingString,
-                localizationKey:bindingString.substring(glu.conventions.localizeStart.length, bindingString.length - glu.conventions.localizeEnd.length)
+                valid: true,
+                bindExpression: bindingString,
+                localizationKey: bindingString.substring(glu.conventions.localizeStart.length, bindingString.length - glu.conventions.localizeEnd.length)
             };
         }
 
@@ -494,7 +492,9 @@ glu = {
                 for (var i = 0; i < symbols.length; i++) {
                     if (symbols[i] == directive) {
 
-                        results = glu.apply({valid:true}, this.bindingDirectiveRegistry[k]);
+                        results = glu.apply({
+                            valid: true
+                        }, this.bindingDirectiveRegistry[k]);
 
                         var directiveRegx = new RegExp("\\" + glu.conventions.startDelimiter + "(.*?)\\" + glu.conventions.endDelimiter);
                         var directiveResults = bindingString.match(directiveRegx);
@@ -511,7 +511,7 @@ glu = {
                             results.prefix = bindingString.substring(0, startDelimiterLocation);
                             results.suffix = bindingString.substring(endDelimiterLocation + 1);
                         }
-//                        console.log(glu.provider.json.stringify(results));
+                        //                        console.log(glu.provider.json.stringify(results));
                         return results;
                     }
                 }
@@ -520,51 +520,51 @@ glu = {
         }
         return results;
     },
-    openWindow:function (config, viewModel, animation) {
+    openWindow: function(config, viewModel, animation) {
         return glu.provider.openWindow(config, viewModel, animation);
     },
     /**
      * Creates a glu ViewPort
      */
-    viewport : function(config, viewMode){
+    viewport: function(config, viewMode) {
         return glu.provider.viewport(config, viewMode);
     },
-    panel:function () {
+    panel: function() {
         return glu.provider.panel.apply(glu.provider, arguments);
     },
-    equivalent:function (oldVal, newVal) {
+    equivalent: function(oldVal, newVal) {
         if ((oldVal === null && newVal != null) || (oldVal != null && newVal == null)) return false
-        if (glu.isArray(newVal)){
+        if (glu.isArray(newVal)) {
             //array equivalency is if all the members are equivalent...
-            if (oldVal==newVal){
+            if (oldVal == newVal) {
                 return true;
             }
-            if (oldVal.length!=newVal.length) return false;
-            for (var i=0;i<oldVal.length;i++){
-                if (oldVal[i]!=newVal[i]) return false;
+            if (oldVal.length != newVal.length) return false;
+            for (var i = 0; i < oldVal.length; i++) {
+                if (oldVal[i] != newVal[i]) return false;
             }
             return true;
         }
         if (glu.isObject(newVal)) {
-            if (newVal == oldVal) {//by reference
+            if (newVal == oldVal) { //by reference
                 return true;
             }
             //do comparison?
-//            try {
-//                return JSON.stringify(oldVal) == JSON.stringify(newVal);
-//            } catch (excp) {
-//                return false; //if cannot stringify, then does not count...
-//            }
+            //            try {
+            //                return JSON.stringify(oldVal) == JSON.stringify(newVal);
+            //            } catch (excp) {
+            //                return false; //if cannot stringify, then does not count...
+            //            }
         }
         return oldVal === newVal;
     },
-    setTestMode:function () {
+    setTestMode: function() {
         this.testMode = true;
     },
 
-    validations:{
-        notEmpty:function (prop) {
-            return function () {
+    validations: {
+        notEmpty: function(prop) {
+            return function() {
                 var val = this.get(prop);
                 if (val == null || val == '') {
                     return 'This field is required.';
@@ -574,21 +574,21 @@ glu = {
         }
     },
 
-    widget:function (config) {
+    widget: function(config) {
         return glu.provider.widget(config);
     },
 
-    _splitReference:function (fqname) {
+    _splitReference: function(fqname) {
         var splitAt = fqname.lastIndexOf('\.');
         if (splitAt === -1) {
             throw "Reference '" + fqname + "' requires a namespace";
         }
         return {
-            ns:fqname.substring(0, splitAt),
-            name:fqname.substring(splitAt + 1)
+            ns: fqname.substring(0, splitAt),
+            name: fqname.substring(splitAt + 1)
         };
     },
-    def:function (fqname, config, location) {
+    def: function(fqname, config, location) {
         var capture = this._splitReference(fqname, config, location);
         var nsObj = glu.ns(capture.ns + '.' + location);
         nsObj[capture.name] = config;
@@ -601,7 +601,7 @@ glu = {
      * @param {Object} config The view model configuration
      *
      */
-    defModel:function (fqname, config) {
+    defModel: function(fqname, config) {
         this.def(fqname, config, glu.conventions.viewmodelNs);
     },
 
@@ -611,8 +611,8 @@ glu = {
      * @param {String} viewmode (optional) Indicates the mode of this view
      * @param {String} config The declarative configuration of the view
      */
-    defView:function (fqname, viewmode, config) {
-        if (glu.isString(viewmode)){
+    defView: function(fqname, viewmode, config) {
+        if (glu.isString(viewmode)) {
             fqname = fqname + '_' + viewmode;
         } else {
             config = viewmode;
@@ -620,13 +620,12 @@ glu = {
         this.def(fqname, config, glu.conventions.viewNs);
     },
 
-    extend:function (baseConstructor, classDef) {
-        var constructor = classDef.constructor === Object ? function () {
-            baseConstructor.apply(this, arguments);
-        } : classDef.constructor;
+    extend: function(baseConstructor, classDef) {
+        var constructor = classDef.constructor === Object ? function() {
+                baseConstructor.apply(this, arguments);
+            } : classDef.constructor;
         //dummy function to serve as temporary constructor so that we don't invoke actual base constructor until parent constructor chooses
-        var tempBaseConstructor = function () {
-        };
+        var tempBaseConstructor = function() {};
         tempBaseConstructor.prototype = baseConstructor.prototype;
         constructor.prototype = new tempBaseConstructor();
         //for chaining within the child constructor function
@@ -637,9 +636,9 @@ glu = {
         return constructor;
     },
 
-    define:function (name, classDef) {
-        var baseCls = glu.walk(classDef.extend) || function(){};
-        var cls = glu.extend (baseCls, classDef);
+    define: function(name, classDef) {
+        var baseCls = glu.walk(classDef.extend) || function() {};
+        var cls = glu.extend(baseCls, classDef);
         var ref = glu._splitReference(name);
         glu.ns(ref.ns)[ref.name] = cls;
         return cls;
@@ -649,37 +648,33 @@ glu = {
      * Informs glu that the UI is about to be changed. Used for accumulating UI changes (like
      * suspending layouts in ExtJS until the thread is done)
      */
-    updatingUI : function(){
+    updatingUI: function() {
         glu.provider.updatingUI();
     },
 
-    getDataTypeOf:function (value) {
+    getDataTypeOf: function(value) {
         if (glu.isString(value)) {
             type = 'string';
-        }
-        else if (glu.isNumber(value)) {
+        } else if (glu.isNumber(value)) {
             type = 'int';
-        }
-        else if (Ext.isBoolean(value)) {
+        } else if (Ext.isBoolean(value)) {
             type = 'boolean';
-        }
-        else if (glu.isObject(value)) {
+        } else if (glu.isObject(value)) {
             type = 'object';
-        }
-        else if (Ext.isDate(value)) {
+        } else if (Ext.isDate(value)) {
             type = 'date';
         }
         return type;
     },
 
-    plugin : function(name) {
+    plugin: function(name) {
         this.plugins.push(name);
     },
 
-    plugins:[],
+    plugins: [],
 
     cssRegularExpression: /([a-z0-9\-]+)\s*:\s*([^;\s]+(?:\s*[^;\s]+)*);?/gi,
-    parseStyles: function(styles){
+    parseStyles: function(styles) {
         var out = {},
             cssRegularExpression = this.cssRegularExpression,
             matches;
@@ -697,8 +692,10 @@ glu = {
 
 if (window.existingGlu) {
     glu.provider = existingGlu.provider;
-    glu.apply(glu,existingGlu);
-    delete window.existingGlu;
+    glu.apply(glu, existingGlu);
+    try {
+        delete window.existingGlu;
+    } catch (e) {}
 }
 
 glu.ns = glu.namespace; //alias
@@ -707,6 +704,3 @@ glu.ns = glu.namespace; //alias
 if (Ext.getProvider().provider != 'touch') {
     glu.panel('glupanel', {});
 }
-
-
-
