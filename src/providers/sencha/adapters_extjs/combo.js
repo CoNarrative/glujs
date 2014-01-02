@@ -97,6 +97,8 @@ glu.regAdapter('combo', {
         control.setValueActual = control.setValue;
         control.setValue = function(value) {
             this.targetValue = value;
+            if (this.wasLoading && !this.store.loading) this.setValueActual(value);
+            this.wasLoading = this.store.loading;
             if (this.getValue() != value)
                 this.setValueActual(value);
         };
