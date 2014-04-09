@@ -7,6 +7,11 @@ glu.regAdapter('progress', {
         setComponentProperty:function (value, oldValue, options, control) {
             control.updateProgress(value);
         }
+    },
+    textBindings:{
+        setComponentProperty:function (value, oldValue, options, control) {
+            control.updateText(value);
+        }
     }
 });
 
