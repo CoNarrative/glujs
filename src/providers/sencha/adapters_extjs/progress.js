@@ -9,3 +9,7 @@ glu.regAdapter('progress', {
         }
     }
 });
+
+glu.regAdapter('progressbar', {
+    extend : 'progress'
+});
