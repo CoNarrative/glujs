@@ -37,20 +37,21 @@ function build() {
 }
 
 function clean() {
-    if (path.existsSync(buildDir)) {
+    try {
+        fs.statSync(buildDir)
         wrench.rmdirSyncRecursive('build');
         console.log('deleted old build.');
-    } else {
+    } catch (e) {
         console.log('no old build to clean.');
     }
 }
 
 function copyExamples() {
     console.log('copying examples');
-    copyDirs('examples', buildDir + '/examples', function(kind, dir, filename, contents){
+    copyDirs('examples', buildDir + '/examples', function(kind, dir, filename, contents) {
         if (filename.match(/^\./)) return false;
-        if (kind==='f' && (filename==='index.html' || filename==='runner.html')) {
-            return contents.replace(/\.\.\/\.\.\/build\/glu/g,'../../glu');
+        if (kind === 'f' && (filename === 'index.html' || filename === 'runner.html')) {
+            return contents.replace(/\.\.\/\.\.\/build\/glu/g, '../../glu');
         }
     });
     wrench.mkdirSyncRecursive(buildDir + '/lib/extjs-4.x');
@@ -100,6 +101,7 @@ function gluJSExt4() {
 var license = "// Copyright (c) 2012 CoNarrative - http://www.conarrative.com/\n" +
     "// License: MIT (http://www.opensource.org/licenses/mit-license.php)\n" +
     "// GluJS version 1.1.0\n";
+
 function concat(combined, files) {
     //make parent directory of combined output file
     var lastSlashIdx = combined.lastIndexOf('/');
@@ -112,7 +114,7 @@ function concat(combined, files) {
     if (files.toArray) {
         files = files.toArray();
     }
-    var out = files.map(function (filePath) {
+    var out = files.map(function(filePath) {
         var src = fs.readFileSync(filePath, 'utf8');
         return cli.isPretty ?
             '//BEGIN ' + filePath + "\n" + src + '//END' + filePath + "\n" :
@@ -127,22 +129,25 @@ function concat(combined, files) {
 function uglify(code) {
     ast = UglifyJS.parse(code);
     ast.figure_out_scope();
-    compressor = UglifyJS.Compressor({unused:false, warnings:false});
+    compressor = UglifyJS.Compressor({
+        unused: false,
+        warnings: false
+    });
     ast = ast.transform(compressor);
     return ast.print_to_string();
 }
 
-FileList = function () {
+FileList = function() {
     this.files = {};
 };
-FileList.prototype.include = function (pattern) {
+FileList.prototype.include = function(pattern) {
     var thisBatch = glob.glob(pattern);
     for (var i = 0; i < thisBatch.length; i++) {
         this.files[thisBatch[i]] = true;
     }
     return this;
 }
-FileList.prototype.toArray = function () {
+FileList.prototype.toArray = function() {
     var files = [];
     for (var filename in this.files) {
         files.push(filename);
@@ -151,7 +156,7 @@ FileList.prototype.toArray = function () {
 }
 
 copyDirs = function(sourceDir, newDir, filter) {
-    filter = filter || function(){};
+    filter = filter || function() {};
     var checkDir = fs.statSync(sourceDir);
     try {
         fs.mkdirSync(newDir, checkDir.mode);
@@ -159,27 +164,27 @@ copyDirs = function(sourceDir, newDir, filter) {
         if (e.code !== 'EEXIST') throw e;
     }
     var files = fs.readdirSync(sourceDir);
-    for(var i = 0; i < files.length; i++) {
+    for (var i = 0; i < files.length; i++) {
         var filename = files[i];
         var destPath = newDir + '/' + filename;
         var currFile = fs.lstatSync(sourceDir + '/' + filename);
-        if(currFile.isDirectory()) {
+        if (currFile.isDirectory()) {
             //directory
-            if (filter('d', sourceDir, filename)!==false) {
+            if (filter('d', sourceDir, filename) !== false) {
                 copyDirs(sourceDir + '/' + filename, destPath, filter);
             }
-        } else if(currFile.isSymbolicLink()) {
+        } else if (currFile.isSymbolicLink()) {
             //sym link
             var symlink = fs.readlinkSync(sourceDir + '/' + filename);
-            if (filter('s', sourceDir, filename)!=false) {
+            if (filter('s', sourceDir, filename) != false) {
                 fs.symlinkSync(symlink, destPath);
             }
         } else {
             //file
             var contents = fs.readFileSync(sourceDir + '/' + filename, 'utf8');
             var filtered = filter('f', sourceDir, filename, contents);
-            if (filtered!=false) {
-                if (typeof(filtered)==='string') {
+            if (filtered != false) {
+                if (typeof(filtered) === 'string') {
                     contents = filtered;
                 }
                 fs.writeFileSync(destPath, contents);
@@ -188,7 +193,7 @@ copyDirs = function(sourceDir, newDir, filter) {
     }
 };
 
-function copyToBuild(oldFileName){
+function copyToBuild(oldFileName) {
     oldFile = fs.createReadStream(oldFileName);
     newFile = fs.createWriteStream(buildDir + '/' + oldFileName);
     require('util').pump(oldFile, newFile);
@@ -196,6 +201,3 @@ function copyToBuild(oldFileName){
 
 //EXECUTE
 cli.parse(process.argv);
-
-
-

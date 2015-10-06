@@ -99,8 +99,10 @@ glu.regAdapter('combo', {
             this.targetValue = value;
             if (this.wasLoading && !this.store.loading) this.setValueActual(value);
             this.wasLoading = this.store.loading;
-            if (this.getValue() != value)
+            if (this.getValue() != value) {
                 this.setValueActual(value);
+                if (!this.store.data.length) this.setRawValue(value)
+            }
         };
         control.setValue(control.value);
         //there is no record, so wait until load
