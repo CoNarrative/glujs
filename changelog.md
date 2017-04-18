@@ -1,9 +1,9 @@
-#Change Log
+# Change Log
 Glu JS 1.2
 
-##1.2
+## 1.2
 
-###New
+### New
  * Added 'viewmode' as an option to this.open
  * Added support for viemodel.prompt
  * Views defined as functions now automatically default to being 'factories' without the need for a Factory suffix
@@ -21,7 +21,7 @@ Glu JS 1.2
  * Added bindings for 'tpl' that refresh only on a 'bulk update'
 
 
-###Fixes
+### Fixes
  * Fixed bug where close was being called on non-windows
  * Corrected message responder code to actually respond properly to the message if its called
  * Corrected message jasmine spy creation to create spec spys properly
@@ -35,7 +35,7 @@ Glu JS 1.2
  * Made 'findControl' optional behavior more consistent
  * fixed buttongroup so that it won't toggle first item when there is no active item binding
 
-###Cleanups
+### Cleanups
  * Cleaned up fake response in test mode
  * Cleaned up log messages.
  * Renamed 'vm' within graphobvservable to be 'node' to reflect the reality that it may be attached to other things (like views)
@@ -43,9 +43,9 @@ Glu JS 1.2
  * Fixed list.length bug in which it was firing removed before adjusting the length
 
 
-##1.1
+## 1.1
 
-###Enhancements
+### Enhancements
 
  * Multiple views per view model via new 'viewMode' view property
  * Ability to set/replace sub-models entirely using normal 'set' syntax (with automatic de-linking/linking of observer patterns)
@@ -55,6 +55,6 @@ Glu JS 1.2
  * Updated activator list with external "focus property" to keep flat and in-line with GluJS conventions
  
  
-###Bug Fixes
+### Bug Fixes
  * Fixed issue with spinnerfield spin up/down arrows not binding
- * Fixed bug with bindings failing when using advanced transformers that modify the entire config block
+ * Fixed bug with bindings failing when using advanced transformers that modify the entire config bloc

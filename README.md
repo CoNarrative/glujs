@@ -1,4 +1,4 @@
-#@{GluJS}
+# @{GluJS}
 *A framework for rapid development of enterprise-ready reactive web & mobile applications "to spec"*
 
 GluJS is a framework for the test-driven development of reactive applications
@@ -7,7 +7,7 @@ leveraging rich javascript widget libraries.
 Currently we have adapters with basic support for Ext JS 3.1+ and Ext JS 4.06+, an experimental adapter
 for Sencha Touch and we'll soon be doing Titanium.
 
-##Hello World
+## Hello World
 Our Hello World application is a little richer than most. That's because the whole point of GluJS is to
 skip the "just looks pretty" stuff and provide you with what you need for building a reactive application out of the gate.
 So our Hello World has a little behavior (pressing the button toggles the title),
@@ -52,7 +52,7 @@ glu.ns('helloworld').locale = {
 
 Ext.onReady(function(){glu.viewport('helloworld.main');});
 ```
-##Getting GluJS
+## Getting GluJS
 
 If you really just want the minified libraries, grab them here:
 
@@ -60,7 +60,7 @@ If you really just want the minified libraries, grab them here:
 
 If you want the source and full examples, clone this project from github.
 
-##Documentation and Support
+## Documentation and Support
 
 Online documentation:
 
@@ -71,14 +71,14 @@ GluJS Support Forums:
 
 -  [GluJS on Google Groups] (https://groups.google.com/d/forum/glujs)
 
-##Building/minifying
+## Building/minifying
 Install node if you haven't already.
 
 Build using node command line
 
     node build.js build
 
-##Running examples
+## Running examples
 Before you can run examples, you'll need to download and install your desired widget toolset into the lib folder.
 We currently support the following:
 
@@ -109,7 +109,7 @@ So to run the agent example for Ext JS 4:
 
     /examples/agents/extjs4
 
-##Testing
+## Testing
 
 We use the excellent jasmine BDD testing library for GluJS testing (and it's also core to how we help you develop and
 test your own applications with GluJS).
@@ -122,7 +122,7 @@ or for Ext JS 3.x testing
 
 http://localhost:8123/spec/extjs3
 
-##Generating your own documentation
+## Generating your own documentation
 
 Documentation is generated using [jsduck] (https://github.com/senchalabs/jsduck).
 
@@ -132,6 +132,6 @@ From the command line with the path in the root of the GluJS project, run:
 
     jsduck --config jsduck.json
 
-##Contributors
+## Contributors
 
 [Mike Gai] (https://github.com/mikegai) (creator), [Nick Tackes] (https://github.com/nicktackes), [Travis Barajas] (https://github.com/tvbarajas)
